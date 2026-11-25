@@ -516,6 +516,79 @@ legend span{font-family:var(--sans);font-size:12px;color:var(--gold);font-weight
 .rich table{border-collapse:collapse;width:100%;margin:0 0 12px;font-size:14px}.rich td,.rich th{border-bottom:1px dashed var(--line);padding:8px 6px;text-align:left;vertical-align:top}
 .pay-note{background:#F3F3F2;padding:14px 16px;font-size:14px;margin:12px 0 0}
 @media (max-width:860px){.pager{grid-template-columns:1fr 1fr}.pager div{display:none}}
+/* Product page: gallery, highlights, specs, reviews */
+.pdp .gallery{min-width:0}
+.g-main{position:relative;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;background:var(--sand);aspect-ratio:1/1}
+.g-main::-webkit-scrollbar{display:none}
+.g-slide{flex:0 0 100%;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;cursor:zoom-in;padding:0}
+.g-slide img{width:100%;height:100%;object-fit:contain;padding:6%;mix-blend-mode:multiply}
+.g-main .badge{left:14px;bottom:auto;top:14px}
+.g-count{position:absolute;right:14px;bottom:14px;background:rgba(255,255,255,.9);font-size:12px;padding:4px 9px}
+.thumbs{display:flex;gap:8px;margin-top:10px;overflow-x:auto;scrollbar-width:thin}
+.thumbs button{flex:0 0 76px;height:76px;border:1px solid var(--line);background:var(--sand);padding:3px;cursor:pointer}
+.thumbs button.on{border-color:var(--ink)}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.pd-info h1{font-family:var(--serif);font-weight:400;font-size:clamp(30px,3.2vw,44px);line-height:1.12;margin:12px 0 10px}
+.pd-rating{display:inline-flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink-2);margin-bottom:4px}
+.pd-rating:hover span{text-decoration:underline}
+.st5{display:inline-flex;gap:2px}
+.st5 svg{width:14px;height:14px;fill:#D9CFC8;stroke:none}
+.st5 svg.on{fill:#B8860B}
+.st5.lg svg{width:20px;height:20px}
+.stars{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin:0 0 6px}
+.fam{margin:0 0 22px}
+.fam div{display:flex;flex-wrap:wrap;gap:8px}
+.fam a{width:58px;height:58px;border:1px solid var(--line);background:var(--sand);display:block;overflow:hidden}
+.fam a:hover{border-color:var(--ink)}
+.fam img{width:100%;height:100%;object-fit:cover}
+.fam .vl{display:block;font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px}
+.hl{list-style:none;padding:22px 0 0;margin:26px 0 0;border-top:1px solid var(--line);display:grid;gap:10px}
+.hl li{display:flex;gap:10px;font-size:14.5px;color:var(--ink-2);line-height:1.45}
+.hl svg{width:17px;height:17px;color:var(--wine);margin-top:2px}
+.pd-tabs{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:10px}
+.pd-tabs .wrap{display:flex;gap:clamp(18px,4vw,48px);overflow-x:auto;scrollbar-width:none}
+.pd-tabs a{padding:16px 0;font-size:14.5px;color:var(--ink-2);white-space:nowrap}
+.pd-tabs a:hover{color:var(--wine)}
+.pd-sec{padding:clamp(44px,6vw,80px) 0;border-bottom:1px solid var(--line);scroll-margin-top:60px}
+.pd-two{display:grid;grid-template-columns:minmax(200px,.6fr) 1.4fr;gap:clamp(24px,5vw,80px)}
+.pd-h h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,2.8vw,38px);line-height:1.1;margin:0}
+.pd-lead{font-size:16.5px;line-height:1.65;color:var(--ink);margin:0 0 18px}
+.spec-t{margin:0;border-top:1px solid var(--line)}
+.spec-t div{display:grid;grid-template-columns:minmax(120px,.5fr) 1fr;gap:20px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.spec-t dt{color:var(--muted)}
+.spec-t dd{margin:0}
+#reviews .pd-h{margin-bottom:30px}
+.rv-grid{display:grid;grid-template-columns:minmax(240px,.6fr) 1.4fr;gap:clamp(24px,5vw,80px);align-items:start}
+.rv-sum .big{font-family:var(--serif);font-size:64px;line-height:1}
+.rv-sum p{color:var(--muted);font-size:14px;margin:10px 0 18px}
+.rbar{display:grid;grid-template-columns:44px 1fr 28px;gap:10px;align-items:center;font-size:13px;margin:6px 0}
+.rbar span{display:inline-flex;gap:4px;align-items:center}
+.rbar .s{width:12px;height:12px;fill:#B8860B;stroke:none}
+.rbar i{height:6px;background:var(--sand-2);display:block}
+.rbar i b{display:block;height:100%;background:var(--ink)}
+.rbar em{font-style:normal;color:var(--muted);text-align:right}
+.rv{padding:22px 0;border-bottom:1px solid var(--line)}
+.rv:first-child{padding-top:0}
+.rv-top{display:flex;align-items:center;gap:12px}
+.vb{font-size:11.5px;color:var(--ok);border:1px solid currentColor;padding:2px 8px}
+.rv h4{font-size:15.5px;font-weight:600;margin:10px 0 4px}
+.rv p{margin:8px 0;color:var(--ink-2)}
+.rv-by{font-size:12.5px;color:var(--muted)}
+.rv-reply{margin-top:10px;background:var(--sand);padding:12px 14px;font-size:14px}
+.rv-form{background:var(--cream);padding:24px;margin-bottom:28px}
+.rv-form textarea{width:100%;border:1px solid var(--line);padding:10px 12px;font:inherit;background:#fff}
+.rv-rate{display:flex;gap:6px;margin-bottom:18px;flex-direction:row}
+.rv-rate label{cursor:pointer}
+.rv-rate input{position:absolute;opacity:0;pointer-events:none}
+.rv-rate svg{width:30px;height:30px;fill:#D9CFC8;stroke:none;transition:fill .15s}
+.rv-rate label.on svg{fill:#B8860B}
+.muted-p{color:var(--muted)}
+.lightbox{position:fixed;inset:0;z-index:90;background:rgba(15,10,8,.94);display:flex;align-items:center;justify-content:center}
+.lightbox[hidden]{display:none}
+.lightbox img{max-width:92vw;max-height:88vh;object-fit:contain;background:#fff}
+.lightbox button{position:absolute;color:#fff;width:52px;height:52px;display:flex;align-items:center;justify-content:center}
+.lb-x{top:16px;right:16px}.lb-p{left:12px;top:50%}.lb-n{right:12px;top:50%}
+@media (max-width:860px){.pd-two,.rv-grid{grid-template-columns:1fr}.thumbs{display:none}.g-main{margin:0 calc(-1 * var(--pad))}}
 </style>
 </head>
 <body data-view="{{VIEW}}">
@@ -550,7 +623,7 @@ legend span{font-family:var(--sans);font-size:12px;color:var(--gold);font-weight
         <div class="lockup"><svg class="mono" viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg><span class="wm">Shopeiz</span></div>
         <p class="tagline">The art of having everything.</p>
         <p style="max-width:340px;margin:0 0 22px">Anything you need, in one place, at your door.</p>
-        <div class="pay-chips"><span>UPI</span><span>VISA</span><span>MASTERCARD</span><span>RUPAY</span><span>COD</span></div>
+        <div class="pay-chips"><span>UPI</span><span>Cash on delivery</span></div>
       </div>
       <div><h4>Shop</h4><ul id="fcats">{{FCATS}}</ul></div>
       <div><h4>Help</h4><ul><li><a href="/help/delivery">Delivery</a></li><li><a href="/help/returns">Replacements &amp; refunds</a></li><li><a href="/help/payment">Payment options</a></li><li><a href="/online-shopping-india">Delivery across India</a></li></ul></div>

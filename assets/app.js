@@ -268,10 +268,13 @@
       return;
     }
     if (a === 'pimg') {
-      const img = $('#pmain img'); if (img) img.src = el.dataset.src;
-      $$('.thumbs button').forEach((b) => b.classList.toggle('on', b === el));
+      const m = $('#pmain'); if (m) m.scrollTo({ left: m.clientWidth * Number(el.dataset.k), behavior: 'smooth' });
       return;
     }
+    if (a === 'zoom') { lbOpen(Number(el.dataset.k)); return; }
+    if (a === 'lbclose') { $('#lb').hidden = true; document.body.style.overflow = ''; return; }
+    if (a === 'lbnav') { lbOpen(lbK + Number(el.dataset.d)); return; }
+    if (a === 'rvopen') { const f = $('[data-form="review"]'); f.hidden = false; f.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     if (a === 'pvar') {
       $$('.vars button').forEach((b) => b.classList.toggle('on', b === el));
       const b = $('#pdpAdd'), sn = readSnap(b), price = Number(el.dataset.price);
@@ -314,6 +317,18 @@
     const f = e.target, kind = f.dataset.form;
     if (!kind) return;
     e.preventDefault();
+    if (kind === 'review') {
+      const fd = Object.fromEntries(new FormData(f).entries());
+      const err = $('[data-rverr]', f);
+      if (!fd.rating) { err.textContent = 'Please choose a star rating.'; return; }
+      if (!live) { err.textContent = 'Reviews are not available right now.'; return; }
+      const btn = f.querySelector('button[type=submit]'); btn.disabled = true; err.textContent = '';
+      try {
+        const r = await api('submit_review', { p: fd });
+        f.innerHTML = `<p class="msg ok" style="margin:0">${ic('i-check')} Thank you${r.verified ? ', verified buyer' : ''}! Your review will appear after a quick check.</p>`;
+      } catch (e2) { err.textContent = e2.message; btn.disabled = false; }
+      return;
+    }
     if (kind === 'news') { f.innerHTML = `<p style="margin:0;padding:16px 0;color:var(--gold-2)">${ic('i-check')} Thank you. You're on the list.</p>`; return; }
     if (kind === 'checkout') {
       saveFields();
@@ -346,6 +361,26 @@
   });
   // Remember where a visitor came from, for order analytics
   try { if (/utm_|gclid|fbclid/.test(location.search) && !sessionStorage.getItem('shopeiz-utm')) sessionStorage.setItem('shopeiz-utm', location.search.slice(1)); } catch (e) {}
+
+  /* ---------- Product gallery ---------- */
+  let lbK = 0;
+  const gImgs = (() => { try { return JSON.parse(($('#gimgs') || {}).textContent || '[]'); } catch (e) { return []; } })();
+  function lbOpen(k) {
+    if (!gImgs.length) return;
+    lbK = (k + gImgs.length) % gImgs.length;
+    const lb = $('#lb'); lb.querySelector('img').src = gImgs[lbK]; lb.hidden = false; document.body.style.overflow = 'hidden';
+  }
+  const gm = $('#pmain');
+  if (gm) gm.addEventListener('scroll', () => {
+    const k = Math.round(gm.scrollLeft / gm.clientWidth);
+    $$('.thumbs button').forEach((b, i) => b.classList.toggle('on', i === k));
+    const c = $('#gcount'); if (c) c.textContent = `${k + 1} / ${gImgs.length}`;
+  }, { passive: true });
+  document.addEventListener('keydown', (e) => { const lb = $('#lb'); if (!lb || lb.hidden) return; if (e.key === 'ArrowRight') lbOpen(lbK + 1); if (e.key === 'ArrowLeft') lbOpen(lbK - 1); if (e.key === 'Escape') { lb.hidden = true; document.body.style.overflow = ''; } });
+  // Star picker
+  document.addEventListener('change', (e) => {
+    if (e.target.name === 'rating' && e.target.closest('.rv-rate')) { const v = Number(e.target.value); $$('.rv-rate label').forEach((l, i) => l.classList.toggle('on', i < v)); }
+  });
 
   /* ---------- Hero slider ---------- */
   let heroK = 0, heroTimer;

@@ -43,10 +43,10 @@
     const c = catOf(p);
     return `<div class="ph ${cls}" style="background:${c.tone};color:${c.ink}">${ic(p.icon || c.icon)}<em>${esc(p.sub)}</em></div>`;
   }
+  const starRow = (v, cls = '') => `<i class="st5 ${cls}" aria-hidden="true">${Array.from({ length: 5 }, (_, k) => `<svg class="${k < Math.round(v) ? 'on' : ''}"><use href="#i-star"/></svg>`).join('')}</i>`;
   function stars(p) {
-    if (!p.rating) return '';
-    const full = Math.round(p.rating);
-    return `<div class="stars"><i>${Array.from({ length: 5 }, (_, k) => `<svg style="opacity:${k < full ? 1 : .25}"><use href="#i-star"/></svg>`).join('')}</i>${p.rating} (${p.reviews})</div>`;
+    if (!p.reviews) return '';
+    return `<div class="stars">${starRow(p.rating)}<span>${Number(p.rating).toFixed(1)} (${p.reviews})</span></div>`;
   }
   const priceHtml = (p) => `<div class="price"><b>${fmt(p.price)}</b>${p.was ? `<s>${fmt(p.was)}</s><span class="off">${off(p)}% off</span>` : ''}</div>`;
   function card(p, ctx = {}) {
@@ -60,6 +60,7 @@
     </div>
     <div class="card-body">
       <h3><a href="${url.product(p)}">${esc(p.title)}</a></h3>
+      ${stars(p)}
       <div class="card-row">
         <div class="cprice">${p.was ? `<b class="sale">${fmt(p.price)}</b><s>${fmt(p.was)}</s>` : `<b>${fmt(p.price)}</b>`}</div>
         ${add ? `<button class="qa" ${add} aria-label="Add ${esc(p.title)} to bag">${ic('i-bag')}<span>Quick add</span></button>` : '<span class="soldout">Sold out</span>'}
@@ -296,31 +297,110 @@
             `Covered by our ${POLICY.replaceDays}-day replacement promise for damaged, defective or wrong items.`], 6),
     ].join(' ');
   }
+  // Short highlight bullets taken from the description
+  function highlights(p) {
+    const html = p.desc_html || '';
+    let pts = [...html.matchAll(/<li>([\s\S]*?)<\/li>/gi)].map((m) => m[1].replace(/<[^>]+>/g, '').trim());
+    if (pts.length < 2) pts = html.replace(/<[^>]+>/g, '\n').split(/\n|(?<=\.)\s+/).map((x) => x.trim());
+    return pts.map((x) => x.replace(/\s+/g, ' ')).filter((x) => x.length > 12 && x.length < 160 && !/:\s*$/.test(x)).filter((x, i, a) => a.indexOf(x) === i).slice(0, 5);
+  }
+  // "Key: value" pairs found in the description, plus what we know about the product
+  function specRows(p) {
+    const text = (p.desc_html || '').replace(/<\/(p|li|tr|h3|h4)>|<br>/gi, '\n').replace(/<\/t[dh]>/gi, ': ').replace(/<[^>]+>/g, '');
+    const rows = [];
+    text.split('\n').forEach((line) => {
+      const m = /^\s*([A-Za-z][A-Za-z /&()-]{1,28}?)\s*[:\-–]\s+(.{1,120})$/.exec(line.trim());
+      if (m && !/http|www|price|mrp|contact|whatsapp/i.test(line)) rows.push([m[1].trim(), m[2].trim().replace(/:\s*$/, '')]);
+    });
+    const seen = new Set();
+    const out = rows.filter(([k]) => { const key = k.toLowerCase(); if (seen.has(key)) return false; seen.add(key); return true; }).slice(0, 14);
+    out.push(['Category', catOf(p).label + (p.sub ? ' · ' + p.sub : '')]);
+    if (p.variants && p.variants.length > 1) out.push(['Options', p.variants.map((v) => v.title).join(', ')]);
+    out.push(['Delivery', deliveryText(p) + ', anywhere in India']);
+    out.push(['Payment', p.cod === false ? 'UPI (prepaid only)' : 'Cash on delivery or UPI']);
+    out.push(['Replacement', `${POLICY.replaceDays} days for damaged, defective or wrong items`]);
+    return out;
+  }
+  function faqs(p) {
+    return [
+      [`How long does delivery take for the ${p.title}?`, `It usually arrives in ${deliveryText(p)}. You get tracking details by SMS or WhatsApp as soon as it ships.`],
+      ['Is cash on delivery available?', p.cod === false ? 'This item is prepaid only. You can pay securely by UPI after placing the order.' : `Yes. Cash on delivery is available across India for a ${fmt(C.COD_FEE)} fee, or you can pay by UPI.`],
+      ['What if it arrives damaged or is not what I ordered?', `Tell us within ${POLICY.replaceDays} days of delivery with photos or an unboxing video and we will send a free replacement, or refund you if a replacement is not possible.`],
+      ['Is the price inclusive of GST?', `Yes. The price shown, ${fmt(p.price)}, includes GST. Delivery is free on orders over ${fmt(C.FREE_OVER)}.`],
+    ];
+  }
+  function reviewsHtml(p) {
+    const r = p.reviewData || { count: 0, items: [] };
+    const n = Number(r.count || 0), avg = Number(r.avg || 0), dist = r.dist || {};
+    const bars = [5, 4, 3, 2, 1].map((k) => { const c = Number(dist[k] || 0); return `<div class="rbar"><span>${k} ${ic('i-star', 'i s')}</span><i><b style="width:${n ? (c / n) * 100 : 0}%"></b></i><em>${c}</em></div>`; }).join('');
+    const list = (r.items || []).map((x) => `<article class="rv">
+      <div class="rv-top">${starRow(x.rating)}${x.verified ? '<span class="vb">Verified buyer</span>' : ''}</div>
+      ${x.title ? `<h4>${esc(x.title)}</h4>` : ''}<p>${esc(x.body)}</p>
+      <div class="rv-by">${esc(x.name)}${x.city ? ', ' + esc(x.city) : ''} · ${new Date(x.at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+      ${x.reply ? `<div class="rv-reply"><b>Shopeiz replied:</b> ${esc(x.reply)}</div>` : ''}
+    </article>`).join('');
+    return `<section class="pd-sec" id="reviews"><div class="wrap">
+      <div class="pd-h"><h2>Ratings &amp; reviews</h2></div>
+      <div class="rv-grid">
+        <div class="rv-sum">
+          ${n ? `<div class="big">${avg.toFixed(1)}</div>${starRow(avg, 'lg')}<p>Based on ${n} review${n === 1 ? '' : 's'}</p>${bars}` : `<div class="big">–</div>${starRow(0, 'lg')}<p>No reviews yet. Bought this? Be the first to share what you think.</p>`}
+          <button class="btn btn-dark btn-block" data-act="rvopen" style="margin-top:22px">Write a review</button>
+        </div>
+        <div>
+          <form class="rv-form" data-form="review" hidden>
+            <input type="hidden" name="product_id" value="${p.id}">
+            <div class="rv-rate" role="radiogroup" aria-label="Your rating">${[1, 2, 3, 4, 5].map((k) => `<label><input type="radio" name="rating" value="${k}" required><svg><use href="#i-star"/></svg><span class="sr">${k} star${k > 1 ? 's' : ''}</span></label>`).join('')}</div>
+            <div class="fields">
+              <div class="field"><label>Your name</label><input name="name" required maxlength="60"></div>
+              <div class="field"><label>City (optional)</label><input name="city" maxlength="60"></div>
+              <div class="field full"><label>Review title (optional)</label><input name="title" maxlength="120"></div>
+              <div class="field full"><label>Your review</label><textarea name="body" required minlength="10" maxlength="2000" rows="4"></textarea></div>
+              <div class="field"><label>Order number (for a Verified buyer badge)</label><input name="order_code" placeholder="SZ10001"></div>
+              <div class="field"><label>Mobile used for the order</label><input name="phone" inputmode="numeric"></div>
+            </div>
+            <p class="msg err" data-rverr></p>
+            <button class="btn btn-wine" type="submit">Submit review</button>
+            <p class="note">Reviews are checked by our team before they appear.</p>
+          </form>
+          <div class="rv-list">${list || (n ? '' : '<p class="muted-p">Honest reviews from real customers will appear here.</p>')}</div>
+        </div>
+      </div>
+    </div></section>`;
+  }
   function vProduct(p, ctx = {}) {
     const c = catOf(p);
     const near = P.filter((x) => x.cat === p.cat && x.id !== p.id);
     const related = near.slice().sort((a, b) => Math.abs(a.price - p.price) - Math.abs(b.price - p.price)).slice(0, 8);
     if (related.length < 4) related.push(...P.filter((x) => x.cat !== p.cat && x.was).slice(0, 4 - related.length));
-    const imgs = (p.images && p.images.length ? p.images : p.img ? [p.img] : []).slice(0, 8);
+    const imgs = (p.images && p.images.length ? p.images : p.img ? [p.img] : []).slice(0, 10);
     const vars = p.variants || [];
     const curV = vars.find((v) => v.id === p.defaultVariant) || vars.find((v) => v.ok) || null;
     const price = curV ? curV.price : p.price;
     const soldOut = p.available === false || (vars.length && !vars.some((v) => v.ok));
     const vp = { ...p, price };
+    const hl = highlights(p);
+    const fam = (p.family || []).slice(0, 10);
     const desc = p.desc_html ? `<div class="rich">${p.desc_html}</div>` : `<p>${esc(p.desc || '')}</p>`;
+    const n = Number((p.reviewData && p.reviewData.count) || p.reviews || 0), avg = Number((p.reviewData && p.reviewData.avg) || p.rating || 0);
     return `<div class="wrap">
-    <div style="padding-top:28px">${crumbs([['Home', '/'], [c.label, url.cat(c.id)], [p.title]])}</div>
+    <div style="padding-top:24px">${crumbs([['Home', '/'], [c.label, url.cat(c.id)], [p.title]])}</div>
     <div class="pdp">
       <div class="gallery">
-        <div class="media" id="pmain">${imgs.length ? `<img src="${imgUrl(imgs[0], 900)}" alt="${esc(p.title)}" fetchpriority="high">` : media(p)}${p.was ? `<span class="badge">Save ${fmt(p.was - p.price)}</span>` : p.tag ? `<span class="badge light">${esc(p.tag)}</span>` : ''}</div>
-        ${imgs.length > 1 ? `<div class="thumbs">${imgs.map((src, k) => `<button class="${k ? '' : 'on'}" data-act="pimg" data-src="${esc(imgUrl(src, 900))}" aria-label="Photo ${k + 1}"><img src="${esc(imgUrl(src, 160))}" alt="" loading="lazy"></button>`).join('')}</div>` : ''}
+        <div class="g-main" id="pmain">
+          ${imgs.length ? imgs.map((src, k) => `<button class="g-slide" data-act="zoom" data-k="${k}" aria-label="Enlarge photo ${k + 1}"><img src="${esc(imgUrl(src, 1000))}" alt="${esc(p.title)}${k ? ' photo ' + (k + 1) : ''}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}></button>`).join('') : `<div class="g-slide">${media(p)}</div>`}
+          ${p.was ? `<span class="badge">Save ${off(p)}%</span>` : p.tag ? `<span class="badge">${esc(p.tag)}</span>` : ''}
+          ${imgs.length > 1 ? `<span class="g-count" id="gcount">1 / ${imgs.length}</span>` : ''}
+        </div>
+        ${imgs.length > 1 ? `<div class="thumbs">${imgs.map((src, k) => `<button class="${k ? '' : 'on'}" data-act="pimg" data-k="${k}" aria-label="Photo ${k + 1}"><img src="${esc(imgUrl(src, 160))}" alt="" loading="lazy"></button>`).join('')}</div>` : ''}
+        <script type="application/json" id="gimgs">${JSON.stringify(imgs.map((x) => imgUrl(x, 1600))).replace(/</g, '\\u003c')}</script>
       </div>
-      <div>
+      <div class="pd-info">
         <span class="eyebrow">${c.label}${p.sub ? ' · ' + esc(p.sub) : ''}</span>
         <h1>${esc(p.title)}</h1>
-        ${stars(p)}
+        <a class="pd-rating" href="#reviews">${starRow(avg)}<span>${n ? `${avg.toFixed(1)} · ${n} review${n === 1 ? '' : 's'}` : 'No reviews yet · Write the first'}</span></a>
         <div id="pprice">${priceHtml(vp)}</div>
         <p class="tax">Inclusive of all taxes${soldOut ? '' : p.cod === false ? ' · Prepaid by UPI only' : ' · Cash on delivery available'}</p>
+        ${fam.length ? `<div class="fam"><span class="vl">Also available in</span><div>${fam.map((f) => `<a href="/products/${esc(f.slug)}" title="${esc(f.title)}"><img src="${esc(imgUrl(f.img, 160))}" alt="${esc(f.title)}" loading="lazy"></a>`).join('')}</div></div>` : ''}
         ${vars.length > 1 ? `<div class="vars"><span class="vl">Option</span><div>${vars.map((v) => `<button class="${curV && v.id === curV.id ? 'on' : ''}" data-act="pvar" data-v="${esc(v.id)}" data-price="${v.price}" ${v.ok ? '' : 'disabled'}>${esc(v.title)}${v.ok ? '' : ' (sold out)'}</button>`).join('')}</div></div>` : ''}
         ${soldOut ? `<div class="stock-out"><b>Currently out of stock.</b> Save it to your wishlist and check back soon.</div>
         <button class="btn btn-line wish-big" data-act="wish" data-id="${p.id}" data-snap="${snap(p)}" style="width:100%">${ic('i-heart')} Save to wishlist</button>` : `
@@ -332,21 +412,34 @@
           <button class="btn btn-wine" data-act="buynow" data-id="${p.id}">Buy it now</button>
           <button class="btn btn-line wish-big" data-act="wish" data-id="${p.id}" data-snap="${snap(p)}" aria-label="Save to wishlist" style="padding:0 18px">${ic('i-heart')}</button>
         </div>`}
+        ${hl.length ? `<ul class="hl">${hl.map((x) => `<li>${ic('i-check')}<span>${esc(x)}</span></li>`).join('')}</ul>` : ''}
         <div class="perks">
           <div>${ic('i-truck')}<p style="margin:0"><b>Get it by ${dateIn(daysOf(p))}</b><span>${deliveryText(p)} · ${price >= C.FREE_OVER ? 'Free delivery' : `Free delivery on orders over ${fmt(C.FREE_OVER)}`}</span></p></div>
           <div>${ic('i-return')}<p style="margin:0"><b>${POLICY.replaceDays}-day replacement</b><span>Damaged, defective or wrong item? We replace it.</span></p></div>
           <div>${ic('i-cash')}<p style="margin:0">${p.cod === false ? '<b>Prepaid by UPI only</b><span>Cash on delivery is not available for this item.</span>' : '<b>Cash on delivery available</b><span>Or pay by UPI with a secure link.</span>'}</p></div>
         </div>
-        <details class="acc" open><summary>Overview ${ic('i-down')}</summary><div class="in"><p>${esc(overview(p))}</p></div></details>
-        <details class="acc" ${p.desc_html ? '' : 'open'}><summary>Details ${ic('i-down')}</summary><div class="in">${desc}${specList(p)}</div></details>
-        <details class="acc"><summary>Delivery &amp; replacement ${ic('i-down')}</summary><div class="in">Delivered across India in ${deliveryText(p)}. Standard delivery is free on orders over ${fmt(C.FREE_OVER)} (otherwise ${fmt(C.STD_FEE)}). ${p.cod === false ? 'This item is prepaid only: pay by UPI.' : `Cash on delivery is available for a ${fmt(C.COD_FEE)} fee.`} If your item arrives damaged, defective or is not what you ordered, contact us within ${POLICY.replaceDays} days of delivery with photos or an unboxing video and we will send a replacement. We do not accept returns for change of mind.</div></details>
       </div>
     </div>
   </div>
-  <section class="block" style="padding-top:0"><div class="wrap">
+  <nav class="pd-tabs"><div class="wrap"><a href="#about">Description</a><a href="#specs">Specifications</a><a href="#reviews">Reviews${n ? ` (${n})` : ''}</a><a href="#faq">Delivery &amp; FAQ</a></div></nav>
+  <section class="pd-sec" id="about"><div class="wrap pd-two">
+    <div class="pd-h"><h2>About this product</h2></div>
+    <div><p class="pd-lead">${esc(overview(p))}</p>${desc}</div>
+  </div></section>
+  <section class="pd-sec" id="specs"><div class="wrap pd-two">
+    <div class="pd-h"><h2>Specifications</h2></div>
+    <dl class="spec-t">${specRows(p).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+  </div></section>
+  ${reviewsHtml(p)}
+  <section class="pd-sec" id="faq"><div class="wrap pd-two">
+    <div class="pd-h"><h2>Delivery &amp; questions</h2></div>
+    <div class="faq">${faqs(p).map(([q, a]) => `<details><summary>${esc(q)} ${ic('i-down')}</summary><div class="a">${esc(a)}</div></details>`).join('')}</div>
+  </div></section>
+  <section class="block"><div class="wrap">
     <div class="sec-head"><div><span class="eyebrow">You may also like</span><h2>More in ${esc(c.label)}</h2></div><a class="link" href="${url.cat(c.id)}">See all ${ic('i-arrow')}</a></div>
     ${gridOf(related, ctx)}
-  </div></section>`;
+  </div></section>
+  <div class="lightbox" id="lb" hidden><button class="lb-x" data-act="lbclose" aria-label="Close">${ic('i-x')}</button><button class="lb-p" data-act="lbnav" data-d="-1" aria-label="Previous">${ic('i-arrow', 'i flip')}</button><img alt=""><button class="lb-n" data-act="lbnav" data-d="1" aria-label="Next">${ic('i-arrow')}</button></div>`;
   }
 
   /* ---------- Help ---------- */
@@ -365,5 +458,5 @@
     return `<div class="wrap"><div class="empty" style="padding:110px 0 130px"><span class="eyebrow">Page not found</span><h2 style="margin-top:14px">We couldn't find that page.</h2><p style="margin-bottom:26px">It may have moved. Everything you need is still one search away.</p><a class="btn btn-dark" href="${url.shop}">Shop all</a></div></div>`;
   }
 
-  return { fmt, esc, ic, byId, bySlug, catOf, off, dateIn, daysOf, deliveryText, imgUrl, snap, url, media, stars, priceHtml, card, gridOf, crumbs, vHome, vList, listData, listView, searchList, PAGE_SIZE, vProduct, overview, specList, vHelp, HELP, vNotFound };
+  return { fmt, esc, ic, byId, bySlug, catOf, off, dateIn, daysOf, deliveryText, imgUrl, snap, url, media, stars, priceHtml, card, gridOf, crumbs, vHome, vList, listData, listView, searchList, PAGE_SIZE, vProduct, overview, faqs, specList, starRow, vHelp, HELP, vNotFound };
 });

@@ -11,7 +11,7 @@ const { SITE, CATS, P, NAV_CATS, POLICY } = C;
 const { esc, url, fmt, bySlug, catOf, ic } = V;
 
 const SHELL = fs.readFileSync(path.join(__dirname, '..', 'templates', 'shell.html'), 'utf8');
-const VERSION = '14';
+const VERSION = '15';
 const DEFAULT_DESC = 'The art of having everything. Anything you need, in one place, at your door: kitchen, home, electronics, beauty, fashion, toys and drones. Free delivery over ₹499, cash on delivery, 7-day replacement.';
 
 function headHtml(h) {
@@ -112,6 +112,12 @@ function productLd(p) {
     },
   };
   if (imgs.length) o.image = imgs;
+  // Only real, approved customer reviews are ever marked up
+  const rd = p.reviewData || {};
+  if (Number(rd.count) > 0) {
+    o.aggregateRating = { '@type': 'AggregateRating', ratingValue: Number(rd.avg).toFixed(1), reviewCount: Number(rd.count), bestRating: 5, worstRating: 1 };
+    o.review = (rd.items || []).slice(0, 5).map((x) => ({ '@type': 'Review', reviewRating: { '@type': 'Rating', ratingValue: x.rating, bestRating: 5 }, author: { '@type': 'Person', name: x.name }, datePublished: String(x.at).slice(0, 10), reviewBody: x.body }));
+  }
   return o;
 }
 
@@ -150,7 +156,7 @@ async function route(pathname, query) {
       const soldOut = p.available === false;
       const desc = `Buy ${p.title} online at ${fmt(p.price)}${p.was ? ` (MRP ${fmt(p.was)}, save ${V.off(p)}%)` : ''}. Delivered across India in ${V.deliveryText(p)}, cash on delivery, ${POLICY.replaceDays}-day replacement.${p.desc ? ' ' + p.desc : ''}`;
       return {
-        head: { title: `${p.title}: Buy Online at ${fmt(p.price)} | Shopeiz`, description: desc.slice(0, 300), canonical: url.product(p), image: p.img ? abs(V.imgUrl(p.img, 1200)) : '', ogType: 'product', noindex: soldOut, ld: [webPage('ItemPage', url.product(p), p.title, V.overview(p), { mainEntity: { '@id': SITE + url.product(p) + '#product' } }), productLd(p), crumbLd([['Home', '/'], [c.label, url.cat(c.id)], [p.title]])] },
+        head: { title: `${p.title}: Buy Online at ${fmt(p.price)} | Shopeiz`, description: desc.slice(0, 300), canonical: url.product(p), image: p.img ? abs(V.imgUrl(p.img, 1200)) : '', ogType: 'product', noindex: soldOut, ld: [webPage('ItemPage', url.product(p), p.title, V.overview(p), { mainEntity: { '@id': SITE + url.product(p) + '#product' } }), productLd(p), crumbLd([['Home', '/'], [c.label, url.cat(c.id)], [p.title]]), { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: V.faqs(p).map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }] },
         main: V.vProduct(p), active: c.id, view: 'product',
         sticky: soldOut ? '' : `<div class="p">${esc(p.title)}<b>${fmt(p.price)}</b></div><button class="btn btn-dark" data-act="add" data-id="${p.id}" data-qty="1" data-snap="${V.snap(p, p.defaultVariant || '')}">Add to bag</button>`,
       };
