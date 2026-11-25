@@ -4,418 +4,451 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Shopeiz — The art of having everything</title>
-<meta name="description" content="Anything you need, in one place, at your door. Drones, electronics, gadgets, fashion, home and beauty. Free delivery over ₹499, free returns for 30 days, cash on delivery.">
+<meta name="description" content="The art of having everything. Anything you need, in one place, at your door — drones, electronics, fashion, home and beauty. Free delivery over ₹499, free returns for 30 days, cash on delivery.">
 <meta name="theme-color" content="#6D001A">
 <meta property="og:title" content="Shopeiz — The art of having everything">
 <meta property="og:description" content="Anything you need, in one place, at your door. Free delivery over ₹499 · Free returns for 30 days · Cash on delivery.">
 <meta property="og:image" content="/assets/drones/t7-pro.png">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%236D001A'/%3E%3Cpath transform='translate(13.6 11) scale(0.1784)' fill='%23fff' fill-rule='evenodd' d='M44.15 0L161.89 0L206.04 44.15L206.04 235.47L0 235.47L0 44.15ZM95.66 22.07h14.72v14.72h-14.72ZM29.44 58.87L176.61 58.87L176.61 88.3L58.87 88.3L58.87 117.74L176.61 117.74L176.61 206.04L29.44 206.04L29.44 176.6L147.17 176.6L147.17 147.17L29.44 147.17L29.44 58.87Z'/%3E%3C/svg%3E">
-<link rel="preload" href="assets/fonts/Archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/BigShouldersDisplay-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
 <style>
-/* ---------- Brand fonts (brand book p.16) ---------- */
 @font-face{font-family:"Archivo";font-style:normal;font-weight:400 800;font-display:swap;src:url("assets/fonts/Archivo-latin.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:"Archivo";font-style:normal;font-weight:400 800;font-display:swap;src:url("assets/fonts/Archivo-latin-ext.woff2") format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Archivo";font-style:normal;font-weight:400 800;font-display:swap;src:url("assets/fonts/Archivo-latin-ext.woff2") format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
 @font-face{font-family:"Big Shoulders Display";font-style:normal;font-weight:900;font-display:swap;src:url("assets/fonts/BigShouldersDisplay-latin.woff2") format("woff2");unicode-range:U+0000-00FF,U+2000-206F}
-@font-face{font-family:"Big Shoulders Display";font-style:normal;font-weight:900;font-display:swap;src:url("assets/fonts/BigShouldersDisplay-latin-ext.woff2") format("woff2");unicode-range:U+0100-02BA,U+1E00-1EFF}
-
-/* ---------- Brand tokens (brand book p.15) ---------- */
 :root{
-  --burgundy:#6D001A; --burgundy-600:#5B0014; --burgundy-700:#48000E; --burgundy-100:#F2E6E6; --burgundy-200:#E5CDCD; --burgundy-300:#D1A8A8;
-  --black:#000; --ink:#070707; --ink-2:#222; --muted:#6B6B6B; --gray-400:#B7B7B7; --gray-300:#D7D7D7; --shelf:#E4E4E4; --gray-100:#EEEEEE; --white:#fff;
-  --sans:"Archivo", "Helvetica Neue", Arial, sans-serif; --logo:"Big Shoulders Display", "Archivo", sans-serif;
-  --pad:clamp(18px,4vw,56px); --max:1400px; --ease:cubic-bezier(.2,0,0,1);
+  /* Shopeiz brand palette (brand book p.15) */
+  --ivory:#FFFFFF; --paper:#FFFFFF; --sand:#F3F3F2; --sand-2:#E4E4E4;
+  --ink:#070707; --ink-2:#2B2B2B; --muted:#6B6B6B; --line:#E4E4E4;
+  --wine:#6D001A; --wine-2:#5B0014; --gold:#6D001A; --gold-2:#D1A8A8; --tint:#F2E6E6;
+  --ok:#2F6B45; --err:#A3261F;
+  --serif:'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans:'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --pad:clamp(18px, 4.5vw, 64px); --max:1360px;
+  --r:2px; --ease:cubic-bezier(.2,.7,.1,1);
 }
-*{box-sizing:border-box;border-radius:0}
+*{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--white);color:var(--ink);font:400 15px/1.55 var(--sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--ivory);color:var(--ink);font:400 15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0}
 input,select{font:inherit;color:inherit}
-h1,h2,h3,h4{font-weight:800;letter-spacing:-.035em;margin:0}
-svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
-.label{font-size:12px;font-weight:400;letter-spacing:.12em;text-transform:uppercase}
-.label.acc{color:var(--burgundy)}
-.num{font-variant-numeric:tabular-nums}
+.serif{font-family:var(--serif);font-weight:500;letter-spacing:-.01em}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-:focus-visible{outline:2px solid var(--burgundy);outline-offset:2px}
+:focus-visible{outline:2px solid var(--wine);outline-offset:3px}
 
-/* ---------- Logo (brand book p.13–14) ---------- */
-.wm{display:inline-flex;align-items:center;background:var(--burgundy);color:var(--white);font-family:var(--logo);font-weight:900;line-height:1;letter-spacing:.005em;text-transform:uppercase;padding:.06em .14em .02em;height:1.04em;box-sizing:content-box;white-space:nowrap;user-select:none}
-.wm.flip{background:var(--white);color:var(--burgundy)}
-.mono{display:block;fill:var(--burgundy)}
-
-/* ---------- Buttons (brand book p.20) ---------- */
-.btn{display:inline-flex;align-items:center;justify-content:space-between;gap:28px;height:52px;padding:0 20px;font-size:15px;font-weight:600;text-align:left;border:2px solid transparent;transition:background .2s,color .2s,border-color .2s;white-space:nowrap;min-width:200px}
-.btn-acc{background:var(--burgundy);color:var(--white)}
-.btn-acc:hover{background:var(--burgundy-600)}
-.btn-acc:active{background:var(--burgundy-700)}
-.btn-ink{background:var(--black);color:var(--white)}
-.btn-ink:hover{background:var(--ink-2)}
-.btn-line{background:var(--white);color:var(--ink);border-color:var(--gray-400)}
-.btn-line:hover{border-color:var(--black)}
-.btn-ghost-w{color:var(--white);border-color:rgba(255,255,255,.5)}
-.btn-ghost-w:hover{border-color:var(--white)}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 30px;border-radius:var(--r);font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;transition:background .25s var(--ease),color .25s,border-color .25s,transform .2s;white-space:nowrap}
+.btn-dark{background:var(--ink);color:var(--ivory)}
+.btn-dark:hover{background:var(--wine)}
+.btn-wine{background:var(--wine);color:var(--ivory)}
+.btn-wine:hover{background:var(--wine-2)}
+.btn-line{border:1px solid var(--ink);color:var(--ink)}
+.btn-line:hover{background:var(--ink);color:var(--ivory)}
+.btn-light{background:var(--ivory);color:var(--ink)}
+.btn-light:hover{background:var(--paper)}
 .btn-block{width:100%}
-.link{color:var(--burgundy);font-weight:600;display:inline-flex;gap:8px;align-items:center}
-.link:hover{text-decoration:underline;text-underline-offset:4px}
-.tag{display:inline-flex;align-items:center;height:26px;padding:0 8px;font-size:13px;white-space:nowrap}
-.tag-deal{background:var(--burgundy-100);color:var(--burgundy-700)}
-.tag-shelf{background:var(--shelf);color:var(--ink)}
-.tag-out{border:1px solid var(--burgundy);color:var(--burgundy);background:var(--white)}
+.btn:active{transform:translateY(1px)}
+.link{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid currentColor;padding-bottom:3px;display:inline-flex;gap:8px;align-items:center}
+.link:hover{color:var(--wine)}
 
-/* ---------- Header ---------- */
-.announce{background:var(--black);color:var(--white);font-size:13px}
-.announce .wrap{display:flex;justify-content:space-between;gap:8px 24px;flex-wrap:wrap;padding-top:9px;padding-bottom:9px}
-.announce b{font-weight:600}
-header.site{position:sticky;top:0;z-index:40;background:var(--white);border-bottom:2px solid var(--black)}
-.hbar{display:flex;align-items:center;gap:28px;height:76px}
-.hbar .logo{font-size:34px;display:flex}
-.search{flex:1;max-width:620px;display:flex;align-items:center;gap:10px;height:46px;border:1px solid var(--gray-400);padding:0 14px;background:var(--white);transition:border-color .2s}
-.search:focus-within{border-color:var(--black)}
-.search input{border:0;outline:0;background:transparent;width:100%;font-size:15px}
-.search input::placeholder{color:var(--muted)}
-.hicons{margin-left:auto;display:flex;align-items:center;gap:2px}
-.icon-btn{position:relative;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;transition:background .2s}
-.icon-btn:hover{background:var(--gray-100)}
-.count{position:absolute;top:4px;right:2px;min-width:18px;height:18px;padding:0 4px;background:var(--burgundy);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+/* Announcement */
+.announce{background:var(--wine);color:#fff;font-size:12px;letter-spacing:.08em;text-align:center;padding:10px var(--pad)}
+.announce b{color:#fff;font-weight:700;letter-spacing:.14em}
+
+/* Header */
+header.site{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid transparent;transition:border-color .3s}
+header.site.scrolled{border-color:var(--line)}
+.hbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:76px}
+.logo{display:flex;flex-direction:column;align-items:center;gap:7px;line-height:1}
+.wm{display:inline-flex;align-items:center;background:var(--wine);color:#fff;font-family:'Big Shoulders Display',var(--sans);font-weight:900;font-size:32px;line-height:1;letter-spacing:.005em;text-transform:uppercase;padding:.06em .14em .02em;height:1.04em;box-sizing:content-box;white-space:nowrap;user-select:none}
+.logo small{display:block;font-family:var(--sans);font-size:9.5px;letter-spacing:.32em;font-weight:500;color:var(--muted);text-transform:uppercase}
+.mono{display:block;fill:var(--wine)}
+.hleft,.hright{display:flex;align-items:center;gap:4px}
+.hright{justify-content:flex-end}
+.icon-btn{position:relative;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s}
+.icon-btn:hover{background:var(--sand)}
+.count{position:absolute;top:5px;right:3px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--wine);color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center}
 .count:empty{display:none}
-nav.cats{display:flex;gap:28px;height:46px;align-items:stretch;overflow-x:auto;scrollbar-width:none}
-nav.cats::-webkit-scrollbar{display:none}
-nav.cats a{display:flex;align-items:center;font-size:14px;color:var(--ink-2);white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .2s}
-nav.cats a:hover{color:var(--black)}
-nav.cats a.on{color:var(--black);font-weight:600;border-color:var(--burgundy)}
-nav.cats a.deal{color:var(--burgundy);font-weight:600}
+.search{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--ink-2);width:min(260px,26vw);padding:6px 2px}
+.search input{border:0;background:transparent;outline:0;width:100%;font-size:14px}
+.search input::placeholder{color:var(--muted)}
+nav.cats{display:flex;justify-content:center;gap:clamp(18px,3vw,44px);height:48px;align-items:center;border-top:1px solid var(--line)}
+nav.cats a{font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);position:relative;padding:14px 0}
+nav.cats a::after{content:"";position:absolute;left:0;right:0;bottom:8px;height:1px;background:var(--wine);transform:scaleX(0);transition:transform .35s var(--ease)}
+nav.cats a:hover::after,nav.cats a.on::after{transform:scaleX(1)}
+nav.cats a.on{color:var(--wine)}
+nav.cats a.sale{color:var(--wine)}
 .only-m{display:none}
 
-/* ---------- Hero ---------- */
-.hero{display:grid;grid-template-columns:1fr 1fr;border-bottom:2px solid var(--black)}
-.hero-copy{background:var(--black);color:var(--white);padding:clamp(48px,7vw,104px) var(--pad);display:flex;flex-direction:column;justify-content:space-between;gap:48px;min-height:min(76vh,700px)}
-.hero h1{font-size:clamp(50px,6.6vw,104px);line-height:.95;letter-spacing:-.045em;margin:20px 0 24px}
-.hero .lead{font-size:18px;color:#CFCFCF;max-width:480px;margin:0 0 34px}
-.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
-.facts{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:8px 32px;border-top:1px solid #333;padding-top:22px;font-size:14px;color:#CFCFCF}
-.facts span{display:flex;gap:10px;align-items:center}
-.hero-vis{position:relative;background:var(--white);overflow:hidden}
-.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:6% 8% 22%;opacity:0;transition:opacity .7s var(--ease)}
-.slide.on{opacity:1}
-.slide img{max-height:100%;object-fit:contain}
-.hero-tag{position:absolute;left:0;bottom:0;right:0;display:grid;grid-template-columns:1fr auto;align-items:center;gap:20px;background:var(--shelf);padding:20px var(--pad);border-top:2px solid var(--black);z-index:2;transition:background .2s}
-.hero-tag:hover{background:var(--gray-300)}
-.hero-tag .t{font-size:20px;font-weight:600;letter-spacing:-.02em;margin-top:4px}
-.hero-tag .p{display:flex;gap:10px;align-items:baseline;margin-top:2px}
-.hero-tag .p b{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
-.hero-tag .p s{color:var(--muted);font-size:14px}
-.dots{position:absolute;left:var(--pad);top:24px;display:flex;gap:6px;z-index:2}
-.dots button{width:28px;height:4px;background:var(--gray-300)}
-.dots button.on{background:var(--black)}
+/* Hero */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;min-height:min(78vh,720px);border-bottom:1px solid var(--line)}
+.hero-copy{background:var(--paper);display:flex;flex-direction:column;justify-content:center;padding:72px var(--pad) 72px max(var(--pad), calc((100vw - var(--max))/2 + var(--pad)))}
+.hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(46px,6.4vw,92px);line-height:.98;letter-spacing:-.02em;margin:22px 0 22px}
+.hero h1 em{font-style:italic;color:var(--wine)}
+.hero p.lead{font-size:17px;color:var(--ink-2);max-width:460px;margin:0 0 36px}
+.hero .ctas{display:flex;gap:14px;flex-wrap:wrap}
+.hero-perks{display:flex;gap:28px;flex-wrap:wrap;margin-top:48px;padding-top:28px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.hero-perks span{display:inline-flex;gap:8px;align-items:center}
+.hero-perks svg{color:var(--wine)}
+.hero-visual{position:relative;background:var(--sand);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:9% 8% 16%;opacity:0;transform:scale(1.03);transition:opacity .9s var(--ease),transform 1.4s var(--ease)}
+.slide.on{opacity:1;transform:none}
+.slide img{max-height:100%;object-fit:contain;mix-blend-mode:multiply}
+.hero-tag{position:absolute;left:clamp(18px,4vw,48px);bottom:clamp(18px,4vw,44px);background:var(--paper);padding:18px 22px;display:flex;gap:28px;align-items:center;box-shadow:0 20px 50px -24px rgba(40,25,10,.35);z-index:2;min-width:min(360px,80%)}
+.hero-tag .t{font-family:var(--serif);font-size:24px;line-height:1.1}
+.hero-tag .p{font-size:13px;color:var(--ink-2);margin-top:4px}
+.hero-tag .p s{color:var(--muted);margin-left:6px}
+.hero-tag .go{margin-left:auto;width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--ivory);display:flex;align-items:center;justify-content:center;transition:background .2s}
+.hero-tag .go:hover{background:var(--wine)}
+.dots{position:absolute;right:clamp(18px,4vw,48px);bottom:clamp(30px,5vw,60px);display:flex;gap:8px;z-index:2}
+.dots button{width:28px;height:2px;background:rgba(23,19,15,.2);transition:background .3s}
+.dots button.on{background:var(--ink)}
 
-/* ---------- Facts strip ---------- */
-.trust{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:2px solid var(--black)}
-.trust div{display:flex;gap:14px;align-items:flex-start;padding:24px var(--pad);border-right:1px solid var(--gray-300)}
+/* Trust strip */
+.trust{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line);border-top:1px solid var(--line);background:var(--paper)}
+.trust div{display:flex;gap:14px;align-items:center;padding:26px var(--pad);border-right:1px solid var(--line)}
 .trust div:last-child{border-right:0}
-.trust b{display:block;font-size:15px;font-weight:600}
-.trust span{font-size:13px;color:var(--muted)}
+.trust svg{width:26px;height:26px;color:var(--wine)}
+.trust b{display:block;font-size:13px;font-weight:600;letter-spacing:.02em}
+.trust span{font-size:12.5px;color:var(--muted)}
 
-/* ---------- Sections ---------- */
-section.block{padding:clamp(56px,7vw,96px) 0}
-.sec-top{display:flex;justify-content:space-between;align-items:center;border-top:2px solid var(--black);padding-top:14px;margin-bottom:22px;gap:16px}
-.sec-title{font-size:clamp(34px,4vw,56px);line-height:1;margin:0 0 36px;max-width:820px}
+/* Sections */
+section.block{padding:clamp(64px,9vw,120px) 0}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:44px;flex-wrap:wrap}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:clamp(34px,4.2vw,56px);line-height:1;margin:12px 0 0;letter-spacing:-.015em}
+.sec-head p{margin:12px 0 0;color:var(--muted);max-width:460px}
 
 /* Category tiles */
-.cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
-.cat-tile{display:flex;flex-direction:column;background:var(--shelf);transition:background .2s}
-.cat-tile:hover{background:var(--gray-300)}
-.cat-tile .pic{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:var(--gray-300)}
-.cat-tile:hover .pic{background:var(--gray-400)}
-.cat-tile .pic.photo{background:var(--white)}
-.cat-tile .pic svg{width:34%;height:auto}
-.cat-tile .pic img{width:86%;height:86%;object-fit:contain}
-.cat-tile .t{display:flex;justify-content:space-between;align-items:center;padding:14px 16px}
-.cat-tile h3{font-size:18px;letter-spacing:-.02em}
-.cat-tile small{font-size:13px;color:var(--muted)}
+.cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.cat-tile{position:relative;aspect-ratio:3/4;border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;isolation:isolate}
+.cat-tile .bg{position:absolute;inset:0;z-index:-1;display:flex;align-items:center;justify-content:center;transition:transform 1s var(--ease)}
+.cat-tile .bg svg{width:42%;height:auto;stroke-width:.9;opacity:.55}
+.cat-tile .bg{align-items:flex-start;padding-top:14%}
+.cat-tile .bg svg{margin-top:22%}
+.cat-tile .bg img{width:72%;mix-blend-mode:multiply;border-radius:2px}
+.cat-tile:hover .bg{transform:scale(1.06)}
+.cat-tile h3{font-family:var(--serif);font-weight:500;font-size:26px;margin:0;line-height:1}
+.cat-tile span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin-top:6px;display:flex;justify-content:space-between;align-items:center}
 
-/* Product cards (brand book p.20) */
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.card{position:relative;display:flex;flex-direction:column;background:var(--shelf)}
-.media{position:relative;aspect-ratio:1/1;background:var(--gray-300);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.media.photo{background:var(--white)}
-.media img{width:100%;height:100%;object-fit:contain;padding:7%;transition:transform .6s var(--ease)}
-.card:hover .media img{transform:scale(1.04)}
-.ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--black)}
-.ph svg{width:30%;height:auto;stroke-width:1.6}
-.media .tag{position:absolute;top:12px;left:12px;z-index:1}
-.wish{position:absolute;top:8px;right:8px;width:40px;height:40px;background:var(--white);display:flex;align-items:center;justify-content:center;z-index:2;transition:color .2s}
-.wish:hover{color:var(--burgundy)}
-.wish.on{color:var(--burgundy)}
-.wish.on svg{fill:var(--burgundy)}
-.card-body{padding:16px 16px 0;display:flex;flex-direction:column;flex:1}
-.card-body .label{margin-bottom:6px}
-.card h3{font-size:16px;font-weight:600;letter-spacing:-.01em;line-height:1.3;margin:0 0 10px}
-.card h3 a:hover{text-decoration:underline;text-underline-offset:3px}
+/* Product grid & cards */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:44px 22px}
+.card{position:relative;display:flex;flex-direction:column}
+.media{position:relative;aspect-ratio:4/5;background:var(--sand);border-radius:var(--r);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.media img{width:100%;height:100%;object-fit:contain;padding:9%;mix-blend-mode:multiply;transition:transform 1s var(--ease)}
+.card:hover .media img,.card:hover .ph svg{transform:scale(1.05)}
+.ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.ph svg{width:34%;height:auto;stroke-width:.8;transition:transform 1s var(--ease)}
+.ph em{font-family:var(--serif);font-size:15px;font-style:italic;opacity:.7}
+.badge{position:absolute;top:14px;left:14px;background:var(--wine);color:#fff;font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;border-radius:2px;z-index:1}
+.badge.light{background:var(--paper);color:var(--ink)}
+.wish{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;z-index:2;transition:background .2s,color .2s}
+.wish:hover{background:#fff}
+.wish.on{color:var(--wine)}
+.wish.on svg{fill:var(--wine)}
+.quick{display:flex;align-items:center;justify-content:center;position:absolute;left:12px;right:12px;bottom:12px;height:46px;background:var(--ink);color:var(--ivory);font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border-radius:2px;opacity:0;transform:translateY(8px);transition:opacity .3s var(--ease),transform .3s var(--ease),background .2s;z-index:2}
+.quick:hover{background:var(--wine)}
+.card:hover .quick,.card:focus-within .quick{opacity:1;transform:none}
+.card-body{padding-top:16px}
+.card-sub{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.card h3{font-family:var(--serif);font-weight:500;font-size:21px;line-height:1.2;margin:0 0 8px}
+.card h3 a:hover{color:var(--wine)}
+.stars{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-bottom:8px}
+.stars i{display:inline-flex;gap:1px;color:var(--ink)}
+.stars svg{width:12px;height:12px;fill:currentColor;stroke:none}
 .price{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
-.price b{font-weight:800;font-size:24px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.price s{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
-.when{font-size:13px;color:var(--ink-2);margin:8px 0 0}
-.stars{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin:6px 0 0}
-.stars svg{width:13px;height:13px;fill:var(--black);stroke:none}
-.card .add{margin:18px 16px 16px;height:46px;min-width:0}
+.price b{font-weight:600;font-size:15.5px}
+.price s{color:var(--muted);font-size:13.5px}
+.price .off{color:var(--wine);font-size:12.5px;font-weight:600}
 
-/* Billboard (brand book p.21) */
-.billboard{display:grid;grid-template-columns:1fr 1fr;border-top:2px solid var(--black);border-bottom:2px solid var(--black)}
-.billboard .ink{background:var(--black);color:var(--white);padding:clamp(48px,6vw,96px) var(--pad);display:flex;flex-direction:column;justify-content:space-between;gap:40px}
-.billboard h2{font-size:clamp(40px,4.8vw,72px);line-height:.98;letter-spacing:-.045em;margin:18px 0 18px}
-.billboard p{color:#CFCFCF;max-width:460px;margin:0}
-.billboard .acc{background:var(--burgundy);display:flex;align-items:center;justify-content:center;min-height:420px}
-.billboard .acc svg{width:30%;max-width:200px;fill:var(--white)}
-.billboard .photo{background:var(--white);display:flex;align-items:center;justify-content:center;padding:6%;min-height:480px}
-.billboard .photo img{max-height:520px;object-fit:contain}
-.bullets{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:0;max-width:480px}
-.bullets li{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid #333;font-size:15px;color:#E6E6E6}
-.code{display:flex;align-items:stretch;max-width:460px;border:2px solid var(--white)}
-.code b{flex:1;display:flex;align-items:center;padding:0 18px;font-size:20px;font-weight:800;letter-spacing:.08em}
-.code button{background:var(--white);color:var(--black);font-weight:600;padding:0 20px;height:52px;display:flex;gap:16px;align-items:center}
-.code button:hover{background:var(--shelf)}
+/* Editorial */
+.feature{display:grid;grid-template-columns:1fr 1fr;background:var(--ink);color:var(--ivory)}
+.feature .pic{background:var(--sand);display:flex;align-items:center;justify-content:center;padding:6%;min-height:520px}
+.feature .pic img{mix-blend-mode:multiply;max-height:520px;object-fit:contain}
+.feature .copy{padding:clamp(48px,7vw,110px);display:flex;flex-direction:column;justify-content:center}
+.feature h2{font-family:var(--serif);font-weight:500;font-size:clamp(38px,4.6vw,64px);line-height:1;margin:16px 0 22px}
+.feature h2 em{color:var(--gold-2)}
+.feature .eyebrow{color:var(--gold-2)}
+.feature p{color:#BDBDBD;max-width:440px;margin:0 0 34px}
+.feature ul{list-style:none;padding:0;margin:0 0 38px;display:grid;gap:12px;font-size:14px;color:#E6E6E6}
+.feature li{display:flex;gap:12px;align-items:center}
+.feature li svg{color:var(--gold-2)}
 
-/* Values */
-.values{display:grid;grid-template-columns:repeat(4,1fr);gap:0 24px}
-.values div{border-top:2px solid var(--black);padding-top:14px}
-.values .n{color:var(--burgundy);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
-.values h3{font-size:24px;margin:12px 0 8px}
-.values p{color:var(--ink-2);margin:0;font-size:14.5px}
+.offer{background:var(--wine);color:#fff;text-align:center;padding:clamp(72px,9vw,120px) var(--pad);position:relative;overflow:hidden;isolation:isolate}
+.offer .eyebrow{color:var(--gold-2)}
+.offer>svg.bgmono{position:absolute;right:-4%;bottom:-18%;width:clamp(220px,28vw,420px);fill:rgba(255,255,255,.06);z-index:-1}
+.offer h2{font-family:var(--serif);font-weight:500;font-size:clamp(36px,4.6vw,62px);line-height:1.02;margin:14px auto 16px;max-width:820px}
+.offer p{color:#E9D6D9;margin:0 auto 30px;max-width:520px}
+.code{display:inline-flex;align-items:center;gap:18px;border:1px dashed rgba(255,255,255,.6);padding:12px 12px 12px 24px;border-radius:var(--r);background:transparent;color:#fff}
+.code b{font-size:16px;letter-spacing:.22em}
 
-/* Newsletter */
-.news{background:var(--shelf);padding:clamp(48px,6vw,80px) 0;border-top:2px solid var(--black)}
-.news .wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end}
-.news h2{font-size:clamp(30px,3.4vw,46px);line-height:1;margin-top:12px}
-.news form{display:flex;gap:0}
-.news input{flex:1;height:52px;border:2px solid var(--black);border-right:0;background:var(--white);padding:0 16px;outline:0;font-size:15px;min-width:0}
-.news .btn{min-width:0}
-.news small{display:block;margin-top:10px;color:var(--muted);font-size:13px}
+.promise{display:grid;grid-template-columns:repeat(4,1fr);gap:40px}
+.promise div{border-top:1px solid var(--ink);padding-top:18px}
+.story{background:var(--sand);padding:clamp(64px,8vw,112px) 0}
+.story-in{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(32px,6vw,96px);align-items:center}
+.story-mark{display:flex;gap:18px;justify-content:center}
+.story-mark .mono{width:clamp(90px,11vw,150px);height:auto}
+.story-mark .mono.z{fill:var(--ink)}
+.story h2{font-family:var(--serif);font-weight:500;font-size:clamp(36px,4.4vw,60px);line-height:1.02;margin:14px 0 20px;letter-spacing:-.015em}
+.story h2 em{color:var(--wine)}
+.story p{color:var(--ink-2);font-size:16px;max-width:560px;margin:0 0 16px}
+.story .sign{font-family:var(--serif);font-style:italic;font-size:26px;color:var(--wine);margin:8px 0 0}
+.promise div h3{font-family:var(--serif);font-weight:500;font-size:28px;margin:18px 0 10px}
+.promise div p{color:var(--muted);margin:0}
+.promise .n{font-size:12px;font-weight:600;letter-spacing:.14em;color:var(--wine)}
+.promise div h3{margin-top:12px!important}
 
-/* Footer */
-footer.site{background:var(--black);color:#BDBDBD;padding:64px 0 28px;font-size:14px}
+.news{background:var(--ink);color:#fff;padding:clamp(56px,7vw,90px) 0}
+.news .wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.news h2{font-family:var(--serif);font-weight:500;font-size:clamp(32px,3.8vw,48px);margin:10px 0 0;line-height:1.05}
+.news form{display:flex;border-bottom:1px solid rgba(255,255,255,.5)}
+.news input{flex:1;background:transparent;border:0;outline:0;color:#fff;padding:16px 0;font-size:15px}
+.news input::placeholder{color:rgba(255,255,255,.55)}
+.news button{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-2);padding:0 4px}
+.news small{display:block;margin-top:12px;color:rgba(255,255,255,.6);font-size:12px}
+
+footer.site{background:#000;color:#BDBDBD;padding:72px 0 32px;font-size:14px}
 .fgrid{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:40px}
-.lockup{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
-.lockup .wm{font-size:40px}
-footer .tagline{color:var(--white);font-weight:600;margin:20px 0 6px;font-size:16px}
-footer h4{color:var(--white);font-size:12px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;margin:0 0 16px;padding-top:12px;border-top:1px solid #333}
-footer ul{list-style:none;padding:0;margin:0;display:grid;gap:9px}
-footer a:hover{color:var(--white)}
-.fbottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid #333;margin-top:52px;padding-top:20px;font-size:12px;color:#8A8A8A}
-.paychips{display:flex;gap:6px;flex-wrap:wrap;margin-top:18px}
-.paychips span{border:1px solid #444;padding:3px 8px;font-size:11px;letter-spacing:.06em;color:#BDBDBD}
+.lockup{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.lockup .mono{width:44px;height:auto}
+footer .tagline{font-family:var(--serif);font-size:26px;color:#fff;margin:22px 0 8px;line-height:1.1}
+footer h4{color:var(--ivory);font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;margin:0 0 18px}
+footer ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+footer a:hover{color:var(--ivory)}
+.fbottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;border-top:1px solid #2A2A2A;margin-top:56px;padding-top:24px;font-size:12px;color:#8A8A8A}
+.pay-chips{display:flex;gap:8px;flex-wrap:wrap}
+.pay-chips span{border:1px solid #3A3A3A;padding:4px 9px;font-size:11px;letter-spacing:.06em;color:#BDBDBD}
 
 /* Listing */
-.page-head{padding:36px 0 26px;border-bottom:2px solid var(--black)}
-.crumbs{font-size:13px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap}
-.crumbs a:hover{color:var(--black);text-decoration:underline}
-.page-head h1{font-size:clamp(40px,5vw,72px);line-height:1;margin:14px 0 10px;letter-spacing:-.045em}
-.page-head p{color:var(--ink-2);margin:0;max-width:600px}
-.toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 0 22px}
-.chips{display:flex;gap:6px;flex-wrap:wrap}
-.chip{height:36px;padding:0 14px;border:1px solid var(--gray-400);font-size:14px;background:var(--white);transition:border-color .2s}
-.chip:hover{border-color:var(--black)}
-.chip.on{background:var(--black);color:var(--white);border-color:var(--black)}
-.sort{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
-.sort select{height:36px;border:1px solid var(--gray-400);background:var(--white);padding:0 10px;color:var(--ink);border-radius:0}
-.empty{padding:80px 0;max-width:560px}
-.empty h2{font-size:40px;margin:0 0 10px}
-.empty p{color:var(--ink-2);margin:0 0 26px}
+.page-head{padding:56px 0 34px;border-bottom:1px solid var(--line)}
+.crumbs{font-size:12px;color:var(--muted);letter-spacing:.04em;display:flex;gap:8px;flex-wrap:wrap}
+.crumbs a:hover{color:var(--ink)}
+.page-head h1{font-family:var(--serif);font-weight:500;font-size:clamp(42px,5.6vw,76px);line-height:1;margin:16px 0 12px;letter-spacing:-.02em}
+.page-head p{color:var(--muted);margin:0;max-width:560px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:20px 0 36px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{height:38px;padding:0 16px;border:1px solid var(--line);border-radius:19px;font-size:13px;background:var(--paper);transition:border-color .2s,background .2s}
+.chip:hover{border-color:var(--ink-2)}
+.chip.on{background:var(--ink);color:var(--ivory);border-color:var(--ink)}
+.sort{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.sort select{height:38px;border:1px solid var(--line);background:var(--paper);border-radius:var(--r);padding:0 12px;color:var(--ink)}
+.empty{text-align:center;padding:90px 0;color:var(--muted)}
+.empty h2{font-family:var(--serif);font-weight:500;color:var(--ink);font-size:36px;margin:0 0 10px}
 
-/* Product page */
-.pdp{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(28px,5vw,72px);padding:24px 0 80px}
-.pdp .gallery{position:sticky;top:150px;align-self:start}
-.pdp .gallery .media{aspect-ratio:1/1;border:1px solid var(--gray-300)}
-.pdp h1{font-size:clamp(34px,3.8vw,52px);line-height:1.02;letter-spacing:-.04em;margin:12px 0 0}
-.pdp .price{margin:20px 0 4px}
-.pdp .price b{font-size:34px}
-.pdp .price s{font-size:17px}
-.pdp .tax{font-size:14px;color:var(--muted);margin:0 0 22px}
-.pdp .desc{font-size:17px;color:var(--ink-2);margin:0 0 26px}
-.facts-list{border-top:2px solid var(--black);margin:0 0 24px}
-.facts-list div{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--gray-300)}
-.facts-list b{display:block;font-weight:600}
-.facts-list span{color:var(--muted);font-size:14px}
-.buy{display:grid;grid-template-columns:auto 1fr;gap:10px;margin-bottom:10px}
-.qty{display:inline-flex;align-items:center;border:1px solid var(--gray-400);height:52px;background:var(--white)}
+/* PDP */
+.pdp{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(28px,5vw,80px);padding:28px 0 90px}
+.pdp .gallery{position:sticky;top:140px;align-self:start}
+.pdp .gallery .media{aspect-ratio:1/1}
+.pdp .gallery .media img{padding:7%}
+.pdp h1{font-family:var(--serif);font-weight:500;font-size:clamp(36px,4vw,54px);line-height:1.04;margin:14px 0 14px;letter-spacing:-.015em}
+.pdp .price{margin:18px 0 6px}
+.pdp .price b{font-size:24px}
+.pdp .price s{font-size:16px}
+.pdp .price .off{font-size:13px;background:#F3E3E2;padding:3px 8px;border-radius:2px}
+.pdp .tax{font-size:13px;color:var(--muted);margin:0 0 26px}
+.pdp .desc{color:var(--ink-2);font-size:16px;margin:0 0 30px}
+.buy{display:grid;grid-template-columns:auto 1fr;gap:12px;margin-bottom:12px}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--ink-2);border-radius:var(--r);height:52px}
 .qty button{width:44px;height:100%;display:flex;align-items:center;justify-content:center}
-.qty button:hover{background:var(--gray-100)}
-.qty span{min-width:28px;text-align:center;font-weight:600;font-variant-numeric:tabular-nums}
-.qty.sm{height:36px}
-.qty.sm button{width:32px}
+.qty button:hover{color:var(--wine)}
+.qty span{min-width:28px;text-align:center;font-weight:600}
+.qty.sm{height:38px}
+.qty.sm button{width:34px}
 .qty.sm svg{width:16px;height:16px}
-details.acc{border-top:2px solid var(--black)}
-details.acc+details.acc{border-top:1px solid var(--gray-300)}
-details.acc:last-of-type{border-bottom:1px solid var(--gray-300)}
-details.acc summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:16px 0;cursor:pointer;font-weight:600}
+.perks{margin:28px 0;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
+.perks div{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-bottom:1px solid var(--line);font-size:14px}
+.perks div:last-child{border-bottom:0}
+.perks svg{color:var(--wine);margin-top:2px}
+.perks b{font-weight:600}
+.perks span{color:var(--muted);display:block;font-size:13px}
+details.acc{border-top:1px solid var(--line)}
+details.acc:last-of-type{border-bottom:1px solid var(--line)}
+details.acc summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:20px 0;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase}
 details.acc summary::-webkit-details-marker{display:none}
-details.acc summary svg{transition:transform .25s}
+details.acc summary svg{transition:transform .3s}
 details.acc[open] summary svg{transform:rotate(180deg)}
-details.acc .in{padding:0 0 18px;color:var(--ink-2)}
-.specs{margin:0}
-.specs div{display:flex;justify-content:space-between;gap:20px;padding:9px 0;border-bottom:1px solid var(--gray-300);font-size:14px}
+details.acc .in{padding:0 0 22px;color:var(--ink-2)}
+.specs{display:grid;gap:0;margin:0}
+.specs div{display:flex;justify-content:space-between;gap:20px;padding:10px 0;border-bottom:1px dashed var(--line);font-size:14px}
 .specs div:last-child{border:0}
 .specs dt{color:var(--muted)}
 .specs dd{margin:0;text-align:right}
 .sticky-buy{display:none}
 
-/* Drawers */
-.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .3s var(--ease);z-index:60}
+/* Drawer */
+.scrim{position:fixed;inset:0;background:rgba(23,19,15,.42);opacity:0;pointer-events:none;transition:opacity .35s var(--ease);z-index:60}
 .scrim.on{opacity:1;pointer-events:auto}
-.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--white);z-index:61;transform:translateX(100%);transition:transform .35s var(--ease);display:flex;flex-direction:column;border-left:2px solid var(--black)}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--ivory);z-index:61;transform:translateX(100%);transition:transform .45s var(--ease);display:flex;flex-direction:column}
 .drawer.on{transform:none}
-.drawer.left{left:0;right:auto;transform:translateX(-100%);border-left:0;border-right:2px solid var(--black)}
+.drawer.left{left:0;right:auto;transform:translateX(-100%)}
 .drawer.left.on{transform:none}
-.dhead{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:2px solid var(--black)}
-.dhead h3{font-size:24px}
-.dbody{flex:1;overflow:auto;padding:4px 22px}
-.dfoot{padding:18px 22px 22px;border-top:2px solid var(--black)}
-.ship-bar{padding:14px 22px;background:var(--shelf);font-size:14px}
-.ship-bar .track{height:4px;background:var(--white);margin-top:10px}
-.ship-bar .track i{display:block;height:100%;background:var(--burgundy);transition:width .5s var(--ease)}
-.line{display:grid;grid-template-columns:84px 1fr auto;gap:14px;padding:16px 0;border-bottom:1px solid var(--gray-300)}
+.dhead{display:flex;justify-content:space-between;align-items:center;padding:22px 24px;border-bottom:1px solid var(--line)}
+.dhead h3{font-family:var(--serif);font-weight:500;font-size:28px;margin:0}
+.dbody{flex:1;overflow:auto;padding:8px 24px}
+.dfoot{padding:20px 24px 24px;border-top:1px solid var(--line);background:var(--paper)}
+.ship-bar{padding:16px 24px;background:var(--sand);font-size:13px}
+.ship-bar .track{height:3px;background:rgba(23,19,15,.12);border-radius:2px;margin-top:10px;overflow:hidden}
+.ship-bar .track i{display:block;height:100%;background:var(--wine);transition:width .6s var(--ease)}
+.line{display:grid;grid-template-columns:88px 1fr auto;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
 .line .media{aspect-ratio:1/1}
-.line .ph svg{width:44%}
-.line h4{font-size:15px;font-weight:600;letter-spacing:-.01em;line-height:1.3;margin:0 0 3px}
-.line .meta{font-size:13px;color:var(--muted);margin-bottom:10px}
+.line .media img{padding:8%}
+.line .ph svg{width:46%}
+.line .ph em{display:none}
+.line h4{font-family:var(--serif);font-weight:500;font-size:19px;line-height:1.15;margin:0 0 4px}
+.line .meta{font-size:12px;color:var(--muted);margin-bottom:10px}
 .line .right{text-align:right;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end}
-.line .right b{font-weight:800;font-variant-numeric:tabular-nums}
-.txt-btn{font-size:13px;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px}
-.txt-btn:hover{color:var(--burgundy)}
-.sum-row{display:flex;justify-content:space-between;font-size:15px;margin:8px 0;font-variant-numeric:tabular-nums}
-.sum-row.total{font-size:18px;font-weight:800;margin:14px 0 16px;padding-top:14px;border-top:2px solid var(--black)}
-.save-line{font-weight:600;font-size:14px;margin:-6px 0 16px}
-.note{font-size:13px;color:var(--muted);margin-top:12px;display:flex;gap:8px;align-items:center}
-.note svg{width:15px;height:15px}
-.mnav a{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--gray-300);font-size:20px;font-weight:800;letter-spacing:-.03em}
-.mnav .search{margin:16px 0 6px;max-width:none}
+.line .rm{font-size:12px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.line .rm:hover{color:var(--wine)}
+.sum-row{display:flex;justify-content:space-between;font-size:14px;margin:8px 0}
+.sum-row.total{font-size:17px;font-weight:600;margin:16px 0 18px;padding-top:16px;border-top:1px solid var(--line)}
+.sum-row .ok{color:var(--ok)}
+.note{font-size:12px;color:var(--muted);text-align:center;margin-top:12px;display:flex;gap:6px;justify-content:center;align-items:center}
+.note svg{width:14px;height:14px}
 
-/* Bag & checkout */
-.two{display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(28px,5vw,64px);padding:32px 0 96px;align-items:start}
-.panel{background:var(--shelf);padding:24px}
-.panel h3{font-size:24px;margin:0 0 14px}
-.sticky{position:sticky;top:150px}
-.promo{display:flex;margin:14px 0 4px}
-.promo input{flex:1;height:46px;border:1px solid var(--gray-400);border-right:0;padding:0 14px;background:var(--white);text-transform:uppercase;letter-spacing:.06em;outline:0;min-width:0}
-.promo input:focus{border-color:var(--black)}
-.promo button{height:46px;padding:0 18px;background:var(--black);color:var(--white);font-weight:600}
-.msg{font-size:13.5px;margin:4px 0 0}
-.msg.err{color:var(--burgundy)}
-.msg.ok{color:var(--ink);font-weight:600}
-fieldset{border:0;padding:0;margin:0 0 30px}
-legend{display:flex;gap:12px;align-items:baseline;width:100%;font-size:24px;font-weight:800;letter-spacing:-.03em;padding:12px 0 0;margin-bottom:16px;border-top:2px solid var(--black)}
-legend span{font-size:13px;color:var(--burgundy);font-weight:600;letter-spacing:0}
-.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* Mobile nav */
+.mnav a{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--line);font-family:var(--serif);font-size:26px}
+.mnav .search{width:100%;margin:18px 0 8px}
+
+/* Cart & checkout pages */
+.two{display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(28px,5vw,72px);padding:40px 0 100px;align-items:start}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:28px}
+.panel h3{font-family:var(--serif);font-weight:500;font-size:26px;margin:0 0 18px}
+.sticky{position:sticky;top:140px}
+.promo{display:flex;gap:8px;margin:18px 0 6px}
+.promo input{flex:1;height:46px;border:1px solid var(--line);border-radius:var(--r);padding:0 14px;background:var(--ivory);text-transform:uppercase;letter-spacing:.08em}
+.promo button{height:46px;padding:0 18px;border:1px solid var(--ink);border-radius:var(--r);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.promo button:hover{background:var(--ink);color:var(--ivory)}
+.msg{font-size:12.5px;margin:4px 0 0}
+.msg.err{color:var(--err)}
+.msg.ok{color:var(--ok)}
+.steps{display:flex;gap:10px;align-items:center;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:18px}
+.steps b{color:var(--ink);font-weight:600}
+fieldset{border:0;padding:0;margin:0 0 34px}
+legend{font-family:var(--serif);font-size:28px;font-weight:500;margin-bottom:18px;padding:0;display:flex;gap:12px;align-items:baseline}
+legend span{font-family:var(--sans);font-size:12px;color:var(--gold);font-weight:600;letter-spacing:.1em}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .fields .full{grid-column:1/-1}
-.field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
-.field input{width:100%;height:50px;border:1px solid var(--gray-400);background:var(--white);padding:0 14px;outline:0}
-.field input:focus{border-color:var(--black);box-shadow:inset 0 0 0 1px var(--black)}
-.field.bad input{border-color:var(--burgundy);box-shadow:inset 0 0 0 1px var(--burgundy)}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--ink-2);margin-bottom:6px;letter-spacing:.02em}
+.field input{width:100%;height:50px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);padding:0 14px;outline:0;transition:border-color .2s}
+.field input:focus{border-color:var(--ink)}
+.field.bad input{border-color:var(--err)}
 .field .msg{display:none}
 .field.bad .msg{display:block}
-.opts{display:grid;gap:8px}
-.opt{display:flex;gap:14px;align-items:center;border:1px solid var(--gray-400);background:var(--white);padding:15px 16px;cursor:pointer}
-.opt:hover{border-color:var(--black)}
-.opt.on{border-color:var(--black);box-shadow:inset 0 0 0 1px var(--black)}
-.opt input{accent-color:var(--black);width:18px;height:18px;margin:0}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:14px;align-items:center;border:1px solid var(--line);background:var(--paper);border-radius:var(--r);padding:16px 18px;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.opt:hover{border-color:var(--ink-2)}
+.opt.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.opt input{accent-color:var(--wine);width:18px;height:18px;margin:0}
 .opt .grow{flex:1}
-.opt b{font-weight:600;display:block}
-.opt span{font-size:13.5px;color:var(--muted)}
-.opt .amt{font-weight:600;font-variant-numeric:tabular-nums}
-.mini{display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--gray-300)}
-.mini .media{aspect-ratio:1/1;overflow:visible}
-.mini .ph svg{width:46%}
-.mini .q{position:absolute;top:-6px;right:-6px;background:var(--black);color:#fff;width:20px;height:20px;font-size:11px;display:flex;align-items:center;justify-content:center}
-.mini h4{font-size:14px;font-weight:600;letter-spacing:-.01em;line-height:1.25}
-.mini small{color:var(--muted);font-size:12.5px}
-.mini b{font-weight:800;font-size:14px;font-variant-numeric:tabular-nums}
-.done{padding:64px 0 110px;max-width:720px}
-.done .mono{width:56px;margin-bottom:28px}
-.done h1{font-size:clamp(40px,5vw,68px);line-height:1;letter-spacing:-.045em;margin:12px 0 14px}
-.done p.l{font-size:17px;color:var(--ink-2);margin:0}
+.opt b{font-weight:600;font-size:14px;display:block}
+.opt span{font-size:13px;color:var(--muted)}
+.opt .amt{font-weight:600;font-size:14px}
+.mini{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.mini .media{aspect-ratio:1/1;position:relative;overflow:visible}
+.mini .media img{padding:8%}
+.mini .ph svg{width:48%}
+.mini .ph em{display:none}
+.mini .q{position:absolute;top:-7px;right:-7px;background:var(--ink-2);color:#fff;width:20px;height:20px;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center}
+.mini h4{font-family:var(--serif);font-weight:500;font-size:17px;margin:0;line-height:1.2}
+.mini small{color:var(--muted);font-size:12px}
+.done{text-align:center;padding:100px 0 120px;max-width:640px;margin:0 auto}
+.done .tick{width:76px;height:76px;border-radius:50%;background:var(--wine);color:var(--ivory);display:flex;align-items:center;justify-content:center;margin:0 auto 28px}
+.done .tick svg{width:34px;height:34px;stroke-width:1.8}
+.done h1{font-family:var(--serif);font-weight:500;font-size:clamp(40px,5vw,64px);margin:12px 0 14px;line-height:1}
 
-.toast{position:fixed;left:var(--pad);bottom:24px;transform:translateY(20px);background:var(--black);color:var(--white);padding:14px 18px;font-size:14px;opacity:0;pointer-events:none;transition:all .3s var(--ease);z-index:80;display:flex;gap:18px;align-items:center;max-width:calc(100vw - 32px)}
-.toast.on{opacity:1;transform:none;pointer-events:auto}
-.toast a{color:var(--white);font-weight:600;text-decoration:underline;text-underline-offset:3px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* Toast */
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);background:var(--ink);color:var(--ivory);padding:14px 22px;border-radius:var(--r);font-size:14px;opacity:0;pointer-events:none;transition:all .4s var(--ease);z-index:80;display:flex;gap:16px;align-items:center;box-shadow:0 18px 40px -18px rgba(0,0,0,.5)}
+.toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast a{color:#fff;text-decoration:underline;text-underline-offset:3px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
 
-/* ---------- Responsive ---------- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}}
+
+/* Responsive */
 @media (max-width:1100px){
   .grid{grid-template-columns:repeat(3,1fr)}
   .cat-grid{grid-template-columns:repeat(3,1fr)}
   .trust{grid-template-columns:repeat(2,1fr)}
   .trust div:nth-child(2){border-right:0}
-  .trust div:nth-child(-n+2){border-bottom:1px solid var(--gray-300)}
-  .values{grid-template-columns:repeat(2,1fr);gap:32px 24px}
-  .facts{grid-template-columns:1fr}
+  .trust div:nth-child(-n+2){border-bottom:1px solid var(--line)}
 }
 @media (max-width:860px){
   .only-d{display:none!important}
   .only-m{display:inline-flex}
-  .hbar{height:62px;gap:8px}
-  .hbar .logo{font-size:28px}
-  nav.cats{gap:22px}
-  .hero{grid-template-columns:1fr}
-  .hero-vis{order:-1;aspect-ratio:1/1.05}
-  .hero-copy{min-height:0;gap:36px}
-  .grid{grid-template-columns:repeat(2,1fr);gap:8px}
-  .card-body{padding:12px 12px 0}
-  .card h3{font-size:14.5px}
-  .price b{font-size:20px}
-  .card .add{margin:14px 12px 12px;height:42px;padding:0 12px;font-size:14px}
-  .billboard{grid-template-columns:1fr}
-  .billboard .acc{min-height:240px}
-  .billboard .photo{min-height:0;aspect-ratio:1/1}
-  .news .wrap{grid-template-columns:1fr}
+  .hbar{height:64px}
+  .wm{font-size:26px}
+  .logo small{display:none}
+  nav.cats{justify-content:flex-start;overflow-x:auto;padding:0 var(--pad);scrollbar-width:none;gap:24px}
+  nav.cats::-webkit-scrollbar{display:none}
+  nav.cats a{white-space:nowrap}
+  .hero{grid-template-columns:1fr;min-height:0}
+  .hero-visual{order:-1;aspect-ratio:1/1.02}
+  .hero-copy{padding:40px var(--pad) 48px}
+  .hero-perks{gap:14px 22px;margin-top:34px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:32px 14px}
+  .card h3{font-size:18px}
+  .quick{opacity:1;transform:none;position:static;margin-top:12px;height:42px;background:transparent;color:var(--ink);border:1px solid var(--ink);order:3}
+  .card .media .quick{display:none}
+  .feature,.news .wrap{grid-template-columns:1fr}
+  .feature .pic{min-height:0;aspect-ratio:1/1}
+  .promise{grid-template-columns:1fr 1fr;gap:28px}
+  .story-in{grid-template-columns:1fr}
+  .story-mark{justify-content:flex-start}
   .fgrid{grid-template-columns:1fr 1fr}
   .fgrid>div:first-child{grid-column:1/-1}
-  .pdp{grid-template-columns:1fr;padding-bottom:110px}
+  .pdp{grid-template-columns:1fr;padding-bottom:120px}
   .pdp .gallery{position:static}
   .two{grid-template-columns:1fr}
   .sticky{position:static}
   .fields{grid-template-columns:1fr}
-  .btn{min-width:0}
-  .sticky-buy{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--white);border-top:2px solid var(--black);padding:10px var(--pad) calc(10px + env(safe-area-inset-bottom));gap:14px;align-items:center;transform:translateY(110%);transition:transform .3s var(--ease)}
+  .sticky-buy{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--paper);border-top:1px solid var(--line);padding:12px var(--pad) calc(12px + env(safe-area-inset-bottom));gap:14px;align-items:center;transform:translateY(110%);transition:transform .4s var(--ease)}
   .sticky-buy.on{transform:none}
-  .sticky-buy .p{flex:1;font-size:13px;line-height:1.3;min-width:0}
-  .sticky-buy .p b{display:block;font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
-  .sticky-buy .btn{height:48px}
+  .sticky-buy .p{flex:1;font-size:13px;line-height:1.3}
+  .sticky-buy .p b{display:block;font-size:16px}
+  .sticky-buy .btn{height:48px;padding:0 22px}
 }
 @media (max-width:520px){
-  .cat-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .promise{grid-template-columns:1fr}
+  .cat-grid{grid-template-columns:repeat(2,1fr);gap:10px}
   .trust{grid-template-columns:1fr}
-  .trust div{border-right:0;border-bottom:1px solid var(--gray-300);padding:16px var(--pad)}
-  .values{grid-template-columns:1fr}
-  .line{grid-template-columns:70px 1fr auto;gap:12px}
-  .panel{padding:20px}
-  .announce .wrap span:last-child{display:none}
-  .hero .ctas .btn{flex:1}
+  .trust div{border-right:0;border-bottom:1px solid var(--line);padding:18px var(--pad)}
+  .hero-tag{padding:14px 16px;gap:16px}
+  .dots{top:20px;bottom:auto}
+  .hero-tag .t{font-size:20px}
+  .line{grid-template-columns:72px 1fr auto;gap:12px}
+  .panel{padding:22px}
+  .code{flex-direction:column;gap:10px;padding:16px}
 }
 </style>
 </head>
 <body>
-<div class="announce"><div class="wrap"><span id="ann1"></span><span id="ann2"></span></div></div>
+<div class="announce" id="announce"></div>
 
 <header class="site" id="hdr">
   <div class="wrap hbar">
-    <button class="icon-btn only-m" data-act="menu" aria-label="Open menu"><svg class="i"><use href="#i-menu"/></svg></button>
-    <a href="#/" class="logo" aria-label="Shopeiz home"><span class="wm">Shopeiz</span></a>
-    <form class="search only-d" data-form="search" role="search">
-      <svg class="i"><use href="#i-search"/></svg>
-      <label class="sr" for="q">Search</label>
-      <input id="q" name="q" placeholder="Search drones, headphones, sofas…" autocomplete="off">
-    </form>
-    <div class="hicons">
+    <div class="hleft">
+      <button class="icon-btn only-m" data-act="menu" aria-label="Open menu"><svg class="i"><use href="#i-menu"/></svg></button>
+      <form class="search only-d" data-form="search" role="search">
+        <svg class="i"><use href="#i-search"/></svg>
+        <label class="sr" for="q">Search</label>
+        <input id="q" name="q" placeholder="Search drones, headphones…" autocomplete="off">
+      </form>
+    </div>
+    <a href="#/" class="logo" aria-label="Shopeiz home"><span class="wm">Shopeiz</span><small>The art of having everything</small></a>
+    <div class="hright">
       <button class="icon-btn only-m" data-act="menu" aria-label="Search"><svg class="i"><use href="#i-search"/></svg></button>
       <a class="icon-btn only-d" href="#/wishlist" aria-label="Wishlist"><svg class="i"><use href="#i-heart"/></svg><span class="count" data-count="wish"></span></a>
-      <button class="icon-btn" data-act="bag" aria-label="Cart"><svg class="i"><use href="#i-cart"/></svg><span class="count" data-count="bag"></span></button>
+      <button class="icon-btn" data-act="bag" aria-label="Shopping bag"><svg class="i"><use href="#i-bag"/></svg><span class="count" data-count="bag"></span></button>
     </div>
   </div>
-  <div class="wrap"><nav class="cats" id="nav" aria-label="Categories"></nav></div>
+  <nav class="cats" id="nav" aria-label="Categories"></nav>
 </header>
 
 <main id="app" tabindex="-1"></main>
@@ -424,82 +457,80 @@ legend span{font-size:13px;color:var(--burgundy);font-weight:600;letter-spacing:
   <div class="wrap">
     <div class="fgrid">
       <div>
-        <div class="lockup"><svg class="mono" viewBox="0 0 206.04 235.47" width="46" aria-hidden="true"><use href="#mono"/></svg><span class="wm">Shopeiz</span></div>
+        <div class="lockup"><svg class="mono" viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg><span class="wm">Shopeiz</span></div>
         <p class="tagline">The art of having everything.</p>
-        <p style="margin:0;max-width:340px">Anything you need, in one place, at your door.</p>
-        <div class="paychips"><span>UPI</span><span>VISA</span><span>MASTERCARD</span><span>RUPAY</span><span>CASH ON DELIVERY</span></div>
+        <p style="max-width:340px;margin:0 0 22px">Anything you need, in one place, at your door.</p>
+        <div class="pay-chips"><span>UPI</span><span>VISA</span><span>MASTERCARD</span><span>RUPAY</span><span>COD</span></div>
       </div>
       <div><h4>Shop</h4><ul id="fcats"></ul></div>
-      <div><h4>Help</h4><ul><li><a href="#/help/delivery">Delivery</a></li><li><a href="#/help/returns">Returns and refunds</a></li><li><a href="#/help/payment">Payment</a></li><li><a href="#/wishlist">Wishlist</a></li></ul></div>
-      <div><h4>Shopeiz</h4><ul><li><a href="#/help/about">About us</a></li><li><a href="#/help/contact">Contact</a></li><li><a href="#/c/deals">Deals</a></li></ul></div>
+      <div><h4>Help</h4><ul><li><a href="#/help/delivery">Delivery</a></li><li><a href="#/help/returns">Returns &amp; refunds</a></li><li><a href="#/help/payment">Payment options</a></li><li><a href="#/wishlist">Your wishlist</a></li></ul></div>
+      <div><h4>Shopeiz</h4><ul><li><a href="#/help/about">About us</a></li><li><a href="#/help/contact">Contact</a></li><li><a href="#/c/deals">Offers</a></li></ul></div>
     </div>
-    <div class="fbottom"><span>© <span id="yr"></span> Shopeiz. Prices include GST.</span><span>From S to Z.</span></div>
+    <div class="fbottom"><span>© <span id="yr"></span> Shopeiz. All prices include GST.</span><span>From S to Z.</span></div>
   </div>
 </footer>
 
 <div class="scrim" id="scrim" data-act="close"></div>
-<aside class="drawer" id="bag" aria-label="Cart" aria-hidden="true"></aside>
+<aside class="drawer" id="bag" aria-label="Shopping bag" aria-hidden="true"></aside>
 <aside class="drawer left" id="menu" aria-label="Menu" aria-hidden="true"></aside>
 <div class="sticky-buy" id="stickyBuy"></div>
 <div class="toast" id="toast" role="status"></div>
 
-<!-- Icons: simple line icons, 2px stroke (brand book p.17) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <path id="mono" fill-rule="evenodd" d="M44.15 0L161.89 0L206.04 44.15L206.04 235.47L0 235.47L0 44.15ZM95.66 22.07h14.72v14.72h-14.72ZM29.44 58.87L176.61 58.87L176.61 88.3L58.87 88.3L58.87 117.74L176.61 117.74L176.61 206.04L29.44 206.04L29.44 176.6L147.17 176.6L147.17 147.17L29.44 147.17L29.44 58.87Z"/>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
-    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/></symbol>
-    <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></symbol>
-    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
-    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
-    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9.4A5 5 0 0 1 12 6.6a5 5 0 0 1 9.3 4.5c-1.8 4.8-9.3 9.4-9.3 9.4z"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1.2 12.5H6.2L5 8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3.5 7h17M3.5 12h17M3.5 17h11"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></symbol>
     <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
     <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
-    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
-    <symbol id="i-truck" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2M15 18H9M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></symbol>
-    <symbol id="i-return" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
-    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
-    <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></symbol>
-    <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></symbol>
-    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
-    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24"><path d="M2.5 6.5h11v10h-11zM13.5 10h4.2l3.3 3.4v3.1h-7.5"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></symbol>
+    <symbol id="i-return" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.8 3.2 8 7.5 9.5 4.3-1.5 7.5-4.7 7.5-9.5V6L12 3z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5 12v8.5h14V12M12 8v12.5M12 8c-1.5-3.5-5-4-5-1.5S10 8 12 8zm0 0c1.5-3.5 5-4 5-1.5S14 8 12 8z"/></symbol>
     <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/></symbol>
     <symbol id="p-drone" viewBox="0 0 24 24"><circle cx="5" cy="5" r="2.6"/><circle cx="19" cy="5" r="2.6"/><circle cx="5" cy="19" r="2.6"/><circle cx="19" cy="19" r="2.6"/><rect x="9" y="9" width="6" height="6" rx="1.6"/><path d="M7 7l2 2M17 7l-2 2M7 17l2-2M17 17l-2-2"/></symbol>
-    <symbol id="p-headphones" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></symbol>
-    <symbol id="p-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></symbol>
-    <symbol id="p-tablet" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></symbol>
-    <symbol id="p-shirt" viewBox="0 0 24 24"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></symbol>
-    <symbol id="p-sofa" viewBox="0 0 24 24"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z"/><path d="M4 18v2M20 18v2"/></symbol>
-    <symbol id="p-laptop" viewBox="0 0 24 24"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"/></symbol>
-    <symbol id="p-sparkles" viewBox="0 0 24 24"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.13-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.13a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.13 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.13a.5.5 0 0 1-.96 0z"/></symbol>
+    <symbol id="p-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></symbol>
+    <symbol id="p-headphones" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2.8" y="13.5" width="4.2" height="7" rx="1.6"/><rect x="17" y="13.5" width="4.2" height="7" rx="1.6"/></symbol>
+    <symbol id="p-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.8 18.5h2.4"/></symbol>
+    <symbol id="p-tablet" viewBox="0 0 24 24"><rect x="3.5" y="3" width="17" height="18" rx="2.4"/><path d="M10.8 18h2.4"/></symbol>
+    <symbol id="p-shirt" viewBox="0 0 24 24"><path d="M8.5 3 3 6l2 5 3-1.2V21h8V9.8l3 1.2 2-5-5.5-3a3.5 3.5 0 0 1-7 0z"/></symbol>
+    <symbol id="p-sofa" viewBox="0 0 24 24"><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><path d="M3 13a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v5H3z"/><path d="M5 18v2M19 18v2"/></symbol>
+    <symbol id="p-laptop" viewBox="0 0 24 24"><rect x="4.5" y="4.5" width="15" height="10.5" rx="1.5"/><path d="M2 19h20"/></symbol>
     <symbol id="p-bottle" viewBox="0 0 24 24"><path d="M10 2.5h4v3h-4z"/><path d="M9 5.5h6l1.5 3v11a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2v-11z"/><path d="M7.5 12h9"/></symbol>
+    <symbol id="p-jar" viewBox="0 0 24 24"><rect x="5" y="9" width="14" height="11.5" rx="3"/><rect x="6.5" y="5" width="11" height="4" rx="1"/><path d="M9 14.5h6"/></symbol>
     <symbol id="p-pot" viewBox="0 0 24 24"><path d="M4 10h16v6a4.5 4.5 0 0 1-4.5 4.5h-7A4.5 4.5 0 0 1 4 16z"/><path d="M1.5 10h21M9 6.5h6M12 6.5V4"/></symbol>
-    <symbol id="p-handbag" viewBox="0 0 24 24"><path d="M2.05 19.5 3.5 9h17l1.45 10.5A2 2 0 0 1 20 22H4a2 2 0 0 1-1.95-2.5z"/><path d="M8 9V7a4 4 0 0 1 8 0v2"/></symbol>
-    <symbol id="p-bell" viewBox="0 0 24 24"><path d="M10.27 21a2 2 0 0 0 3.46 0"/><path d="M3.26 15.33A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.67C19.41 13.96 18 12.5 18 8A6 6 0 0 0 6 8c0 4.5-1.41 5.96-2.74 7.33"/></symbol>
-    <symbol id="p-watch" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><path d="M12 10v2l1 1M16.13 7.66l-.81-4.05a2 2 0 0 0-2-1.61h-2.68a2 2 0 0 0-2 1.61l-.78 4.05M7.88 16.36l.8 4a2 2 0 0 0 2 1.61h2.72a2 2 0 0 0 2-1.61l.81-4.05"/></symbol>
+    <symbol id="p-handbag" viewBox="0 0 24 24"><path d="M4.5 9.5h15l-1 11h-13z"/><path d="M8 9.5c0-4 1.5-6.5 4-6.5s4 2.5 4 6.5"/></symbol>
+    <symbol id="p-bell" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="5"/><circle cx="12" cy="8.5" r="2.2"/><circle cx="12" cy="16" r="1.4"/></symbol>
+    <symbol id="p-watch" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="3.2"/><path d="M9 6l.8-3.5h4.4L15 6M9 18l.8 3.5h4.4L15 18M12 9v3l2 1.2"/></symbol>
   </defs>
 </svg>
 
 <script>
 /* ============================================================
    CATALOGUE — edit products here.
-   price = selling price, was = MRP (optional), img = photo path (optional),
-   days = delivery estimate in days.
+   price = selling price, was = MRP (optional), img = photo path (optional).
    ============================================================ */
 const CATS = [
-  { id: 'drones',      label: 'Drones',      blurb: 'Foldable camera drones, ready to fly out of the box.', icon: 'p-drone', img: 'assets/drones/m3-max.png' },
-  { id: 'electronics', label: 'Electronics', blurb: 'Audio, phones and smart-home tech.',                  icon: 'p-headphones' },
-  { id: 'gadgets',     label: 'Gadgets',     blurb: 'Laptops, tablets and wearables.',                     icon: 'p-laptop' },
-  { id: 'fashion',     label: 'Fashion',     blurb: 'Everyday clothing and bags.',                         icon: 'p-shirt' },
-  { id: 'home',        label: 'Home',        blurb: 'Furniture and kitchen.',                              icon: 'p-sofa' },
-  { id: 'beauty',      label: 'Beauty',      blurb: 'Skin and hair care.',                                 icon: 'p-sparkles' },
+  { id: 'drones',      label: 'Drones',      blurb: 'Foldable camera drones, ready to fly out of the box.', icon: 'p-drone',      tone: '#F3F3F2', ink: '#070707', img: 'assets/drones/m3-max.png' },
+  { id: 'electronics', label: 'Electronics', blurb: 'Sound, smartphones and smart-home tech that just works.', icon: 'p-headphones', tone: '#F3F3F2', ink: '#070707' },
+  { id: 'gadgets',     label: 'Gadgets',     blurb: 'Laptops, tablets and wearables for work and play.',      icon: 'p-laptop',     tone: '#F3F3F2', ink: '#070707' },
+  { id: 'fashion',     label: 'Fashion',     blurb: 'Wardrobe staples in honest materials.',                  icon: 'p-shirt',      tone: '#F3F3F2', ink: '#070707' },
+  { id: 'home',        label: 'Home',        blurb: 'Pieces that make home feel finished.',                   icon: 'p-sofa',       tone: '#F3F3F2', ink: '#070707' },
+  { id: 'beauty',      label: 'Beauty',      blurb: 'Everyday skin and hair care, gently made.',              icon: 'p-sparkles',   tone: '#F3F3F2', ink: '#070707' },
 ];
 const P = [
-  { id: 'd4', cat: 'drones', sub: 'Camera drones', title: 'T7 Pro Drone', price: 6499, days: 3, img: 'assets/drones/t7-pro.png', desc: 'Our top drone, with a screen remote. Available in orange or black.', specs: 'Full specifications from the seller to be added.' },
+  { id: 'd4', cat: 'drones', sub: 'Camera drones', title: 'T7 Pro Drone', price: 6499, days: 3, img: 'assets/drones/t7-pro.png', tag: 'Flagship', desc: 'Our top drone, with a screen remote. Available in orange or black.', specs: 'Full specifications from the seller to be added.' },
   { id: 'd3', cat: 'drones', sub: 'Camera drones', title: 'M3 Max', price: 1999, was: 3888, days: 3, img: 'assets/drones/m3-max.png', desc: 'Dual-camera drone with a phone-holder remote for a live view while you fly.', specs: 'Full specifications from the seller to be added.' },
   { id: 'd2', cat: 'drones', sub: 'Camera drones', title: 'J2 Drone', price: 1799, was: 2947, days: 3, img: 'assets/drones/j2.png', desc: 'Foldable camera drone with coloured arm lights. Comes in a black or red finish.', specs: 'Full specifications from the seller to be added.' },
-  { id: 'd1', cat: 'drones', sub: 'Camera drones', title: 'E88 Pro Drone', price: 1399, was: 2499, days: 3, img: 'assets/drones/e88-pro.png', desc: 'Foldable camera drone with a phone-holder remote. Spare batteries, propellers and a carry case are shown in the box.', specs: 'Full specifications from the seller to be added.' },
+  { id: 'd1', cat: 'drones', sub: 'Camera drones', title: 'E88 Pro Drone', price: 1399, was: 2499, days: 3, img: 'assets/drones/e88-pro.png', tag: 'Best value', desc: 'Foldable camera drone with a phone-holder remote. Spare batteries, propellers and a carry case are shown in the box.', specs: 'Full specifications from the seller to be added.' },
   { id: 'p1', cat: 'electronics', sub: 'Audio', title: 'Wireless Noise-Cancelling Headphones', price: 8999, was: 11999, days: 1, icon: 'p-headphones', rating: 4.7, reviews: 128, desc: 'Thirty hours of battery, fast charging and active noise cancelling that adapts to where you are. Folds flat into the case included.', specs: 'Battery: 30 h · Charging: USB-C, 10 min = 5 h · Weight: 250 g · Bluetooth 5.3' },
   { id: 'p2', cat: 'electronics', sub: 'Phones', title: 'Smartphone 128 GB, Graphite', price: 29999, days: 3, icon: 'p-phone', rating: 4.6, reviews: 342, desc: 'A 6.1-inch display, a camera that handles low light, and a battery that lasts a full day of real use.', specs: 'Storage: 128 GB · Display: 6.1 in OLED · Camera: 48 MP · Dual SIM' },
   { id: 'p11', cat: 'electronics', sub: 'Smart home', title: 'Video Doorbell with Chime', price: 6999, days: 1, icon: 'p-bell', rating: 4.4, reviews: 211, desc: 'See who is at the door from your phone. Wired or battery, with a plug-in chime for inside.', specs: 'Video: 1080p HD · Night vision · Battery: 6 months · Works with Wi-Fi 2.4 GHz' },
@@ -510,7 +541,7 @@ const P = [
   { id: 'p10', cat: 'fashion', sub: 'Women', title: 'Leather Crossbody Bag', price: 3499, days: 3, icon: 'p-handbag', rating: 4.6, reviews: 94, desc: 'Full-grain leather, an adjustable strap and room for a phone, wallet and keys.', specs: 'Material: full-grain leather · Size: 24 × 16 × 7 cm · Strap: 110–130 cm' },
   { id: 'p5', cat: 'home', sub: 'Living', title: 'Three-Seat Linen Sofa', price: 54999, days: 5, icon: 'p-sofa', rating: 4.8, reviews: 46, desc: 'Deep seats, removable linen covers and a solid oak frame. Delivered and assembled in your living room.', specs: 'Width: 220 cm · Depth: 95 cm · Frame: oak · Covers: washable linen' },
   { id: 'p9', cat: 'home', sub: 'Kitchen', title: 'Cast Iron Casserole, 5 L', price: 6499, was: 7999, days: 1, icon: 'p-pot', rating: 4.9, reviews: 77, desc: 'Enamelled cast iron that goes from hob to oven to table. Holds heat for slow cooking.', specs: 'Capacity: 5 L · Oven safe to 260°C · All hobs including induction' },
-  { id: 'p7', cat: 'beauty', sub: 'Skincare', title: 'Daily Moisturiser SPF 30, 50 ml', price: 649, days: 1, icon: 'p-sparkles', rating: 4.5, reviews: 690, desc: 'A light, non-greasy moisturiser with broad-spectrum SPF 30. Suits all skin types.', specs: 'Size: 50 ml · SPF 30 · Fragrance free · Dermatologist tested' },
+  { id: 'p7', cat: 'beauty', sub: 'Skincare', title: 'Daily Moisturiser SPF 30, 50 ml', price: 649, days: 1, icon: 'p-jar', rating: 4.5, reviews: 690, desc: 'A light, non-greasy moisturiser with broad-spectrum SPF 30. Suits all skin types.', specs: 'Size: 50 ml · SPF 30 · Fragrance free · Dermatologist tested' },
   { id: 'p13', cat: 'beauty', sub: 'Hair', title: 'Repair Shampoo, 400 ml', price: 399, days: 1, icon: 'p-bottle', rating: 4.2, reviews: 430, desc: 'A gentle daily shampoo for dry and coloured hair. Sulphate free.', specs: 'Size: 400 ml · Sulphate free · For dry and coloured hair' },
 ];
 const HERO = ['d4', 'd3', 'd1', 'd2'];
@@ -523,13 +554,10 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const fmt = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const ic = (id, cls = 'i') => `<svg class="${cls}"><use href="#${id}"/></svg>`;
-const mono = (w = 40) => `<svg class="mono" viewBox="0 0 206.04 235.47" width="${w}" aria-hidden="true"><use href="#mono"/></svg>`;
 const byId = (id) => P.find((p) => p.id === id);
 const catOf = (p) => CATS.find((c) => c.id === p.cat) || CATS[0];
 const off = (p) => (p.was ? Math.round((1 - p.price / p.was) * 100) : 0);
-const dayName = (d) => { const t = new Date(); t.setDate(t.getDate() + d); return d === 1 ? 'tomorrow' : t.toLocaleDateString('en-IN', { weekday: 'long' }); };
 const dateIn = (d) => { const t = new Date(); t.setDate(t.getDate() + d); return t.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' }); };
-const arrives = (p) => `Arrives ${dayName(p.days)} · Free returns`;
 
 const store = (() => {
   let s = { cart: [], wish: [], promo: false };
@@ -545,33 +573,42 @@ function totals(opts = {}) {
   const count = lines.reduce((a, l) => a + l.qty, 0);
   const sub = lines.reduce((a, l) => a + l.total, 0);
   const mrp = lines.reduce((a, l) => a + (l.p.was || l.p.price) * l.qty, 0);
-  const ship = (sub >= FREE_OVER || !sub ? 0 : STD_FEE) + (opts.ship === 'exp' ? EXP_FEE : 0);
+  const express = opts.ship === 'exp';
+  const ship = (sub >= FREE_OVER || !sub ? 0 : STD_FEE) + (express ? EXP_FEE : 0);
   const disc = store.promo ? Math.round(sub * PROMO.pct / 100) : 0;
   const cod = opts.pay === 'cod' ? COD_FEE : 0;
   return { lines, count, sub, mrp, ship, disc, cod, total: sub + ship - disc + cod, saved: mrp - sub + disc };
 }
 
 /* ---------- Pieces ---------- */
-const media = (p) => p.img ? `<img src="${p.img}" alt="${esc(p.title)}" loading="lazy" decoding="async">` : `<div class="ph">${ic(p.icon || catOf(p).icon)}</div>`;
-const mediaCls = (p) => 'media' + (p.img ? ' photo' : '');
+function media(p, cls = '') {
+  if (p.img) return `<img src="${p.img}" alt="${esc(p.title)}" loading="lazy" decoding="async">`;
+  const c = catOf(p);
+  return `<div class="ph ${cls}" style="background:${c.tone};color:${c.ink}">${ic(p.icon || c.icon)}<em>${esc(p.sub)}</em></div>`;
+}
 function stars(p) {
   if (!p.rating) return '';
-  return `<div class="stars">${ic('i-star')} <span class="num">${p.rating}</span> (${p.reviews} reviews)</div>`;
+  const full = Math.round(p.rating);
+  return `<div class="stars"><i>${Array.from({ length: 5 }, (_, k) => `<svg style="opacity:${k < full ? 1 : .25}"><use href="#i-star"/></svg>`).join('')}</i>${p.rating} (${p.reviews})</div>`;
 }
-const priceHtml = (p) => `<div class="price"><b>${fmt(p.price)}</b>${p.was ? `<s>${fmt(p.was)}</s>` : ''}</div>`;
+function priceHtml(p) {
+  return `<div class="price"><b>${fmt(p.price)}</b>${p.was ? `<s>${fmt(p.was)}</s><span class="off">${off(p)}% off</span>` : ''}</div>`;
+}
 function card(p) {
   const w = store.wish.includes(p.id);
-  return `<article class="card">
-    <a class="${mediaCls(p)}" href="#/p/${p.id}" aria-label="${esc(p.title)}">${media(p)}${p.was ? `<span class="tag tag-deal">−${off(p)}%</span>` : ''}</a>
-    <button class="wish ${w ? 'on' : ''}" data-act="wish" data-id="${p.id}" aria-label="${w ? 'Remove from' : 'Save to'} wishlist" aria-pressed="${w}">${ic('i-heart')}</button>
-    <div class="card-body">
-      <span class="label acc">${catOf(p).label} · ${esc(p.sub)}</span>
-      <h3><a href="#/p/${p.id}">${esc(p.title)}</a></h3>
-      ${priceHtml(p)}
-      <p class="when">${arrives(p)}</p>
-      ${stars(p)}
+  const badge = p.was ? `<span class="badge">−${off(p)}%</span>` : p.tag ? `<span class="badge light">${esc(p.tag)}</span>` : '';
+  return `<article class="card reveal">
+    <div style="position:relative">
+      <a class="media" href="#/p/${p.id}" aria-label="${esc(p.title)}">${media(p)}${badge}</a>
+      <button class="wish ${w ? 'on' : ''}" data-act="wish" data-id="${p.id}" aria-label="${w ? 'Remove from' : 'Save to'} wishlist" aria-pressed="${w}">${ic('i-heart')}</button>
+      <button class="quick only-d" data-act="add" data-id="${p.id}">Add to bag</button>
     </div>
-    <button class="btn btn-ink add" data-act="add" data-id="${p.id}">Add to cart ${ic('i-arrow')}</button>
+    <div class="card-body">
+      <p class="card-sub">${esc(p.sub)}</p>
+      <h3><a href="#/p/${p.id}">${esc(p.title)}</a></h3>
+      ${stars(p)}${priceHtml(p)}
+    </div>
+    <button class="quick only-m" data-act="add" data-id="${p.id}">Add to bag</button>
   </article>`;
 }
 const gridOf = (list) => `<div class="grid">${list.map(card).join('')}</div>`;
@@ -579,106 +616,98 @@ const gridOf = (list) => `<div class="grid">${list.map(card).join('')}</div>`;
 /* ---------- Views ---------- */
 function vHome() {
   const best = ['p1', 'd3', 'p9', 'p12', 'p10', 'd1', 'p7', 'p6'].map(byId);
-  const drones = P.filter((p) => p.cat === 'drones');
   const t7 = byId('d4');
   return `
   <section class="hero">
     <div class="hero-copy">
-      <div>
-        <span class="label" style="color:#9B9B9B">Shopeiz · Delivered across India</span>
-        <h1>The art of having everything.</h1>
-        <p class="lead">Anything you need, in one place, at your door. Drones, electronics, fashion, home and beauty.</p>
-        <div class="ctas">
-          <a class="btn btn-acc" href="#/c/drones">Shop drones ${ic('i-arrow')}</a>
-          <a class="btn btn-ghost-w" href="#/c/all">Shop all ${ic('i-arrow')}</a>
-        </div>
+      <span class="eyebrow">Shopeiz · From S to Z</span>
+      <h1>The art of having <em>everything.</em></h1>
+      <p class="lead">Anything you need, in one place, at your door. Drones, electronics, fashion, home and beauty — fair prices, secure checkout, delivered across India.</p>
+      <div class="ctas">
+        <a class="btn btn-wine" href="#/c/drones">Shop drones ${ic('i-arrow')}</a>
+        <a class="btn btn-line" href="#/c/all">Explore all</a>
       </div>
-      <div class="facts">
+      <div class="hero-perks">
         <span>${ic('i-truck')} Free delivery over ${fmt(FREE_OVER)}</span>
-        <span>${ic('i-return')} Free returns for 30 days</span>
+        <span>${ic('i-return')} 30-day free returns</span>
         <span>${ic('i-cash')} Cash on delivery</span>
       </div>
     </div>
-    <div class="hero-vis" id="heroVis">
-      <div class="dots">${HERO.map((_, k) => `<button class="${k ? '' : 'on'}" data-act="slide" data-k="${k}" aria-label="Show product ${k + 1}"></button>`).join('')}</div>
-      ${HERO.map((id, k) => `<div class="slide ${k ? '' : 'on'}"><img src="${byId(id).img}" alt="${esc(byId(id).title)}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}></div>`).join('')}
+    <div class="hero-visual" id="heroVis">
+      ${HERO.map((id, k) => `<div class="slide ${k ? '' : 'on'}" data-slide="${k}"><img src="${byId(id).img}" alt="${esc(byId(id).title)}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}></div>`).join('')}
       <a class="hero-tag" id="heroTag" href="#/p/${HERO[0]}"></a>
+      <div class="dots">${HERO.map((_, k) => `<button class="${k ? '' : 'on'}" data-act="slide" data-k="${k}" aria-label="Show slide ${k + 1}"></button>`).join('')}</div>
     </div>
   </section>
 
   <div class="trust">
-    <div>${ic('i-truck')}<p style="margin:0"><b>Free delivery over ${fmt(FREE_OVER)}</b><span>Express next-day delivery for ${fmt(EXP_FEE)}</span></p></div>
-    <div>${ic('i-return')}<p style="margin:0"><b>Free returns for 30 days</b><span>Returns that just work</span></p></div>
+    <div>${ic('i-truck')}<p style="margin:0"><b>Free delivery</b><span>On orders over ${fmt(FREE_OVER)}</span></p></div>
+    <div>${ic('i-return')}<p style="margin:0"><b>30-day returns</b><span>Free and easy, no questions</span></p></div>
     <div>${ic('i-shield')}<p style="margin:0"><b>Secure checkout</b><span>UPI, cards and net banking</span></p></div>
     <div>${ic('i-cash')}<p style="margin:0"><b>Cash on delivery</b><span>Pay when it arrives</span></p></div>
   </div>
 
   <section class="block"><div class="wrap">
-    <div class="sec-top"><span class="label acc">01 — Categories</span><a class="link" href="#/c/all">Shop all ${ic('i-arrow')}</a></div>
-    <h2 class="sec-title">One search covers every category.</h2>
-    <div class="cat-grid">${CATS.map((c) => `<a class="cat-tile" href="#/c/${c.id}">
-      <div class="pic ${c.img ? 'photo' : ''}">${c.img ? `<img src="${c.img}" alt="" loading="lazy">` : ic(c.icon)}</div>
-      <div class="t"><div><h3>${c.label}</h3><small>${P.filter((p) => p.cat === c.id).length} products</small></div>${ic('i-arrow')}</div></a>`).join('')}</div>
+    <div class="sec-head reveal"><div><span class="eyebrow">Shop by category</span><h2>Anything you need, in one place</h2></div><a class="link" href="#/c/all">View everything ${ic('i-arrow')}</a></div>
+    <div class="cat-grid">${CATS.map((c) => `<a class="cat-tile reveal" href="#/c/${c.id}" style="color:${c.ink}">
+      <div class="bg" style="background:${c.tone}">${c.img ? `<img src="${c.img}" alt="" loading="lazy">` : ic(c.icon)}</div>
+      <h3>${c.label}</h3><span>${P.filter((p) => p.cat === c.id).length} pieces ${ic('i-arrow')}</span></a>`).join('')}</div>
   </div></section>
 
-  <section class="billboard">
-    <div class="ink">
-      <div>
-        <span class="label" style="color:#9B9B9B">02 — Drones</span>
-        <h2>The T7 Pro. The view from above.</h2>
-        <p>${esc(t7.desc)} Foldable and ready to fly the day it arrives.</p>
-        <ul class="bullets">
-          <li>${ic('i-check')} Remote with a built-in screen</li>
-          <li>${ic('i-check')} Orange or black</li>
-          <li>${ic('i-check')} Arrives ${dateIn(t7.days)} · Free returns</li>
-        </ul>
-      </div>
-      <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
-        <span style="font-size:34px;font-weight:800;letter-spacing:-.02em" class="num">${fmt(t7.price)}</span>
-        <a class="btn btn-ghost-w" href="#/p/${t7.id}">View product ${ic('i-arrow')}</a>
+  <section class="feature">
+    <div class="pic reveal"><img src="${t7.img}" alt="${esc(t7.title)} in its box" loading="lazy"></div>
+    <div class="copy">
+      <span class="eyebrow">The flagship · ${esc(t7.sub)}</span>
+      <h2>The T7 Pro. <em>The view from above.</em></h2>
+      <p>${esc(t7.desc)} Foldable, beginner-friendly and ready to fly the day it arrives.</p>
+      <ul>
+        <li>${ic('i-check')} Remote with a built-in screen — no phone needed</li>
+        <li>${ic('i-check')} Choose orange or black</li>
+        <li>${ic('i-check')} Delivered by ${dateIn(t7.days)} · free returns</li>
+      </ul>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-light" data-act="add" data-id="${t7.id}">Add to bag · ${fmt(t7.price)}</button>
+        <a class="link" style="color:#fff" href="#/p/${t7.id}">Details ${ic('i-arrow')}</a>
       </div>
     </div>
-    <div class="photo"><img src="${t7.img}" alt="${esc(t7.title)} in its box" loading="lazy"></div>
   </section>
 
   <section class="block"><div class="wrap">
-    <div class="sec-top"><span class="label acc">03 — Drones</span><a class="link" href="#/c/drones">All drones ${ic('i-arrow')}</a></div>
-    <h2 class="sec-title">Camera drones from ${fmt(Math.min(...drones.map((p) => p.price)))}.</h2>
-    ${gridOf(drones)}
-  </div></section>
-
-  <section class="billboard">
-    <div class="ink">
-      <div>
-        <span class="label" style="color:#9B9B9B">Welcome offer</span>
-        <h2>${PROMO.pct}% off your first order.</h2>
-        <p>Enter the code at checkout. It works on everything in your cart.</p>
-      </div>
-      <div class="code"><b>${PROMO.code}</b><button data-act="copy">Copy code ${ic('i-copy')}</button></div>
-    </div>
-    <div class="acc"><svg viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg></div>
-  </section>
-
-  <section class="block"><div class="wrap">
-    <div class="sec-top"><span class="label acc">04 — Bestsellers</span><a class="link" href="#/c/deals">All deals ${ic('i-arrow')}</a></div>
-    <h2 class="sec-title">What people are buying.</h2>
+    <div class="sec-head reveal"><div><span class="eyebrow">Most loved</span><h2>What everyone's buying</h2></div><a class="link" href="#/c/deals">Shop all deals ${ic('i-arrow')}</a></div>
     ${gridOf(best)}
   </div></section>
 
-  <section class="block" style="padding-top:0"><div class="wrap">
-    <div class="sec-top"><span class="label acc">05 — Our promise</span></div>
-    <h2 class="sec-title">Four things we never compromise on.</h2>
-    <div class="values">
-      <div><span class="n">01</span><h3>Choice</h3><p>If people buy it, we sell it. One search covers every category.</p></div>
-      <div><span class="n">02</span><h3>Trust</h3><p>Verified sellers, secure checkout and returns that just work.</p></div>
-      <div><span class="n">03</span><h3>Speed</h3><p>Fast to find, fast to pay, fast to arrive. Every step is short.</p></div>
-      <div><span class="n">04</span><h3>Fair price</h3><p>Clear prices, no hidden fees, real deals instead of fake discounts.</p></div>
+  <section class="offer">
+    <svg class="bgmono" viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg>
+    <span class="eyebrow">Welcome offer</span>
+    <h2>${PROMO.pct}% off your first order.</h2>
+    <p>Use the code at checkout. It works on everything in your bag — drones included.</p>
+    <div class="code"><b>${PROMO.code}</b><button class="btn btn-light" style="height:44px" data-act="copy">Copy code</button></div>
+  </section>
+
+  <section class="story"><div class="wrap story-in">
+    <div class="story-mark reveal"><svg class="mono" viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg><svg class="mono z" viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono" transform="matrix(-1 0 0 1 206.04 0)"/></svg></div>
+    <div class="reveal">
+      <span class="eyebrow">Our mark</span>
+      <h2>A price tag that carries <em>everything.</em></h2>
+      <p>Every product we sell has one. The tag stands for clear, fair prices; the three bars inside are our shelves — gadgets, fashion, home and everything in between. Flip the S and it becomes a Z: Shopeiz starts with S and ends with Z, and so does everything you need.</p>
+      <p class="sign">From S to Z.</p>
+    </div>
+  </div></section>
+
+  <section class="block"><div class="wrap">
+    <div class="sec-head reveal"><div><span class="eyebrow">The Shopeiz promise</span><h2>Four things we never compromise on</h2></div></div>
+    <div class="promise">
+      <div class="reveal"><span class="n">01</span><h3>Choice</h3><p>If people buy it, we sell it. One search covers every category.</p></div>
+      <div class="reveal"><span class="n">02</span><h3>Trust</h3><p>Verified sellers, secure checkout and returns that just work.</p></div>
+      <div class="reveal"><span class="n">03</span><h3>Speed</h3><p>Fast to find, fast to pay, fast to arrive. Every step is short.</p></div>
+      <div class="reveal"><span class="n">04</span><h3>Fair price</h3><p>Clear prices, no hidden fees, real deals instead of fake discounts.</p></div>
     </div>
   </div></section>
 
   <section class="news"><div class="wrap">
-    <div><span class="label acc">Newsletter</span><h2>New products and deals, once a fortnight.</h2></div>
-    <div><form data-form="news"><label class="sr" for="em">Email address</label><input id="em" type="email" required placeholder="Email address"><button class="btn btn-ink">Sign up ${ic('i-arrow')}</button></form><small>Unsubscribe any time.</small></div>
+    <div><span class="eyebrow" style="color:var(--gold-2)">Join the list</span><h2>New arrivals and real deals, first.</h2></div>
+    <div><form data-form="news"><label class="sr" for="em">Email address</label><input id="em" type="email" required placeholder="Your email address"><button>Join</button></form><small>One thoughtful email a fortnight. Unsubscribe anytime.</small></div>
   </div></section>`;
 }
 
@@ -690,9 +719,9 @@ function vList(cat, q) {
     list = P.filter((p) => (p.title + ' ' + p.sub + ' ' + catOf(p).label).toLowerCase().includes(t));
     title = `“${esc(q)}”`; blurb = `${list.length} result${list.length === 1 ? '' : 's'}`; crumbs = 'Search';
   } else if (cat === 'deals') {
-    list = P.filter((p) => p.was); title = 'Deals'; blurb = 'Real prices against MRP. No fake discounts.'; crumbs = 'Deals';
+    list = P.filter((p) => p.was); title = 'Offers'; blurb = 'The best prices in the store, on things worth owning.'; crumbs = 'Offers';
   } else if (cat === 'all' || !CATS.find((c) => c.id === cat)) {
-    list = P.slice(); title = 'Shop all'; blurb = 'Everything in one place.'; crumbs = 'Shop all';
+    list = P.slice(); title = 'Shop all'; blurb = 'Every piece in the Shopeiz collection.'; crumbs = 'Shop all';
   } else {
     const c = CATS.find((x) => x.id === cat); list = P.filter((p) => p.cat === cat); title = c.label; blurb = c.blurb; crumbs = c.label;
   }
@@ -705,12 +734,12 @@ function vList(cat, q) {
     <div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><span>${crumbs}</span></div><h1>${title}</h1><p>${blurb}</p></div>
     <div class="toolbar">
       <div class="chips">${subs.length > 1 ? ['all', ...subs].map((x) => `<button class="chip ${listState.sub === x ? 'on' : ''}" data-act="sub" data-v="${esc(x)}">${x === 'all' ? 'All' : esc(x)}</button>`).join('') : ''}</div>
-      <label class="sort">Sort <select data-act="sort">
+      <label class="sort">Sort by <select data-act="sort">
         ${[['pop', 'Featured'], ['lo', 'Price: low to high'], ['hi', 'Price: high to low'], ['off', 'Biggest saving']].map(([v, l]) => `<option value="${v}" ${s === v ? 'selected' : ''}>${l}</option>`).join('')}
       </select></label>
     </div>
-    ${shown.length ? gridOf(shown) : `<div class="empty"><h2>No results.</h2><p>Try another search, or browse everything.</p><a class="btn btn-ink" href="#/c/all">Shop all ${ic('i-arrow')}</a></div>`}
-    <div style="height:96px"></div>
+    ${shown.length ? gridOf(shown) : `<div class="empty"><h2>Nothing here yet</h2><p>Try another search, or <a class="link" href="#/c/all">browse everything</a></p></div>`}
+    <div style="height:110px"></div>
   </div>`;
 }
 
@@ -723,76 +752,77 @@ function vProduct(id) {
   const specs = p.specs.includes(':') ? `<dl class="specs">${p.specs.split('·').map((x) => { const [k, ...v] = x.split(':'); return `<div><dt>${esc(k.trim())}</dt><dd>${esc(v.join(':').trim())}</dd></div>`; }).join('')}</dl>` : `<p style="margin:0">${esc(p.specs)}</p>`;
   const related = P.filter((x) => x.cat === p.cat && x.id !== p.id).concat(P.filter((x) => x.cat !== p.cat && x.was)).slice(0, 4);
   return `<div class="wrap">
-    <div class="crumbs" style="padding-top:24px"><a href="#/">Home</a><span>/</span><a href="#/c/${c.id}">${c.label}</a><span>/</span><span>${esc(p.title)}</span></div>
+    <div class="crumbs" style="padding-top:28px"><a href="#/">Home</a><span>/</span><a href="#/c/${c.id}">${c.label}</a><span>/</span><span>${esc(p.title)}</span></div>
     <div class="pdp">
-      <div class="gallery"><div class="${mediaCls(p)}">${media(p)}${p.was ? `<span class="tag tag-deal">−${off(p)}%</span>` : ''}</div></div>
+      <div class="gallery"><div class="media">${media(p)}${p.was ? `<span class="badge">Save ${fmt(p.was - p.price)}</span>` : p.tag ? `<span class="badge light">${esc(p.tag)}</span>` : ''}</div></div>
       <div>
-        <span class="label acc">${c.label} · ${esc(p.sub)}</span>
+        <span class="eyebrow">${c.label} · ${esc(p.sub)}</span>
         <h1>${esc(p.title)}</h1>
         ${stars(p)}
         ${priceHtml(p)}
-        <p class="tax">${p.was ? `You save ${fmt(p.was - p.price)} on MRP. ` : ''}Includes GST.${p.price >= 3000 ? ` Or 3 no-cost EMIs of ${fmt(Math.ceil(p.price / 3))}.` : ''}</p>
-        <div class="facts-list">
-          <div>${ic('i-truck')}<p style="margin:0"><b>Arrives ${dateIn(p.days)}</b><span>${p.price >= FREE_OVER ? 'Free delivery' : `Free delivery over ${fmt(FREE_OVER)}`} · Express next day for ${fmt(EXP_FEE)}</span></p></div>
-          <div>${ic('i-return')}<p style="margin:0"><b>Free returns for 30 days</b><span>Send it back, we refund you.</span></p></div>
-          <div>${ic('i-cash')}<p style="margin:0"><b>Cash on delivery available</b><span>Or pay by UPI, card or net banking.</span></p></div>
-        </div>
+        <p class="tax">Inclusive of all taxes${p.price >= 3000 ? ` · or 3 no-cost EMIs of ${fmt(Math.ceil(p.price / 3))}` : ''}</p>
+        <p class="desc">${esc(p.desc)}</p>
         <div class="buy">
           <div class="qty"><button data-act="pq" data-d="-1" aria-label="Decrease quantity">${ic('i-minus')}</button><span id="pq">${pdpQty}</span><button data-act="pq" data-d="1" aria-label="Increase quantity">${ic('i-plus')}</button></div>
-          <button class="btn btn-acc" id="pdpAdd" data-act="add" data-id="${p.id}" data-qty="1"><span>Add to cart</span>${ic('i-arrow')}</button>
+          <button class="btn btn-dark" id="pdpAdd" data-act="add" data-id="${p.id}" data-qty="1">Add to bag — ${fmt(p.price)}</button>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px">
-          <button class="btn btn-ink" data-act="buynow" data-id="${p.id}">Buy now ${ic('i-arrow')}</button>
-          <button class="btn btn-line" data-act="wish" data-id="${p.id}" aria-pressed="${w}"><span>${w ? 'Saved' : 'Save for later'}</span>${ic('i-heart')}</button>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:12px">
+          <button class="btn btn-wine" data-act="buynow" data-id="${p.id}">Buy it now</button>
+          <button class="btn btn-line wish-big ${w ? 'on' : ''}" data-act="wish" data-id="${p.id}" aria-label="Save to wishlist" style="padding:0 18px">${ic('i-heart')}</button>
         </div>
-        <p class="desc">${esc(p.desc)}</p>
-        <details class="acc" open><summary>Specifications ${ic('i-down')}</summary><div class="in">${specs}</div></details>
-        <details class="acc"><summary>Delivery and returns ${ic('i-down')}</summary><div class="in">Standard delivery is free on orders over ${fmt(FREE_OVER)}, otherwise ${fmt(STD_FEE)}. Express next-day delivery is ${fmt(EXP_FEE)}. Returns are free for 30 days after delivery.</div></details>
+        <div class="perks">
+          <div>${ic('i-truck')}<p style="margin:0"><b>Get it by ${dateIn(p.days)}</b><span>${p.price >= FREE_OVER ? 'Free standard delivery' : `Free delivery on orders over ${fmt(FREE_OVER)}`} · Express available</span></p></div>
+          <div>${ic('i-return')}<p style="margin:0"><b>30-day free returns</b><span>Changed your mind? Send it back, on us.</span></p></div>
+          <div>${ic('i-cash')}<p style="margin:0"><b>Cash on delivery available</b><span>Or pay securely by UPI, card or net banking.</span></p></div>
+        </div>
+        <details class="acc" open><summary>Details ${ic('i-down')}</summary><div class="in">${esc(p.desc)}</div></details>
+        <details class="acc"><summary>Specifications ${ic('i-down')}</summary><div class="in">${specs}</div></details>
+        <details class="acc"><summary>Delivery &amp; returns ${ic('i-down')}</summary><div class="in">Standard delivery is free on orders over ${fmt(FREE_OVER)} (otherwise ${fmt(STD_FEE)}). Express delivery is ${fmt(EXP_FEE)}. Returns are free within 30 days of delivery.</div></details>
       </div>
     </div>
   </div>
   <section class="block" style="padding-top:0"><div class="wrap">
-    <div class="sec-top"><span class="label acc">You might also need</span></div>
+    <div class="sec-head"><div><span class="eyebrow">You may also like</span><h2>Pairs well with</h2></div></div>
     ${gridOf(related)}
   </div></section>`;
 }
 
 function lineHtml(l, compact) {
   return `<div class="line">
-    <a class="${mediaCls(l.p)}" href="#/p/${l.p.id}">${media(l.p)}</a>
-    <div><h4><a href="#/p/${l.p.id}">${esc(l.p.title)}</a></h4><div class="meta">${fmt(l.p.price)} · Arrives ${dayName(l.p.days)}</div>
+    <a class="media" href="#/p/${l.p.id}">${media(l.p)}</a>
+    <div><h4><a href="#/p/${l.p.id}">${esc(l.p.title)}</a></h4><div class="meta">${esc(l.p.sub)} · ${fmt(l.p.price)}</div>
       <div class="qty sm"><button data-act="q" data-id="${l.id}" data-d="-1" aria-label="Decrease">${ic('i-minus')}</button><span>${l.qty}</span><button data-act="q" data-id="${l.id}" data-d="1" aria-label="Increase">${ic('i-plus')}</button></div></div>
-    <div class="right"><b>${fmt(l.total)}</b><div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">${compact ? '' : `<button class="txt-btn" data-act="save" data-id="${l.id}">Save for later</button>`}<button class="txt-btn" data-act="rm" data-id="${l.id}">Remove</button></div></div>
+    <div class="right"><b>${fmt(l.total)}</b><div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">${compact ? '' : `<button class="rm" data-act="save" data-id="${l.id}">Save for later</button>`}<button class="rm" data-act="rm" data-id="${l.id}">Remove</button></div></div>
   </div>`;
 }
 function shipBar(sub) {
   const left = FREE_OVER - sub;
-  return `<div class="ship-bar">${left > 0 ? `Add <b class="num">${fmt(left)}</b> more for free delivery.` : `<b>Your order qualifies for free delivery.</b>`}<div class="track"><i style="width:${Math.min(100, sub / FREE_OVER * 100)}%"></i></div></div>`;
+  return `<div class="ship-bar">${left > 0 ? `You're <b>${fmt(left)}</b> away from free delivery` : `${ic('i-check')} <b>You've unlocked free delivery</b>`}<div class="track"><i style="width:${Math.min(100, sub / FREE_OVER * 100)}%"></i></div></div>`;
 }
 function promoHtml() {
   return store.promo
-    ? `<p class="msg ok" style="margin:14px 0 4px">${PROMO.code} applied. ${PROMO.pct}% off. <button class="txt-btn" data-act="unpromo">Remove</button></p>`
+    ? `<p class="msg ok" style="margin:16px 0 4px">${ic('i-check')} ${PROMO.code} applied — ${PROMO.pct}% off. <button class="rm" data-act="unpromo">Remove</button></p>`
     : `<div class="promo"><label class="sr" for="pc">Promo code</label><input id="pc" placeholder="Promo code" autocomplete="off" data-promo><button type="button" data-act="promo">Apply</button></div><p class="msg err" id="promoMsg"></p>`;
 }
 function summaryRows(t) {
   return `<div class="sum-row"><span>Subtotal (${t.count} item${t.count === 1 ? '' : 's'})</span><span>${fmt(t.sub)}</span></div>
-    ${t.disc ? `<div class="sum-row"><span>Promo ${PROMO.code}</span><span>−${fmt(t.disc)}</span></div>` : ''}
-    <div class="sum-row"><span>Delivery</span><span>${t.ship ? fmt(t.ship) : 'Free'}</span></div>
+    ${t.disc ? `<div class="sum-row"><span>Promo ${PROMO.code}</span><span class="ok">−${fmt(t.disc)}</span></div>` : ''}
+    <div class="sum-row"><span>Delivery</span><span>${t.ship ? fmt(t.ship) : '<span class="ok">Free</span>'}</span></div>
     ${t.cod ? `<div class="sum-row"><span>Cash on delivery fee</span><span>${fmt(t.cod)}</span></div>` : ''}
-    <div class="sum-row total"><span>Total</span><span>${fmt(t.total)}</span></div>
-    ${t.saved > 0 ? `<p class="save-line">You save ${fmt(t.saved)} on this order.</p>` : ''}`;
+    <div class="sum-row total"><span>Total <small style="font-weight:400;color:var(--muted)">incl. GST</small></span><span>${fmt(t.total)}</span></div>
+    ${t.saved > 0 ? `<p class="msg ok" style="margin:-8px 0 16px">You're saving ${fmt(t.saved)} on this order</p>` : ''}`;
 }
 
 function vCart() {
   const t = totals();
-  if (!t.count) return `<div class="wrap"><div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><span>Cart</span></div><h1>Your cart is empty.</h1></div><div class="empty" style="padding-top:28px"><p>Anything you need is one search away.</p><a class="btn btn-ink" href="#/c/all">Shop all ${ic('i-arrow')}</a></div></div>`;
+  if (!t.count) return `<div class="wrap"><div class="empty" style="padding:120px 0"><h2>Your bag is empty</h2><p style="margin-bottom:28px">Let's find something you'll love.</p><a class="btn btn-dark" href="#/c/all">Start shopping</a></div></div>`;
   return `<div class="wrap">
-    <div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><span>Cart</span></div><h1>Cart</h1></div>
+    <div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><span>Bag</span></div><h1>Your bag</h1></div>
     <div class="two">
       <div>${shipBar(t.sub)}${t.lines.map((l) => lineHtml(l)).join('')}</div>
-      <div class="panel sticky"><h3>Order summary</h3>${promoHtml()}<div style="height:10px"></div>${summaryRows(t)}
-        <a class="btn btn-acc btn-block" href="#/checkout">Go to checkout ${ic('i-arrow')}</a>
-        <p class="note">${ic('i-lock')} Secure checkout · Cash on delivery available</p></div>
+      <div class="panel sticky"><h3>Order summary</h3>${promoHtml()}<div style="height:12px"></div>${summaryRows(t)}
+        <a class="btn btn-wine btn-block" href="#/checkout">Checkout securely ${ic('i-lock')}</a>
+        <p class="note">${ic('i-return')} Free 30-day returns · Cash on delivery available</p></div>
     </div>
   </div>`;
 }
@@ -801,37 +831,38 @@ const co = { ship: 'std', pay: 'upi', f: {} };
 function vCheckout() {
   const t = totals(co);
   if (!t.count) return vCart();
-  const field = (id, label, type = 'text', full = false, extra = '', err = 'Enter this to continue.') => `<div class="field ${full ? 'full' : ''}"><label for="f-${id}">${label}</label><input id="f-${id}" name="${id}" type="${type}" value="${esc(co.f[id] || '')}" ${extra}><p class="msg err">${err}</p></div>`;
+  const field = (id, label, type = 'text', full = false, extra = '') => `<div class="field ${full ? 'full' : ''}"><label for="f-${id}">${label}</label><input id="f-${id}" name="${id}" type="${type}" value="${esc(co.f[id] || '')}" ${extra}><p class="msg err">Please fill this in.</p></div>`;
   const opt = (grp, v, title, sub, amt) => `<label class="opt ${co[grp] === v ? 'on' : ''}"><input type="radio" name="${grp}" value="${v}" ${co[grp] === v ? 'checked' : ''} data-act="opt"><span class="grow"><b>${title}</b><span>${sub}</span></span><span class="amt">${amt}</span></label>`;
   return `<div class="wrap">
-    <div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><a href="#/cart">Cart</a><span>/</span><span>Checkout</span></div><h1>Checkout</h1></div>
+    <div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><a href="#/cart">Bag</a><span>/</span><span>Checkout</span></div><h1>Checkout</h1>
+      <div class="steps"><b>Details</b><span>—</span><b>Delivery</b><span>—</span><b>Payment</b></div></div>
     <form class="two" data-form="checkout" novalidate>
       <div>
         <fieldset><legend><span>01</span>Contact</legend><div class="fields">
           ${field('name', 'Full name', 'text', false, 'autocomplete="name" required')}
-          ${field('phone', 'Mobile number', 'tel', false, 'autocomplete="tel" inputmode="numeric" required pattern="[0-9 +]{10,14}"', 'Enter a 10-digit mobile number.')}
-          ${field('email', 'Email (optional, for your receipt)', 'email', true, 'autocomplete="email"')}
+          ${field('phone', 'Mobile number', 'tel', false, 'autocomplete="tel" inputmode="numeric" required pattern="[0-9 +]{10,14}"')}
+          ${field('email', 'Email (for your receipt)', 'email', true, 'autocomplete="email"')}
         </div></fieldset>
-        <fieldset><legend><span>02</span>Address</legend><div class="fields">
-          ${field('addr', 'Flat, house number, street', 'text', true, 'autocomplete="street-address" required')}
+        <fieldset><legend><span>02</span>Delivery address</legend><div class="fields">
+          ${field('addr', 'Flat, house no., street', 'text', true, 'autocomplete="street-address" required')}
           ${field('city', 'City', 'text', false, 'autocomplete="address-level2" required')}
-          ${field('pin', 'PIN code', 'text', false, 'autocomplete="postal-code" inputmode="numeric" required pattern="[0-9]{6}"', 'Enter a 6-digit PIN code.')}
+          ${field('pin', 'PIN code', 'text', false, 'autocomplete="postal-code" inputmode="numeric" required pattern="[0-9]{6}"')}
         </div></fieldset>
-        <fieldset><legend><span>03</span>Delivery</legend><div class="opts">
-          ${opt('ship', 'std', 'Standard', `Arrives ${dateIn(3)}`, t.sub >= FREE_OVER ? 'Free' : fmt(STD_FEE))}
-          ${opt('ship', 'exp', 'Express', `Arrives ${dateIn(1)}`, '+' + fmt(EXP_FEE))}
+        <fieldset><legend><span>03</span>Delivery speed</legend><div class="opts">
+          ${opt('ship', 'std', 'Standard', `Arrives by ${dateIn(3)}`, t.sub >= FREE_OVER ? 'Free' : fmt(STD_FEE))}
+          ${opt('ship', 'exp', 'Express', `Arrives by ${dateIn(1)}`, '+' + fmt(EXP_FEE))}
         </div></fieldset>
         <fieldset><legend><span>04</span>Payment</legend><div class="opts">
-          ${opt('pay', 'upi', 'UPI', 'Google Pay, PhonePe, Paytm or any UPI app', '')}
+          ${opt('pay', 'upi', 'UPI', 'GPay, PhonePe, Paytm or any UPI app', '')}
           ${opt('pay', 'card', 'Credit or debit card', 'Visa, Mastercard, RuPay', '')}
-          ${opt('pay', 'cod', 'Cash on delivery', 'Pay in cash or by UPI when it arrives', '+' + fmt(COD_FEE))}
+          ${opt('pay', 'cod', 'Cash on delivery', 'Pay in cash or UPI when it arrives', '+' + fmt(COD_FEE))}
         </div></fieldset>
       </div>
       <div class="panel sticky"><h3>Your order</h3>
-        ${t.lines.map((l) => `<div class="mini"><div class="${mediaCls(l.p)}">${media(l.p)}<span class="q">${l.qty}</span></div><div><h4>${esc(l.p.title)}</h4><small>${esc(l.p.sub)}</small></div><b>${fmt(l.total)}</b></div>`).join('')}
-        ${promoHtml()}<div style="height:10px"></div>${summaryRows(t)}
-        <button class="btn btn-acc btn-block" type="submit"><span>${co.pay === 'cod' ? 'Place order' : 'Pay ' + fmt(t.total)}</span>${ic('i-arrow')}</button>
-        <p class="note">${ic('i-lock')} Your details are encrypted and never shared.</p>
+        ${t.lines.map((l) => `<div class="mini"><div class="media">${media(l.p)}<span class="q">${l.qty}</span></div><div><h4>${esc(l.p.title)}</h4><small>${esc(l.p.sub)}</small></div><b style="font-size:14px">${fmt(l.total)}</b></div>`).join('')}
+        ${promoHtml()}<div style="height:12px"></div>${summaryRows(t)}
+        <button class="btn btn-wine btn-block" type="submit">${co.pay === 'cod' ? 'Place order' : 'Pay ' + fmt(t.total)} ${ic('i-lock')}</button>
+        <p class="note">${ic('i-shield')} Your details are encrypted and kept private</p>
       </div>
     </form>
   </div>`;
@@ -842,37 +873,37 @@ function vDone() {
   const o = lastOrder;
   if (!o) return vHome();
   return `<div class="wrap"><div class="done">
-    ${mono(56)}
-    <span class="label acc">Order ${o.id}</span>
-    <h1>Thank you, ${esc(o.name.split(' ')[0])}. Your order is confirmed.</h1>
-    <p class="l">Arrives <b>${o.arrives}</b>. We'll send updates to ${esc(o.phone)}. Free returns for 30 days.</p>
-    <div class="panel" style="margin:32px 0">${o.lines.map((l) => `<div class="sum-row"><span>${esc(l.t)} × ${l.q}</span><span>${fmt(l.v)}</span></div>`).join('')}<div class="sum-row total" style="margin-bottom:0"><span>${o.cod ? 'To pay on delivery' : 'Paid'}</span><span>${fmt(o.total)}</span></div></div>
-    <a class="btn btn-ink" href="#/">Continue shopping ${ic('i-arrow')}</a>
+    <svg class="mono" viewBox="0 0 206.04 235.47" width="58" style="margin:0 auto 26px" aria-hidden="true"><use href="#mono"/></svg>
+    <span class="eyebrow">Order ${o.id}</span>
+    <h1>Thank you, ${esc(o.name.split(' ')[0])}.</h1>
+    <p style="color:var(--ink-2);font-size:16px">Your order is confirmed and will arrive by <b>${o.arrives}</b>. We'll send updates to ${esc(o.phone)}.</p>
+    <div class="panel" style="text-align:left;margin:36px 0">${o.lines.map((l) => `<div class="sum-row"><span>${esc(l.t)} × ${l.q}</span><span>${fmt(l.v)}</span></div>`).join('')}<div class="sum-row total" style="margin-bottom:0"><span>${o.cod ? 'To pay on delivery' : 'Paid'}</span><span>${fmt(o.total)}</span></div></div>
+    <a class="btn btn-dark" href="#/">Continue shopping</a>
   </div></div>`;
 }
 
 function vWish() {
   const list = store.wish.map(byId);
-  return `<div class="wrap"><div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><span>Wishlist</span></div><h1>Wishlist</h1><p>${list.length ? 'Saved for later.' : ''}</p></div>
-    <div style="padding:22px 0 96px">${list.length ? gridOf(list) : `<div class="empty" style="padding-top:20px"><h2>Nothing saved yet.</h2><p>Tap the heart on any product to save it here.</p><a class="btn btn-ink" href="#/c/all">Shop all ${ic('i-arrow')}</a></div>`}</div></div>`;
+  return `<div class="wrap"><div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><span>Wishlist</span></div><h1>Wishlist</h1><p>${list.length ? 'Saved for later. Prices update automatically.' : ''}</p></div>
+    <div style="padding:36px 0 110px">${list.length ? gridOf(list) : `<div class="empty"><h2>Nothing saved yet</h2><p style="margin-bottom:26px">Tap the heart on anything you like to keep it here.</p><a class="btn btn-dark" href="#/c/all">Browse the collection</a></div>`}</div></div>`;
 }
 
 const HELP = {
-  delivery: ['Delivery', `Standard delivery takes 1 to 5 working days and is free on orders over ${fmt(FREE_OVER)}. Below that it costs ${fmt(STD_FEE)}. Express next-day delivery costs ${fmt(EXP_FEE)}. Every product page and the checkout show the date your order arrives.`],
-  returns: ['Returns and refunds', 'Free returns for 30 days after delivery. Items should be unused and in their original packaging. We refund your original payment method. Cash-on-delivery orders are refunded by UPI or bank transfer.'],
-  payment: ['Payment', `Pay by UPI, credit or debit card (Visa, Mastercard, RuPay) or cash on delivery (${fmt(COD_FEE)} fee). All prices include GST.`],
-  about: ['About Shopeiz', 'Anything you need, in one place, at your door. An online marketplace for everything — gadgets, electronics, fashion, home, beauty and more. Wide choice, fair prices, secure payment and reliable delivery, every order, every time.'],
-  contact: ['Contact', 'Questions about an order or a product? Use the contact details on your order confirmation. We reply within one working day.'],
+  delivery: ['Delivery', `Standard delivery takes 1–5 working days depending on the product and is free on orders over ${fmt(FREE_OVER)}; below that it costs ${fmt(STD_FEE)}. Express delivery (next day in most cities) is ${fmt(EXP_FEE)}. You'll see the expected date on every product page and at checkout.`],
+  returns: ['Returns & refunds', 'Return anything within 30 days of delivery for free. Items should be unused and in their original packaging. Refunds go back to your original payment method; cash-on-delivery orders are refunded by UPI or bank transfer.'],
+  payment: ['Payment options', `Pay by UPI, credit or debit card (Visa, Mastercard, RuPay) or cash on delivery (${fmt(COD_FEE)} fee). All prices include GST.`],
+  about: ['About Shopeiz', 'The art of having everything. Shopeiz is an online marketplace for everything — gadgets, electronics, fashion, home, beauty and more — for anyone who needs something and would rather not spend the afternoon looking for it. Wide choice, fair prices, secure payment and reliable delivery: every order, every time.'],
+  contact: ['Contact', 'Questions about an order or a product? Reach us via the contact details on your order confirmation and we will get back to you within one working day.'],
 };
 function vHelp(k) {
   const h = HELP[k] || HELP.about;
-  return `<div class="wrap"><div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><span>${h[0]}</span></div><h1>${h[0]}</h1></div><p style="max-width:680px;font-size:17px;color:var(--ink-2);padding:30px 0 110px;margin:0">${h[1]}</p></div>`;
+  return `<div class="wrap"><div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><span>${h[0]}</span></div><h1>${h[0]}</h1></div><p style="max-width:680px;font-size:17px;color:var(--ink-2);padding:36px 0 120px;margin:0">${h[1]}</p></div>`;
 }
 
 /* ---------- Chrome ---------- */
 function renderNav(route) {
   const items = [['all', 'Shop all'], ...CATS.map((c) => [c.id, c.label]), ['deals', 'Deals']];
-  $('#nav').innerHTML = items.map(([id, l]) => `<a href="#/c/${id}" class="${route.cat === id ? 'on' : ''} ${id === 'deals' && route.cat !== id ? 'deal' : ''}">${l}</a>`).join('');
+  $('#nav').innerHTML = items.map(([id, l]) => `<a href="#/c/${id}" class="${route.cat === id ? 'on' : ''} ${id === 'deals' ? 'sale' : ''}">${l}</a>`).join('');
   $('#fcats').innerHTML = CATS.map((c) => `<li><a href="#/c/${c.id}">${c.label}</a></li>`).join('');
 }
 function updateCounts() {
@@ -882,21 +913,21 @@ function updateCounts() {
 }
 function renderBag() {
   const t = totals();
-  $('#bag').innerHTML = `<div class="dhead"><h3>Cart ${t.count ? `<span class="num" style="font-weight:400;color:var(--muted);font-size:16px">(${t.count})</span>` : ''}</h3><button class="icon-btn" data-act="close" aria-label="Close">${ic('i-x')}</button></div>
+  $('#bag').innerHTML = `<div class="dhead"><h3>Your bag ${t.count ? `<small style="font-family:var(--sans);font-size:13px;color:var(--muted)">(${t.count})</small>` : ''}</h3><button class="icon-btn" data-act="close" aria-label="Close">${ic('i-x')}</button></div>
     ${t.count ? shipBar(t.sub) : ''}
-    <div class="dbody">${t.count ? t.lines.map((l) => lineHtml(l, true)).join('') : `<div class="empty" style="padding:48px 0"><h2 style="font-size:28px">Your cart is empty.</h2><p>Anything you need is one search away.</p><a class="btn btn-ink" href="#/c/all" data-act="close">Shop all ${ic('i-arrow')}</a></div>`}</div>
-    ${t.count ? `<div class="dfoot"><div class="sum-row" style="font-size:17px;font-weight:800;margin:0 0 2px"><span>Subtotal</span><span>${fmt(t.sub)}</span></div><p style="font-size:13px;color:var(--muted);margin:0 0 14px">Includes GST. Delivery and promo codes at checkout.</p>
-      <a class="btn btn-acc btn-block" href="#/checkout" data-act="close">Go to checkout ${ic('i-arrow')}</a>
-      <a class="btn btn-line btn-block" href="#/cart" data-act="close" style="margin-top:8px">View cart ${ic('i-arrow')}</a></div>` : ''}`;
+    <div class="dbody">${t.count ? t.lines.map((l) => lineHtml(l, true)).join('') : `<div class="empty" style="padding:70px 0"><h2 style="font-size:30px">Your bag is empty</h2><p style="margin-bottom:24px">Your next favourite thing is waiting.</p><a class="btn btn-dark" href="#/c/all" data-act="close">Start shopping</a></div>`}</div>
+    ${t.count ? `<div class="dfoot"><div class="sum-row" style="font-size:16px;font-weight:600;margin:0 0 4px"><span>Subtotal</span><span>${fmt(t.sub)}</span></div><p style="font-size:12px;color:var(--muted);margin:0 0 16px">GST included. Delivery and promo codes applied at checkout.</p>
+      <a class="btn btn-wine btn-block" href="#/checkout" data-act="close">Checkout ${ic('i-lock')}</a>
+      <a class="btn btn-block" href="#/cart" data-act="close" style="height:44px;margin-top:6px">View bag</a></div>` : ''}`;
 }
 function renderMenu() {
-  $('#menu').innerHTML = `<div class="dhead"><span class="wm" style="font-size:26px">Shopeiz</span><button class="icon-btn" data-act="close" aria-label="Close">${ic('i-x')}</button></div>
+  $('#menu').innerHTML = `<div class="dhead"><span class="wm" style="font-size:24px">Shopeiz</span><button class="icon-btn" data-act="close" aria-label="Close">${ic('i-x')}</button></div>
     <div class="dbody mnav">
-      <form class="search" data-form="search" role="search">${ic('i-search')}<input name="q" placeholder="Search Shopeiz" autocomplete="off" aria-label="Search"></form>
+      <form class="search" data-form="search" role="search">${ic('i-search')}<input name="q" placeholder="Search the store" autocomplete="off" aria-label="Search"></form>
       <a href="#/c/all" data-act="close">Shop all ${ic('i-arrow')}</a>
       ${CATS.map((c) => `<a href="#/c/${c.id}" data-act="close">${c.label} ${ic('i-arrow')}</a>`).join('')}
-      <a href="#/c/deals" data-act="close" style="color:var(--burgundy)">Deals ${ic('i-arrow')}</a>
-      <a href="#/wishlist" data-act="close">Wishlist ${ic('i-heart')}</a>
+      <a href="#/c/deals" data-act="close" style="color:var(--wine)">Offers ${ic('i-arrow')}</a>
+      <a href="#/wishlist" data-act="close">Wishlist <span style="font-family:var(--sans);font-size:14px;color:var(--muted)">${store.wish.length || ''}</span></a>
     </div>`;
 }
 function openDrawer(id) {
@@ -924,11 +955,6 @@ function addToCart(id, qty = 1, open = true) {
   if (open) openDrawer('bag');
 }
 function refreshView() { const y = window.scrollY; render(false); window.scrollTo(0, y); }
-function applyPromo() {
-  if (($('#pc')?.value || '').trim().toUpperCase() === PROMO.code) { saveFields(); store.promo = true; save(); toast(`Promo applied. ${PROMO.pct}% off.`); refreshView(); }
-  else $('#promoMsg').textContent = "We don't recognise that code. Check the spelling?";
-}
-function saveFields() { $$('[data-form="checkout"] input:not([type="radio"])').forEach((i) => { if (i.id.startsWith('f-')) co.f[i.name] = i.value; }); }
 
 document.addEventListener('click', (e) => {
   const el = e.target.closest('[data-act]');
@@ -938,16 +964,14 @@ document.addEventListener('click', (e) => {
   if (a === 'close') { closeDrawers(); return; }
   if (a === 'menu') { e.preventDefault(); openDrawer('menu'); return; }
   if (a === 'bag') { openDrawer('bag'); return; }
-  if (a === 'add') { e.preventDefault(); addToCart(id, el.dataset.qty ? pdpQty : 1); return; }
+  if (a === 'add') { e.preventDefault(); addToCart(id, Number(el.dataset.qty ? pdpQty : 1)); return; }
   if (a === 'buynow') { addToCart(id, pdpQty, false); location.hash = '#/checkout'; return; }
-  if (a === 'pq') { pdpQty = Math.max(1, Math.min(10, pdpQty + Number(el.dataset.d))); $('#pq').textContent = pdpQty; return; }
+  if (a === 'pq') { pdpQty = Math.max(1, Math.min(10, pdpQty + Number(el.dataset.d))); $('#pq').textContent = pdpQty; const p = byId(route().id); $('#pdpAdd').textContent = `Add to bag — ${fmt(p.price * pdpQty)}`; return; }
   if (a === 'wish') {
     const i = store.wish.indexOf(id);
-    if (i > -1) { store.wish.splice(i, 1); toast('Removed from your wishlist.'); }
-    else { store.wish.push(id); toast('Saved to your wishlist.', '<a href="#/wishlist">View</a>'); }
-    save();
-    $$(`.wish[data-id="${id}"]`).forEach((b) => { b.classList.toggle('on', i === -1); b.setAttribute('aria-pressed', i === -1); });
-    $$(`.btn-line[data-act="wish"][data-id="${id}"] span`).forEach((s) => (s.textContent = i === -1 ? 'Saved' : 'Save for later'));
+    if (i > -1) { store.wish.splice(i, 1); toast('Removed from your wishlist'); }
+    else { store.wish.push(id); toast('Saved to your wishlist', '<a href="#/wishlist">View</a>'); }
+    save(); $$(`[data-act="wish"][data-id="${id}"]`).forEach((b) => { b.classList.toggle('on', i === -1); b.setAttribute('aria-pressed', i === -1); });
     if (route().v === 'wish') refreshView();
     return;
   }
@@ -955,34 +979,31 @@ document.addEventListener('click', (e) => {
     const l = store.cart.find((x) => x.id === id);
     if (a === 'q' && l) { l.qty += Number(el.dataset.d); if (l.qty < 1) store.cart = store.cart.filter((x) => x !== l); if (l.qty > 10) l.qty = 10; }
     if (a === 'rm') store.cart = store.cart.filter((x) => x.id !== id);
-    if (a === 'save') { store.cart = store.cart.filter((x) => x.id !== id); if (!store.wish.includes(id)) store.wish.push(id); toast('Moved to your wishlist.'); }
+    if (a === 'save') { store.cart = store.cart.filter((x) => x.id !== id); if (!store.wish.includes(id)) store.wish.push(id); toast('Moved to your wishlist'); }
     save();
     if ($('#bag').classList.contains('on')) renderBag();
-    if (['cart', 'checkout'].includes(route().v)) { saveFields(); refreshView(); }
+    if (['cart', 'checkout'].includes(route().v)) refreshView();
     return;
   }
   if (a === 'promo') { applyPromo(); return; }
-  if (a === 'unpromo') { saveFields(); store.promo = false; save(); refreshView(); return; }
+  if (a === 'unpromo') { store.promo = false; save(); refreshView(); return; }
   if (a === 'sub') { listState.sub = el.dataset.v; refreshView(); return; }
   if (a === 'slide') { heroGo(Number(el.dataset.k)); return; }
-  if (a === 'copy') { try { navigator.clipboard.writeText(PROMO.code); } catch (err) {} toast(`Code ${PROMO.code} copied.`); return; }
+  if (a === 'copy') { try { navigator.clipboard.writeText(PROMO.code); } catch (err) {} toast(`Code ${PROMO.code} copied`); return; }
 });
 document.addEventListener('change', (e) => {
   const el = e.target;
   if (el.dataset.act === 'sort') { listState.sort = el.value; refreshView(); }
   if (el.dataset.act === 'opt') { saveFields(); co[el.name] = el.value; refreshView(); }
 });
-document.addEventListener('input', (e) => { if (e.target.closest('[data-form="checkout"]') && e.target.id?.startsWith('f-')) { co.f[e.target.name] = e.target.value; e.target.closest('.field')?.classList.remove('bad'); } });
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeDrawers();
-  if (e.key === 'Enter' && e.target.matches('[data-promo]')) { e.preventDefault(); applyPromo(); }
-});
+function saveFields() { $$('[data-form="checkout"] input:not([type="radio"])').forEach((i) => { if (i.id.startsWith('f-')) co.f[i.name] = i.value; }); }
+document.addEventListener('input', (e) => { if (e.target.closest('[data-form="checkout"]') && e.target.type !== 'radio') { co.f[e.target.name] = e.target.value; e.target.closest('.field')?.classList.remove('bad'); } });
 document.addEventListener('submit', (e) => {
   const f = e.target, kind = f.dataset.form;
   if (!kind) return;
   e.preventDefault();
   if (kind === 'search') { const q = f.q.value.trim(); if (q) { closeDrawers(); location.hash = '#/search/' + encodeURIComponent(q); f.q.blur(); } return; }
-  if (kind === 'news') { f.innerHTML = `<p style="margin:0;padding:14px 0;font-weight:600">Thanks. You're signed up.</p>`; return; }
+  if (kind === 'news') { f.innerHTML = `<p style="margin:0;padding:16px 0;color:var(--gold-2)">${ic('i-check')} Thank you — you're on the list.</p>`; return; }
   if (kind === 'checkout') {
     saveFields();
     let first = null;
@@ -994,15 +1015,23 @@ document.addEventListener('submit', (e) => {
     location.hash = '#/done';
   }
 });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeDrawers();
+  if (e.key === 'Enter' && e.target.matches('[data-promo]')) { e.preventDefault(); applyPromo(); }
+});
+function applyPromo() {
+  if (($('#pc')?.value || '').trim().toUpperCase() === PROMO.code) { saveFields(); store.promo = true; save(); toast(`Promo applied — ${PROMO.pct}% off`); refreshView(); }
+  else $('#promoMsg').textContent = "We don't recognise that code. Check the spelling?";
+}
 
-/* ---------- Hero ---------- */
+/* ---------- Hero slider ---------- */
 let heroK = 0, heroTimer;
 function heroGo(k) {
   heroK = k;
   $$('.slide').forEach((s, i) => s.classList.toggle('on', i === k));
   $$('.dots button').forEach((s, i) => s.classList.toggle('on', i === k));
   const p = byId(HERO[k]), tag = $('#heroTag');
-  if (tag) { tag.href = '#/p/' + p.id; tag.innerHTML = `<div><span class="label acc">${catOf(p).label} · ${esc(p.sub)}</span><div class="t">${esc(p.title)}</div><div class="p"><b>${fmt(p.price)}</b>${p.was ? `<s>${fmt(p.was)}</s>` : ''}</div></div>${ic('i-arrow')}`; }
+  if (tag) { tag.href = '#/p/' + p.id; tag.innerHTML = `<div><div class="t">${esc(p.title)}</div><div class="p">${fmt(p.price)}${p.was ? `<s>${fmt(p.was)}</s>` : ''}</div></div><span class="go">${ic('i-arrow')}</span>`; }
 }
 function heroStart() { clearInterval(heroTimer); if (!$('#heroVis')) return; heroGo(0); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) heroTimer = setInterval(() => heroGo((heroK + 1) % HERO.length), 5500); }
 
@@ -1026,21 +1055,31 @@ function render(top = true) {
   if (key !== lastKey && r.v === 'list') listState.sub = 'all';
   if (key !== lastKey && r.v === 'product') pdpQty = 1;
   lastKey = key;
-  $('#app').innerHTML = r.v === 'list' ? vList(r.cat) : r.v === 'search' ? vList(null, r.q) : r.v === 'product' ? vProduct(r.id) : r.v === 'cart' ? vCart() : r.v === 'checkout' ? vCheckout() : r.v === 'done' ? vDone() : r.v === 'wish' ? vWish() : r.v === 'help' ? vHelp(r.k) : vHome();
+  const app = $('#app');
+  app.innerHTML = r.v === 'list' ? vList(r.cat) : r.v === 'search' ? vList(null, r.q) : r.v === 'product' ? vProduct(r.id) : r.v === 'cart' ? vCart() : r.v === 'checkout' ? vCheckout() : r.v === 'done' ? vDone() : r.v === 'wish' ? vWish() : r.v === 'help' ? vHelp(r.k) : vHome();
   renderNav(r);
   updateCounts();
   const sb = $('#stickyBuy');
-  if (r.v === 'product' && byId(r.id)) { const p = byId(r.id); sb.innerHTML = `<div class="p">${esc(p.title)}<b>${fmt(p.price)}</b></div><button class="btn btn-acc" data-act="add" data-id="${p.id}" data-qty="1">Add to cart ${ic('i-arrow')}</button>`; } else { sb.innerHTML = ''; sb.classList.remove('on'); }
-  const titles = { home: 'Shopeiz — The art of having everything', cart: 'Cart — Shopeiz', checkout: 'Checkout — Shopeiz', done: 'Order confirmed — Shopeiz', wish: 'Wishlist — Shopeiz' };
-  document.title = r.v === 'product' && byId(r.id) ? `${byId(r.id).title} — Shopeiz` : r.v === 'list' ? `${(CATS.find((c) => c.id === r.cat) || { label: r.cat === 'deals' ? 'Deals' : 'Shop all' }).label} — Shopeiz` : titles[r.v] || 'Shopeiz';
+  if (r.v === 'product' && byId(r.id)) { const p = byId(r.id); sb.innerHTML = `<div class="p">${esc(p.title)}<b>${fmt(p.price)}</b></div><button class="btn btn-dark" data-act="add" data-id="${p.id}" data-qty="1">Add to bag</button>`; } else { sb.innerHTML = ''; sb.classList.remove('on'); }
+  const titles = { home: 'Shopeiz — The art of having everything', cart: 'Your bag — Shopeiz', checkout: 'Checkout — Shopeiz', done: 'Order confirmed — Shopeiz', wish: 'Wishlist — Shopeiz' };
+  document.title = r.v === 'product' && byId(r.id) ? `${byId(r.id).title} — Shopeiz` : r.v === 'list' ? `${(CATS.find((c) => c.id === r.cat) || { label: r.cat === 'deals' ? 'Offers' : 'Shop all' }).label} — Shopeiz` : titles[r.v] || 'Shopeiz';
   if (top) window.scrollTo(0, 0);
   heroStart();
+  observe();
 }
-window.addEventListener('scroll', () => { const sb = $('#stickyBuy'); if (sb.innerHTML) sb.classList.toggle('on', window.scrollY > 620); }, { passive: true });
+let io;
+function observe() {
+  if (!('IntersectionObserver' in window)) { $$('.reveal').forEach((e) => e.classList.add('in')); return; }
+  io = io || new IntersectionObserver((es) => es.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { rootMargin: '0px 0px -8% 0px' });
+  $$('.reveal:not(.in)').forEach((e) => io.observe(e));
+}
+window.addEventListener('scroll', () => {
+  $('#hdr').classList.toggle('scrolled', window.scrollY > 8);
+  const sb = $('#stickyBuy'); if (sb.innerHTML) sb.classList.toggle('on', window.scrollY > 560);
+}, { passive: true });
 window.addEventListener('hashchange', () => { closeDrawers(); render(); });
 
-$('#ann1').innerHTML = `Free delivery over ${fmt(FREE_OVER)} · Free returns for 30 days`;
-$('#ann2').innerHTML = `<b>${PROMO.pct}% off</b> your first order with code <b>${PROMO.code}</b>`;
+$('#announce').innerHTML = `Free delivery over ${fmt(FREE_OVER)} &nbsp;·&nbsp; Free returns for 30 days &nbsp;·&nbsp; <b>${PROMO.pct}% OFF</b> your first order with <b>${PROMO.code}</b>`;
 $('#yr').textContent = new Date().getFullYear();
 render();
 </script>
