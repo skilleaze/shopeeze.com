@@ -51,23 +51,23 @@
   const priceHtml = (p) => `<div class="price"><b>${fmt(p.price)}</b>${p.was ? `<s>${fmt(p.was)}</s><span class="off">${off(p)}% off</span>` : ''}</div>`;
   function card(p, ctx = {}) {
     const w = (ctx.wish || []).includes(p.id);
-    const badge = p.was ? `<span class="badge">−${off(p)}%</span>` : p.tag ? `<span class="badge light">${esc(p.tag)}</span>` : '';
+    const badge = p.was ? `<span class="badge">Save ${off(p)}%</span>` : p.tag ? `<span class="badge">${esc(p.tag)}</span>` : '';
     const add = p.available === false ? '' : `data-act="add" data-id="${p.id}" data-snap="${snap(p)}"`;
     return `<article class="card reveal">
-    <div style="position:relative">
-      <a class="media" href="${url.product(p)}" aria-label="${esc(p.title)}">${media(p)}${badge}</a>
+    <div class="card-media">
+      <a class="media" href="${url.product(p)}" aria-label="${esc(p.title)}">${media(p)}</a>${badge}
       <button class="wish ${w ? 'on' : ''}" data-act="wish" data-id="${p.id}" data-snap="${snap(p)}" aria-label="Save ${esc(p.title)} to wishlist" aria-pressed="${w}">${ic('i-heart')}</button>
-      ${add ? `<button class="quick only-d" ${add}>Add to bag</button>` : ''}
     </div>
     <div class="card-body">
-      <p class="card-sub">${esc(p.sub || catOf(p).label)}</p>
       <h3><a href="${url.product(p)}">${esc(p.title)}</a></h3>
-      ${stars(p)}${priceHtml(p)}
+      <div class="card-row">
+        <div class="cprice">${p.was ? `<b class="sale">${fmt(p.price)}</b><s>${fmt(p.was)}</s>` : `<b>${fmt(p.price)}</b>`}</div>
+        ${add ? `<button class="qa" ${add} aria-label="Add ${esc(p.title)} to bag">${ic('i-bag')}<span>Quick add</span></button>` : '<span class="soldout">Sold out</span>'}
+      </div>
     </div>
-    ${add ? `<button class="quick only-m" ${add}>Add to bag</button>` : ''}
   </article>`;
   }
-  const gridOf = (list, ctx) => `<div class="grid">${list.map((p) => card(p, ctx)).join('')}</div>`;
+  const gridOf = (list, ctx, cls = '') => `<div class="grid ${cls}">${list.map((p) => card(p, ctx)).join('')}</div>`;
   const crumbs = (items) => `<nav class="crumbs" aria-label="Breadcrumb">${items.map(([label, href], i) => (i ? '<span>/</span>' : '') + (href ? `<a href="${href}">${esc(label)}</a>` : `<span>${esc(label)}</span>`)).join('')}</nav>`;
 
   /* ---------- Home ---------- */
@@ -258,10 +258,9 @@
         ${[['pop', 'Featured'], ['lo', 'Price: low to high'], ['hi', 'Price: high to low'], ['off', 'Biggest saving']].map(([val, l]) => `<option value="${val}" ${v.sort === val ? 'selected' : ''}>${l}</option>`).join('')}
       </select></label>
     </div>
-    ${v.items.length ? gridOf(v.items, ctx) : `<div class="empty"><h2>Nothing here yet</h2><p>Try another search, or <a class="link" href="${url.shop}">browse everything</a></p></div>`}
-    ${pager(v)}
-    <div style="height:110px"></div>
-  </div>`;
+    </div>
+    ${v.items.length ? gridOf(v.items, ctx, 'bleed') : `<div class="wrap"><div class="empty"><h2>Nothing here yet</h2><p>Try another search, or <a class="link" href="${url.shop}">browse everything</a></p></div></div>`}
+    <div class="wrap">${pager(v)}<div style="height:110px"></div></div>`;
   }
 
   /* ---------- Product ---------- */

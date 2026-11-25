@@ -30,3 +30,9 @@ create or replace function bag_prices(ids text[]) returns jsonb language sql sta
     'variants', (select coalesce(jsonb_agg(jsonb_build_object('id', v->>'id', 'title', v->>'title', 'price', variant_price(p, v), 'ok', coalesce((v->>'avail')::boolean, true))), '[]') from jsonb_array_elements(p.variants) v))), '[]')
   from products p where p.id = any(ids[1:60])
 $fn$;
+
+-- 25 Nov 2026: suppliers can be Shopify or WooCommerce; Seasonsway added (WooCommerce Store API)
+alter table suppliers add column if not exists platform text not null default 'shopify';
+insert into suppliers (id, name, base_url, fee, enabled, cod_ok, platform, notes) values
+  ('seasonsway', 'Seasonsway', 'https://seasonsway.com', 0, true, true, 'woo', 'Women''s fashion (WooCommerce). Prices taken from their public site; shipping fee per order not confirmed yet.')
+on conflict (id) do update set platform = 'woo';

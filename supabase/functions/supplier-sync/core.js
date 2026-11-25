@@ -1,16 +1,18 @@
 // Shared supplier sync logic. Plain JavaScript so it runs in the Supabase Edge Function (Deno)
-// and in Node for local tests. Reads public Shopify feeds (products.json) and writes to the database.
+// and in Node for local tests. Reads public Shopify feeds (products.json) and WooCommerce Store API feeds.
 
 const UA = 'Mozilla/5.0 (compatible; ShopeizSync/1.0; +https://shopeiz.com)';
 export const PAGE = 250;
 // Short id prefixes so product ids don't name the supplier
-export const PREFIX = { dropplier: 'dp', baapstore: 'bs', deodap: 'dd' };
+export const PREFIX = { dropplier: 'dp', baapstore: 'bs', deodap: 'dd', seasonsway: 'sw' };
 export const pid = (supplier, id) => `${PREFIX[supplier] || supplier}${id}`;
 
 /* ---------- Text clean-up ---------- */
-const SUPPLIER_WORDS = /\b(dropplier|deodap|deo\s*dap|baap\s*store|baapstore|wukusy|wukuzy)\b/gi;
+const ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', ndash: '-', mdash: '-', hellip: '...', rsquo: "'", lsquo: "'", rdquo: '"', ldquo: '"', times: 'x' };
+export const decode = (s) => String(s || '').replace(/&#(\d+);/g, (m, n) => String.fromCharCode(Number(n))).replace(/&#x([0-9a-f]+);/gi, (m, n) => String.fromCharCode(parseInt(n, 16))).replace(/&([a-z]+);/gi, (m, n) => (ENT[n.toLowerCase()] != null ? ENT[n.toLowerCase()] : m)).replace(/[\u2013\u2014]/g, '-');
+const SUPPLIER_WORDS = /\b(dropplier|deodap|deo\s*dap|baap\s*store|baapstore|wukusy|wukuzy|seasonsway)\b/gi;
 export function cleanTitle(t) {
-  let s = String(t || '').replace(/\s+/g, ' ').trim();
+  let s = decode(t).replace(/\s+/g, ' ').trim();
   s = s.replace(/^\(?\d{2,6}[a-zA-Z]?\)?[\s_\-:.]+(?=[A-Za-z])/, '');        // leading stock codes: "099 Square ..."
   s = s.replace(/^[A-Z0-9]{2,}[_-][A-Za-z0-9_-]+\s+/, '');            // "0099_squr_gas ..."
   s = s.replace(SUPPLIER_WORDS, '').replace(/\s{2,}/g, ' ').replace(/^[\s\-|:,]+|[\s\-|:,]+$/g, '');
@@ -19,7 +21,7 @@ export function cleanTitle(t) {
 }
 export function cleanType(t) {
   const s = String(t || '').replace(SUPPLIER_WORDS, '').replace(/[_]+/g, ' ').replace(/\s+/g, ' ').trim();
-  if (!s || /^(all products|default|product|products|test|goods)$/i.test(s)) return '';
+  if (!s || /^(all products|default|product|products|test|goods|uncategori[sz]ed)$/i.test(s)) return '';
   return s.replace(/\b[a-z]/g, (c) => c.toUpperCase()).slice(0, 60);
 }
 
@@ -50,7 +52,7 @@ const RULES = [
   ['electronics', /\b(earphone|earbud|headphone|headset|speaker|bluetooth|charger|charging|cable|usb|power ?bank|mobile|smart ?watch|phone|tripod|selfie|ring light|led strip|remote|adapter|mic\b|microphone|keyboard|mouse|camera|projector|gadget|electronic|tws|neckband|smart)\b/i],
   ['kids', /\b(toy|toys|kids?|baby|child|children|infant|puzzle|doll|game|rc car|building blocks|school bag|teether|feeding bottle)\b/i],
   ['auto', /\b(car|bike|motorcycle|scooter|helmet|automotive|vehicle|dashboard|tyre|tire)\b/i],
-  ['fashion', /\b(saree|sari|kurti|kurta|lehenga|dupatta|blouse|dress|shirt|t-?shirt|jeans|legging|top|gown|footwear|sandal|slipper|shoe|chappal|jewell?ery|earring|necklace|bangle|bracelet|ring|watch|wallet|handbag|bag|purse|backpack|belt|sunglass|cap|socks|scarf|stole|suit)\b/i],
+  ['fashion', /\b(shrug|shrugs|wear|ethnic|palazzo|skirt|jacket|hoodie|sweatshirt|tunic|nightwear|co-?ord|jumpsuit|trousers?|pants|shorts|saree|sari|kurti|kurta|lehenga|dupatta|blouse|dress|shirt|t-?shirt|jeans|legging|top|gown|footwear|sandal|slipper|shoe|chappal|jewell?ery|earring|necklace|bangle|bracelet|ring|watch|wallet|handbag|bag|purse|backpack|belt|sunglass|cap|socks|scarf|stole|suit)\b/i],
   ['beauty', /\b(beauty|makeup|make-up|lipstick|nail|hair|comb|brush|trimmer|shaver|massager|skin|face|facial|cosmetic|perfume|soap|shampoo|bath|personal care|health|wax|mirror|grooming|dental|tooth)\b/i],
   ['office', /\b(pen|pencil|notebook|diary|stationery|office|desk|file|folder|stapler|marker|calculator|sticky|craft|art|paint|colou?r)\b/i],
   ['sports', /\b(gym|yoga|fitness|exercise|sport|sports|cricket|football|badminton|cycle|cycling|camping|travel|bottle|garden|plant|outdoor|water bottle|skipping|dumbbell)\b/i],
@@ -110,6 +112,34 @@ export function mapProduct(supplier, sp, runId) {
   };
 }
 
+/* ---------- Map one WooCommerce Store API product ---------- */
+export function mapWoo(supplier, wp, runId) {
+  const pr = wp.prices || {};
+  const unit = Math.pow(10, Number(pr.currency_minor_unit == null ? 2 : pr.currency_minor_unit));
+  const money = (x) => (x == null || x === '' ? null : Number(x) / unit);
+  const range = pr.price_range;
+  // When options cost different amounts we price every option at the highest one, so we never undercharge
+  const cost = range && range.max_amount ? money(range.max_amount) : money(pr.price);
+  const reg = money(pr.regular_price);
+  const mrp = reg && cost && reg > cost ? reg : null;
+  const available = wp.is_in_stock !== false && wp.is_purchasable !== false && cost > 0;
+  const vars = (wp.variations || []).map((v) => ({ id: String(v.id), title: (v.attributes || []).map((a) => decode(a.value)).filter(Boolean).join(' / ') || 'Option', sku: null, cost, mrp, avail: true, grams: null }));
+  const variants = vars.length ? vars : [{ id: String(wp.id), title: 'Default Title', sku: wp.sku || null, cost, mrp, avail: available, grams: null }];
+  const cats = (wp.categories || []).map((c) => decode(c.name));
+  const name = cleanTitle(wp.name);
+  const images = (wp.images || []).map((i) => i.src).filter(Boolean).slice(0, 10);
+  const html = cleanHtml(decode(wp.description || '') ? wp.description : wp.short_description);
+  return {
+    id: pid(supplier, wp.id), supplier, src_id: String(wp.id), handle: wp.slug, title_src: decode(wp.name), name,
+    cat: guessCat(name, cats.join(' '), cats), sub: cleanType(cats[cats.length - 1] || '') || null, tags: cats.slice(0, 30),
+    desc_html: html, images, variants, cost, mrp, available,
+    hidden_reason: !cost ? 'zero price' : !images.length ? 'no photo' : null,
+    collections: [],
+    rank: (available ? 10 : 0) + (mrp && cost && mrp > cost * 1.5 ? 2 : 0) + Math.min(images.length, 5) * 0.2,
+    last_seen_run: runId, synced_at: new Date().toISOString(),
+  };
+}
+
 /* ---------- HTTP ---------- */
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 export async function getJson(url, tries = 3) {
@@ -120,7 +150,7 @@ export async function getJson(url, tries = 3) {
       if (r.status === 429 || r.status >= 500) { last = new Error(`${r.status} from ${url}`); await sleep(1500 * (i + 1)); continue; }
       if (!r.ok) throw new Error(`${r.status} from ${url}`);
       return await r.json();
-    } catch (e) { last = e; await sleep(800 * (i + 1)); }
+    } catch (e) { last = e; if (/ 40\d from /.test(e.message)) throw e; await sleep(800 * (i + 1)); }
   }
   throw last;
 }
@@ -149,7 +179,7 @@ export function db(base, key) {
 
 /* ---------- One step of the sync (a few pages), so each call stays short ---------- */
 export async function step(D, { force = false, pagesPerCall = 4, log = () => {} } = {}) {
-  const suppliers = await D.get('suppliers?select=id,base_url,enabled&enabled=eq.true&base_url=not.is.null&order=id');
+  const suppliers = await D.get('suppliers?select=id,base_url,enabled,platform&enabled=eq.true&base_url=not.is.null&order=id');
   const states = await D.get('sync_state?select=*');
   const now = Date.now();
   let st = null, sup = null;
@@ -171,17 +201,20 @@ export async function step(D, { force = false, pagesPerCall = 4, log = () => {} 
   try {
     while (pages < pagesPerCall && st.phase !== 'idle') {
       if (st.phase === 'products') {
-        const j = await getJson(`${base}/products.json?limit=${PAGE}&page=${st.page}`);
+        const woo = sup.platform === 'woo';
+        const j = woo ? await getJson(`${base}/wp-json/wc/store/v1/products?per_page=100&page=${st.page}`).catch((e) => { if (/ 40\d from /.test(e.message)) return []; throw e; })
+                      : await getJson(`${base}/products.json?limit=${PAGE}&page=${st.page}`);
         pages++;
-        const list = j.products || [];
+        const list = woo ? (Array.isArray(j) ? j : []) : (j.products || []);
         if (!list.length) {
           const hasCols = (await D.get(`collection_map?select=handle&supplier=eq.${sup.id}&limit=1`)).length > 0;
           st.phase = hasCols ? 'collections' : 'finish'; st.page = 1; st.col_idx = 0;
           if (hasCols) cols.push(...(await D.get(`collection_map?select=handle&supplier=eq.${sup.id}&order=priority,handle`)));
           continue;
         }
-        const rows = list.map((p) => mapProduct(sup.id, p, st.run_id));
+        const rows = list.map((p) => (woo ? mapWoo(sup.id, p, st.run_id) : mapProduct(sup.id, p, st.run_id)));
         for (let i = 0; i < rows.length; i += 125) await D.upsert('products', rows.slice(i, i + 125));
+        if (woo) pages -= 0.5; // Woo pages hold 100 products: allow twice as many per call
         st.stats = { ...(st.stats || {}), seen: (st.stats?.seen || 0) + rows.length };
         log(`${sup.id} products page ${st.page}: ${rows.length}`);
         st.page++;

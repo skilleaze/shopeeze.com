@@ -191,7 +191,7 @@
           <div class="row" style="margin-top:8px">${o.pay_status !== 'paid' ? '<button class="btn sm" data-pay="paid">Mark paid</button>' : ''}${o.pay_status === 'paid' ? '<button class="btn sm" data-pay="refunded">Mark refunded</button>' : ''}</div></div>
       </div>
       <div class="sec"><h3>Items · place these with ${sups.map((s) => esc(supById(s).name || s)).join(', ')}</h3>
-        ${items.map((i) => { const sp = supById(i.supplier); const link = sp.base_url && i.handle ? `${sp.base_url}/products/${i.handle}${i.variant_id ? '?variant=' + i.variant_id : ''}` : ''; return `<div class="item">${i.img ? `<img class="thumb" src="${esc(i.img)}${/shopify/.test(i.img) ? '?width=100' : ''}">` : ''}<div class="sp"><b>${esc(i.title)}</b>${i.variant_title ? ` · ${esc(i.variant_title)}` : ''}<div class="meta">${esc(sp.name || i.supplier || '')}${i.sku ? ' · SKU ' + esc(i.sku) : ''} · cost ${inr(i.cost)} + fee ${inr(i.fee)} · sold at ${inr(i.price)}</div>
+        ${items.map((i) => { const sp = supById(i.supplier); const link = sp.base_url && i.handle ? (sp.platform === 'woo' ? `${sp.base_url}/product/${i.handle}/` : `${sp.base_url}/products/${i.handle}${i.variant_id ? '?variant=' + i.variant_id : ''}`) : ''; return `<div class="item">${i.img ? `<img class="thumb" src="${esc(i.img)}${/shopify/.test(i.img) ? '?width=100' : ''}">` : ''}<div class="sp"><b>${esc(i.title)}</b>${i.variant_title ? ` · ${esc(i.variant_title)}` : ''}<div class="meta">${esc(sp.name || i.supplier || '')}${i.sku ? ' · SKU ' + esc(i.sku) : ''} · cost ${inr(i.cost)} + fee ${inr(i.fee)} · sold at ${inr(i.price)}</div>
           <div class="row" style="margin-top:4px">${link ? `<a class="btn sm" href="${esc(link)}" target="_blank">Open on ${esc(sp.name)} ↗</a>` : ''}<a class="btn sm" href="/products/${esc(i.slug)}" target="_blank">Our page ↗</a></div></div><div style="text-align:right"><b>× ${i.qty}</b><div class="muted">${inr(i.price * i.qty)}</div></div></div>`; }).join('')}</div>
       <div class="sec"><h3>Supplier and tracking</h3><div class="fgrid">
         <div class="f"><label>Supplier order ID</label><input class="in" id="so" value="${esc(o.supplier_order || '')}"></div>
@@ -289,7 +289,7 @@
     const p = id ? (await q(sb.from('products').select('*').eq('id', id).single())).data : { id: '', supplier: 'own', name: '', images: [], variants: [], active: true, available: true, category: 'home' };
     const sp = supById(p.supplier);
     const own = p.supplier === 'own';
-    const link = sp.base_url && p.handle ? `${sp.base_url}/products/${p.handle}` : '';
+    const link = sp.base_url && p.handle ? (sp.platform === 'woo' ? `${sp.base_url}/product/${p.handle}/` : `${sp.base_url}/products/${p.handle}`) : '';
     openDrawer(`<div class="hd"><b style="font-size:16px">${id ? esc(p.display_title) : 'New own product'}</b><span class="sp"></span>${id ? `<a class="btn sm" href="/products/${esc(p.slug)}" target="_blank">View ↗</a>` : ''}<button class="btn sm" id="dc">Close</button></div>
     <div class="bd">
       ${(p.images || []).length ? `<div class="row sec">${p.images.slice(0, 6).map((i) => `<img class="thumb" style="width:80px;height:80px;flex-basis:80px" src="${esc(i)}${/shopify/.test(i) ? '?width=160' : ''}">`).join('')}</div>` : ''}
