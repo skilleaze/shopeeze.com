@@ -1,0 +1,4 @@
+-- 25 Nov 2026 (applied): colour families, customer reviews with moderation, ratings on products.
+-- See the live functions family_key, product_family, submit_review, product_reviews, reviews_after
+-- and catalog_list (now returns rating_avg and rating_count). Reviews are shown only after an admin approves them;
+-- "Verified buyer" is set when the order number and phone match a delivered order containing the product.
