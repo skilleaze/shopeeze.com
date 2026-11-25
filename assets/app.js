@@ -353,11 +353,11 @@
     heroK = k;
     $$('.slide').forEach((s, i) => s.classList.toggle('on', i === k));
     $$('.dots button').forEach((s, i) => s.classList.toggle('on', i === k));
-    const p = byId(HERO[k]), tag = $('#heroTag');
+    const sl = $$('.slide')[k], p = sl && byId(sl.dataset.id), tag = $('#heroTag');
     if (!p) return;
     if (tag) { tag.href = url.product(p); tag.innerHTML = `<div><div class="t">${esc(p.title)}</div><div class="p">${fmt(p.price)}${p.was ? `<s>${fmt(p.was)}</s>` : ''}</div></div><span class="go">${ic('i-arrow')}</span>`; }
   }
-  if ($('#heroVis') && !matchMedia('(prefers-reduced-motion: reduce)').matches) heroTimer = setInterval(() => heroGo((heroK + 1) % HERO.length), 5500);
+  if ($('#heroVis') && !matchMedia('(prefers-reduced-motion: reduce)').matches) if ($$('.slide').length > 1) heroTimer = setInterval(() => heroGo((heroK + 1) % $$('.slide').length), 5500);
 
   /* ---------- Reveal on scroll ---------- */
   let io;

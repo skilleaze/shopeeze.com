@@ -24,7 +24,7 @@
       seo: 'Online fashion shopping in India: bags, wallets, jewellery and accessories for men and women, with cash on delivery across India.' },
     { id: 'kids',        label: 'Toys & Kids',        blurb: 'Toys, games and baby essentials they will love.', icon: 'p-drone',
       seo: 'Shop toys and kids products online in India: RC toys, puzzles, games and baby essentials with cash on delivery.' },
-    { id: 'drones',      label: 'Drones',             blurb: 'Foldable camera drones, ready to fly out of the box.', icon: 'p-drone', img: '/assets/drones/m3-max.png',
+    { id: 'drones',      label: 'Drones',             blurb: 'Foldable camera drones, ready to fly out of the box.', icon: 'p-drone', img: '/assets/drones/e88-pro.png',
       seo: 'Buy camera drones online in India at the best prices. Foldable drones with dual cameras, phone and screen remotes and cash on delivery.' },
     { id: 'cleaning',    label: 'Cleaning & Storage', blurb: 'Mops, organisers and storage that keep things tidy.', icon: 'p-sofa',
       seo: 'Buy cleaning supplies and storage organisers online in India: mops, lint rollers, racks, boxes and laundry essentials with cash on delivery.' },
@@ -63,11 +63,13 @@
     { id: 's12', cat: 'cleaning', sub: 'Lint removers', title: 'Mini Lint Roller', cost: 35, price: 169, days: 5, img: '/assets/products/mini-lint-roller.jpg', desc: 'Reusable, washable lint roller for clothes, sofas and car seats. Picks up hair, lint, dust and crumbs.' },
     { id: 's13', cat: 'kids', sub: 'Toy guns', title: 'Automatic Gel Blaster Toy Gun', cost: 380, price: 840, days: 5, img: '/assets/products/gel-blaster-toy-gun.jpg', desc: 'Automatic gel ball blaster with goggles and water gel beads. For outdoor play with adult supervision.' },
   ];
-  OWN.forEach((p) => { p.supplier = 'own'; p.available = true; p.cod = true; });
+  // Only the E88 Pro is in stock right now; the rest show as out of stock (change in /admin → Products).
+  const IN_STOCK = ['d1'];
+  OWN.forEach((p) => { p.supplier = 'own'; p.available = IN_STOCK.includes(p.id); p.cod = true; });
   // P is the live product list. On the server it is refilled from the database; in the browser it holds our own stock.
-  const P = OWN.slice();
-  const HERO = ['d4', 'd3', 'd1', 'd2'];
-  const BEST = ['s1', 'd3', 's2', 's12', 's8', 'd1', 's3', 's10'];
+  const P = OWN.filter((p) => p.available);
+  const HERO = ['d1', 'd4', 'd3', 'd2'];
+  const BEST = ['d1'];
   const FREE_OVER = 499, STD_FEE = 40, EXP_FEE = 0, COD_FEE = 49;
   const PROMO = { code: 'SZWELCOME', pct: 10 };
   const POLICY = { minDays: 6, maxDays: 10, ownMax: 5, replaceDays: 7 };

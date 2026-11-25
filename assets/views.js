@@ -74,7 +74,8 @@
   function vHome(ctx = {}) {
     let best = BEST.map(byId).filter(Boolean);
     if (best.length < 8) best = best.concat(P.filter((p) => !BEST.includes(p.id) && p.img).slice(0, 8 - best.length));
-    const t7 = byId('d4');
+    const hero = HERO.map(byId).filter(Boolean);
+    const fl = byId('d1');
     const counts = {}; P.forEach((p) => (counts[p.cat] = (counts[p.cat] || 0) + 1));
     const cover = (c) => c.img || (P.find((p) => p.cat === c.id && p.img) || {}).img;
     const cats = CATS.filter((c) => counts[c.id]);
@@ -86,7 +87,7 @@
       <p class="lead">Anything you need, in one place, at your door. Kitchen, home, electronics, beauty, fashion, toys and drones. Fair prices, cash on delivery, delivered across India.</p>
       <div class="ctas">
         <a class="btn btn-wine" href="${url.shop}">Shop everything ${ic('i-arrow')}</a>
-        <a class="btn btn-line" href="${url.cat('drones')}">Shop drones</a>
+        <a class="btn btn-line" href="${url.deals}">Today's deals</a>
       </div>
       <div class="hero-perks">
         <span>${ic('i-truck')} Free delivery over ${fmt(C.FREE_OVER)}</span>
@@ -95,9 +96,9 @@
       </div>
     </div>
     <div class="hero-visual" id="heroVis">
-      ${HERO.map((id, k) => `<div class="slide ${k ? '' : 'on'}" data-slide="${k}"><img src="${byId(id).img}" alt="${esc(byId(id).title)}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}></div>`).join('')}
-      <a class="hero-tag" id="heroTag" href="${url.product(byId(HERO[0]))}"><div><div class="t">${esc(byId(HERO[0]).title)}</div><div class="p">${fmt(byId(HERO[0]).price)}</div></div><span class="go">${ic('i-arrow')}</span></a>
-      <div class="dots">${HERO.map((_, k) => `<button class="${k ? '' : 'on'}" data-act="slide" data-k="${k}" aria-label="Show slide ${k + 1}"></button>`).join('')}</div>
+      ${hero.map((p, k) => `<div class="slide ${k ? '' : 'on'}" data-slide="${k}" data-id="${p.id}"><img src="${imgUrl(p.img, 900)}" alt="${esc(p.title)}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}></div>`).join('')}
+      ${hero[0] ? `<a class="hero-tag" id="heroTag" href="${url.product(hero[0])}"><div><div class="t">${esc(hero[0].title)}</div><div class="p">${fmt(hero[0].price)}</div></div><span class="go">${ic('i-arrow')}</span></a>` : ''}
+      ${hero.length > 1 ? `<div class="dots">${hero.map((_, k) => `<button class="${k ? '' : 'on'}" data-act="slide" data-k="${k}" aria-label="Show slide ${k + 1}"></button>`).join('')}</div>` : ''}
     </div>
   </section>
 
@@ -115,23 +116,23 @@
       <h3>${c.label}</h3><span>${counts[c.id].toLocaleString('en-IN')} ${counts[c.id] === 1 ? 'piece' : 'pieces'} ${ic('i-arrow')}</span></a>`).join('')}</div>
   </div></section>
 
-  <section class="feature">
-    <div class="pic reveal"><img src="${t7.img}" alt="${esc(t7.title)} in its box" loading="lazy"></div>
+  ${fl ? `<section class="feature">
+    <div class="pic reveal"><img src="${fl.img}" alt="${esc(fl.title)} with its remote" loading="lazy"></div>
     <div class="copy">
-      <span class="eyebrow">The flagship · ${esc(t7.sub)}</span>
-      <h2>The T7 Pro. <em>The view from above.</em></h2>
-      <p>${esc(t7.desc)} Foldable, beginner-friendly and ready to fly the day it arrives.</p>
+      <span class="eyebrow">Our drone · ${esc(fl.sub)}</span>
+      <h2>The E88 Pro. <em>The view from above.</em></h2>
+      <p>${esc(fl.desc)} Foldable, beginner-friendly and ready to fly the day it arrives.</p>
       <ul>
-        <li>${ic('i-check')} Remote with a built-in screen, no phone needed</li>
-        <li>${ic('i-check')} Choose orange or black</li>
-        <li>${ic('i-check')} Delivered by ${dateIn(daysOf(t7))} · cash on delivery</li>
+        <li>${ic('i-check')} Phone-holder remote for a live view while you fly</li>
+        <li>${ic('i-check')} Folds small enough to carry anywhere</li>
+        <li>${ic('i-check')} Delivered by ${dateIn(daysOf(fl))} · cash on delivery</li>
       </ul>
       <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
-        <button class="btn btn-light" data-act="add" data-id="${t7.id}" data-snap="${snap(t7)}">Add to bag · ${fmt(t7.price)}</button>
-        <a class="link" style="color:#fff" href="${url.product(t7)}">Details ${ic('i-arrow')}</a>
+        <button class="btn btn-light" data-act="add" data-id="${fl.id}" data-snap="${snap(fl)}">Add to bag · ${fmt(fl.price)}</button>
+        <a class="link" style="color:#fff" href="${url.product(fl)}">Details ${ic('i-arrow')}</a>
       </div>
     </div>
-  </section>
+  </section>` : ''}
 
   <section class="block"><div class="wrap">
     <div class="sec-head reveal"><div><span class="eyebrow">Most loved</span><h2>What everyone's buying</h2></div><a class="link" href="${url.deals}">Shop all deals ${ic('i-arrow')}</a></div>
