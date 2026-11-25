@@ -465,10 +465,40 @@ legend span{font-family:var(--sans);font-size:12px;color:var(--gold);font-weight
 .fplaces{display:flex;flex-wrap:wrap;gap:6px 14px;border-top:1px solid #2A2A2A;margin-top:40px;padding-top:22px;font-size:13px}
 .fplaces b{color:#fff;font-weight:600;margin-right:6px}
 @media (max-width:860px){.loc-hero .wrap,.two-col{grid-template-columns:1fr}}
+/* Catalogue additions: gallery thumbs, options, pages, rich descriptions */
+.thumbs{display:flex;gap:10px;margin-top:12px;overflow-x:auto;scrollbar-width:thin}
+.thumbs button{flex:0 0 72px;height:72px;border:1px solid var(--line);background:#F3F3F2;padding:4px;cursor:pointer}
+.thumbs button.on{border-color:var(--ink)}
+.thumbs img{width:100%;height:100%;object-fit:contain}
+.vars{margin:0 0 22px}
+.vars .vl{display:block;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px}
+.vars div{display:flex;flex-wrap:wrap;gap:8px}
+.vars button{border:1px solid var(--line);background:#fff;padding:10px 14px;font:inherit;font-size:14px;cursor:pointer}
+.vars button.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.vars button:disabled{color:var(--muted);text-decoration:line-through;cursor:not-allowed}
+.stock-out{background:var(--tint);color:var(--wine);padding:14px 16px;margin:0 0 14px;font-size:14px}
+.pager{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;margin:56px 0 0;font-size:14px}
+.pager>a:last-child{justify-self:end}
+.pager>a{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.pager div{display:flex;gap:6px;align-items:center}
+.pager div a,.pager div b{display:inline-grid;place-items:center;min-width:38px;height:38px;border:1px solid var(--line)}
+.pager div b{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pager em{font-style:normal;color:var(--muted);padding:0 4px}
+.i.flip{transform:rotate(180deg)}
+.cat-chips{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0}
+.cat-chips a{border:1px solid var(--line);padding:8px 14px;font-size:13px}
+.cat-chips a:hover{border-color:var(--ink)}
+.page-head h1 .pg{font-family:var(--sans);font-size:15px;color:var(--muted);font-weight:400;letter-spacing:0}
+.rich{font-size:15px;line-height:1.65}
+.rich p{margin:0 0 12px}.rich ul,.rich ol{margin:0 0 12px;padding-left:20px}.rich li{margin:0 0 4px}
+.rich h3,.rich h4{font-family:var(--sans);font-size:15px;font-weight:700;margin:16px 0 8px}
+.rich table{border-collapse:collapse;width:100%;margin:0 0 12px;font-size:14px}.rich td,.rich th{border-bottom:1px dashed var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.pay-note{background:#F3F3F2;padding:14px 16px;font-size:14px;margin:12px 0 0}
+@media (max-width:860px){.pager{grid-template-columns:1fr 1fr}.pager div{display:none}}
 </style>
 </head>
 <body data-view="{{VIEW}}">
-<div class="announce" id="announce">Free delivery over ₹499 &nbsp;·&nbsp; Free returns for 30 days &nbsp;·&nbsp; <b>10% OFF</b> your first order with <b>SZWELCOME</b></div>
+<div class="announce" id="announce">Free delivery over ₹499 &nbsp;·&nbsp; Cash on delivery &nbsp;·&nbsp; <b>10% OFF</b> your first order with <b>SZWELCOME</b></div>
 
 <header class="site" id="hdr">
   <div class="wrap hbar">
@@ -477,7 +507,7 @@ legend span{font-family:var(--sans);font-size:12px;color:var(--gold);font-weight
       <form class="search only-d" action="/search" role="search">
         <svg class="i"><use href="#i-search"/></svg>
         <label class="sr" for="q">Search</label>
-        <input id="q" name="q" placeholder="Search drones, headphones…" autocomplete="off" value="{{Q}}">
+        <input id="q" name="q" placeholder="Search kitchen tools, earbuds, drones…" autocomplete="off" value="{{Q}}">
       </form>
     </div>
     <a href="/" class="logo" aria-label="Shopeiz home"><span class="wm">Shopeiz</span><small>The art of having everything</small></a>
@@ -502,7 +532,7 @@ legend span{font-family:var(--sans);font-size:12px;color:var(--gold);font-weight
         <div class="pay-chips"><span>UPI</span><span>VISA</span><span>MASTERCARD</span><span>RUPAY</span><span>COD</span></div>
       </div>
       <div><h4>Shop</h4><ul id="fcats">{{FCATS}}</ul></div>
-      <div><h4>Help</h4><ul><li><a href="/help/delivery">Delivery</a></li><li><a href="/help/returns">Returns &amp; refunds</a></li><li><a href="/help/payment">Payment options</a></li><li><a href="/online-shopping-india">Delivery across India</a></li></ul></div>
+      <div><h4>Help</h4><ul><li><a href="/help/delivery">Delivery</a></li><li><a href="/help/returns">Replacements &amp; refunds</a></li><li><a href="/help/payment">Payment options</a></li><li><a href="/online-shopping-india">Delivery across India</a></li></ul></div>
       <div><h4>Shopeiz</h4><ul><li><a href="/help/about">About us</a></li><li><a href="/help/contact">Contact</a></li><li><a href="/deals">Deals</a></li><li><a href="/wishlist">Your wishlist</a></li></ul></div>
     </div>
     {{FPLACES}}
@@ -554,6 +584,7 @@ legend span{font-family:var(--sans);font-size:12px;color:var(--gold);font-weight
 </svg>
 
 <script src="/assets/catalog.js?v={{V}}" defer></script>
+<script src="/assets/config.js?v={{V}}" defer></script>
 <script src="/assets/views.js?v={{V}}" defer></script>
 <script src="/assets/app.js?v={{V}}" defer></script>
 </body>

@@ -1,0 +1,216 @@
+// Shared supplier sync logic. Plain JavaScript so it runs in the Supabase Edge Function (Deno)
+// and in Node for local tests. Reads public Shopify feeds (products.json) and writes to the database.
+
+const UA = 'Mozilla/5.0 (compatible; ShopeizSync/1.0; +https://shopeiz.com)';
+export const PAGE = 250;
+// Short id prefixes so product ids don't name the supplier
+export const PREFIX = { dropplier: 'dp', baapstore: 'bs', deodap: 'dd' };
+export const pid = (supplier, id) => `${PREFIX[supplier] || supplier}${id}`;
+
+/* ---------- Text clean-up ---------- */
+const SUPPLIER_WORDS = /\b(dropplier|deodap|deo\s*dap|baap\s*store|baapstore|wukusy|wukuzy)\b/gi;
+export function cleanTitle(t) {
+  let s = String(t || '').replace(/\s+/g, ' ').trim();
+  s = s.replace(/^\(?\d{2,6}\)?[\s_\-:.]+(?=[A-Za-z])/, '');        // leading stock codes: "099 Square ..."
+  s = s.replace(/^[A-Z0-9]{2,}[_-][A-Za-z0-9_-]+\s+/, '');            // "0099_squr_gas ..."
+  s = s.replace(SUPPLIER_WORDS, '').replace(/\s{2,}/g, ' ').replace(/^[\s\-|:,]+|[\s\-|:,]+$/g, '');
+  if (s === s.toUpperCase() && /[A-Z]{4}/.test(s)) s = s.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase());
+  return s.slice(0, 160);
+}
+export function cleanType(t) {
+  const s = String(t || '').replace(SUPPLIER_WORDS, '').replace(/[_]+/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!s || /^(all products|default|product|products|test|goods)$/i.test(s)) return '';
+  return s.replace(/\b[a-z]/g, (c) => c.toUpperCase()).slice(0, 60);
+}
+
+const ALLOWED = new Set(['p', 'br', 'ul', 'ol', 'li', 'b', 'strong', 'i', 'em', 'h3', 'h4', 'table', 'thead', 'tbody', 'tr', 'td', 'th']);
+export function cleanHtml(html) {
+  let s = String(html || '');
+  s = s.replace(/<(script|style|iframe|video|object|svg|noscript)[\s\S]*?<\/\1>/gi, '');
+  s = s.replace(/<!--[\s\S]*?-->/g, '');
+  s = s.replace(/<\/?h[12]\b/gi, (m) => m.replace(/h[12]/i, 'h3'));
+  s = s.replace(/<\/?h[56]\b/gi, (m) => m.replace(/h[56]/i, 'h4'));
+  s = s.replace(/<div\b[^>]*>/gi, '<p>').replace(/<\/div>/gi, '</p>');
+  s = s.replace(/<(\/?)([a-z0-9]+)\b[^>]*>/gi, (m, close, tag) => (ALLOWED.has(tag.toLowerCase()) ? `<${close}${tag.toLowerCase()}>` : (tag.toLowerCase() === 'br' ? '<br>' : ' ')));
+  s = s.replace(/&nbsp;/g, ' ');
+  s = s.replace(SUPPLIER_WORDS, '');
+  s = s.replace(/https?:\/\/[^\s<"']+/g, '').replace(/www\.[^\s<"']+/g, '').replace(/\b(?:\+?91[\s-]?)?[6-9]\d{4}[\s-]?\d{5}\b/g, '');
+  s = s.replace(/[^\S\n]{2,}/g, ' ');
+  s = s.replace(/<p>\s*(<br>\s*)*<\/p>/g, '').replace(/(<br>\s*){3,}/g, '<br><br>');
+  s = s.replace(/<(b|strong|i|em|li|td|th)>\s*<\/\1>/g, '');
+  // Drop lines that talk about the supplier, wholesale or reselling
+  s = s.replace(/<(p|li)>[^<]*(wholesale|reseller|dropship|whatsapp|contact us|our store|visit us)[^<]*<\/\1>/gi, '');
+  return s.trim().slice(0, 20000);
+}
+export function textOf(html) { return String(html || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(); }
+
+/* ---------- Categories from words ---------- */
+const RULES = [
+  ['drones', /\bdrone|quadcopter\b/i],
+  ['electronics', /\b(earphone|earbud|headphone|headset|speaker|bluetooth|charger|charging|cable|usb|power ?bank|mobile|smart ?watch|phone|tripod|selfie|ring light|led strip|remote|adapter|mic\b|microphone|keyboard|mouse|camera|projector|gadget|electronic|tws|neckband|smart)\b/i],
+  ['kids', /\b(toy|toys|kids?|baby|child|children|infant|puzzle|doll|game|rc car|building blocks|school bag|teether|feeding bottle)\b/i],
+  ['auto', /\b(car|bike|motorcycle|scooter|helmet|automotive|vehicle|dashboard|tyre|tire)\b/i],
+  ['fashion', /\b(saree|sari|kurti|kurta|lehenga|dupatta|blouse|dress|shirt|t-?shirt|jeans|legging|top|gown|footwear|sandal|slipper|shoe|chappal|jewell?ery|earring|necklace|bangle|bracelet|ring|watch|wallet|handbag|bag|purse|backpack|belt|sunglass|cap|socks|scarf|stole|suit)\b/i],
+  ['beauty', /\b(beauty|makeup|make-up|lipstick|nail|hair|comb|brush|trimmer|shaver|massager|skin|face|facial|cosmetic|perfume|soap|shampoo|bath|personal care|health|wax|mirror|grooming|dental|tooth)\b/i],
+  ['office', /\b(pen|pencil|notebook|diary|stationery|office|desk|file|folder|stapler|marker|calculator|sticky|craft|art|paint|colou?r)\b/i],
+  ['sports', /\b(gym|yoga|fitness|exercise|sport|sports|cricket|football|badminton|cycle|cycling|camping|travel|bottle|garden|plant|outdoor|water bottle|skipping|dumbbell)\b/i],
+  ['tools', /\b(tool|tools|drill|screwdriver|plier|spanner|wrench|hammer|tape|glue|sealant|measuring|multimeter|lock|padlock|security|hardware|repair)\b/i],
+  ['festive', /\b(pooja|puja|diya|rangoli|festival|festive|diwali|christmas|holi|rakhi|gift|idol|god|toran|decoration light|lantern)\b/i],
+  ['kitchen', /\b(kitchen|cook|cooking|chopper|knife|peeler|grater|slicer|cutter|spoon|ladle|pan|tawa|kadai|pot|container|lunch ?box|tiffin|bottle|jar|plate|bowl|cup|mug|glass|tray|strainer|whisk|spatula|mixer|blender|gas|stove|dining|spice|masala|roti|oil dispenser|kettle|flask)\b/i],
+  ['cleaning', /\b(clean|cleaning|mop|broom|duster|dustbin|wiper|scrub|sponge|brush holder|storage|organi[sz]er|rack|shelf|hanger|hook|basket|box|drawer|closet|wardrobe|laundry|bathroom|toilet|sink|drain)\b/i],
+  ['home', /\b(home|decor|curtain|bedsheet|pillow|cushion|carpet|mat|rug|lamp|light|clock|wall|sticker|frame|furniture|chair|table|sofa|bed|door|window|vase|plant|fan|heater)\b/i],
+];
+export function guessCat(title, type, tags) {
+  const t = `${type || ''} ${title || ''}`;
+  for (const [cat, re] of RULES) if (re.test(t)) return cat;
+  const tg = (tags || []).join(' ');
+  for (const [cat, re] of RULES) if (re.test(tg)) return cat;
+  return 'home';
+}
+
+/* ---------- Map one Shopify product ---------- */
+export function mapProduct(supplier, sp, runId) {
+  const variants = (sp.variants || []).map((v) => ({
+    id: String(v.id), title: v.title, sku: v.sku || null,
+    cost: v.price != null ? Number(v.price) : null,
+    mrp: v.compare_at_price != null && Number(v.compare_at_price) > 0 ? Number(v.compare_at_price) : null,
+    avail: v.available !== false, grams: v.grams || null,
+  }));
+  const live = variants.filter((v) => v.avail && v.cost > 0);
+  const pool = live.length ? live : variants.filter((v) => v.cost > 0);
+  const cheapest = pool.sort((a, b) => a.cost - b.cost)[0];
+  const images = (sp.images || []).map((i) => String(i.src || '').split('?')[0]).filter(Boolean).slice(0, 10);
+  const tags = Array.isArray(sp.tags) ? sp.tags : String(sp.tags || '').split(',').map((x) => x.trim()).filter(Boolean);
+  const name = cleanTitle(sp.title) || String(sp.title || '').trim();
+  const sub = cleanType(sp.product_type);
+  const cost = cheapest ? cheapest.cost : null;
+  const mrp = cheapest ? cheapest.mrp : null;
+  const available = live.length > 0;
+  const onlyDefault = variants.length === 1 && /^default title$/i.test(variants[0].title || '');
+  return {
+    id: pid(supplier, sp.id),
+    supplier,
+    src_id: String(sp.id),
+    handle: sp.handle,
+    title_src: sp.title,
+    name,
+    cat: guessCat(name, sp.product_type, tags),
+    sub: sub || null,
+    tags: tags.slice(0, 30),
+    desc_html: cleanHtml(sp.body_html),
+    images,
+    variants: onlyDefault ? variants.map((v) => ({ ...v, title: 'Default Title' })) : variants,
+    cost,
+    mrp,
+    available,
+    hidden_reason: !cost ? 'zero price' : !images.length ? 'no photo' : null,
+    collections: [],
+    rank: (available ? 10 : 0) + (mrp && cost && mrp > cost * 2 ? 2 : 0) + Math.min(images.length, 5) * 0.2,
+    last_seen_run: runId,
+    synced_at: new Date().toISOString(),
+  };
+}
+
+/* ---------- HTTP ---------- */
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+export async function getJson(url, tries = 3) {
+  let last;
+  for (let i = 0; i < tries; i++) {
+    try {
+      const r = await fetch(url, { headers: { 'User-Agent': UA, Accept: 'application/json' } });
+      if (r.status === 429 || r.status >= 500) { last = new Error(`${r.status} from ${url}`); await sleep(1500 * (i + 1)); continue; }
+      if (!r.ok) throw new Error(`${r.status} from ${url}`);
+      return await r.json();
+    } catch (e) { last = e; await sleep(800 * (i + 1)); }
+  }
+  throw last;
+}
+
+/* ---------- Database via PostgREST ---------- */
+export function db(base, key) {
+  const h = { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' };
+  const call = async (path, opts = {}) => {
+    const r = await fetch(`${base}/rest/v1/${path}`, { ...opts, headers: { ...h, ...(opts.headers || {}) } });
+    const t = await r.text();
+    if (!r.ok) throw new Error(`DB ${r.status} ${path.split('?')[0]}: ${t.slice(0, 300)}`);
+    return t ? JSON.parse(t) : null;
+  };
+  return {
+    get: (path) => call(path),
+    rpc: (fn, args) => call(`rpc/${fn}`, { method: 'POST', body: JSON.stringify(args) }),
+    upsert: (table, rows) => call(`${table}?on_conflict=id`, { method: 'POST', body: JSON.stringify(rows), headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } }),
+    insert: (table, row) => call(table, { method: 'POST', body: JSON.stringify(row), headers: { Prefer: 'return=representation' } }),
+    patch: (table, filter, row) => call(`${table}?${filter}`, { method: 'PATCH', body: JSON.stringify(row), headers: { Prefer: 'return=minimal' } }),
+    upsertState: (st) => call('sync_state?on_conflict=supplier', { method: 'POST', body: JSON.stringify({
+      supplier: st.supplier, phase: st.phase, page: st.page, col_idx: st.col_idx || 0, run_id: st.run_id, next_at: st.next_at || new Date().toISOString(),
+      started_at: st.started_at || null, finished_at: st.finished_at || null, last_error: st.last_error || null, stats: st.stats || {} }),
+      headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } }),
+  };
+}
+
+/* ---------- One step of the sync (a few pages), so each call stays short ---------- */
+export async function step(D, { force = false, pagesPerCall = 4, log = () => {} } = {}) {
+  const suppliers = await D.get('suppliers?select=id,base_url,enabled&enabled=eq.true&base_url=not.is.null&order=id');
+  const states = await D.get('sync_state?select=*');
+  const now = Date.now();
+  let st = null, sup = null;
+  // Continue a run in progress first, else start the supplier that is most overdue
+  for (const s of suppliers) { const x = states.find((y) => y.supplier === s.id); if (x && x.phase !== 'idle') { st = x; sup = s; break; } }
+  if (!st) {
+    const due = suppliers.map((s) => ({ s, x: states.find((y) => y.supplier === s.id) }))
+      .filter(({ x }) => force || !x || new Date(x.next_at).getTime() <= now)
+      .sort((a, b) => new Date(a.x ? a.x.next_at : 0) - new Date(b.x ? b.x.next_at : 0));
+    if (!due.length) return { idle: true };
+    sup = due[0].s;
+    const run = await D.insert('sync_runs', { supplier: sup.id });
+    st = { supplier: sup.id, phase: 'products', page: 1, col_idx: 0, run_id: run[0].id, started_at: new Date().toISOString(), stats: { seen: 0 } };
+    await D.upsertState(st);
+  }
+  const base = sup.base_url.replace(/\/+$/, '');
+  const cols = st.phase === 'collections' ? await D.get(`collection_map?select=handle&supplier=eq.${sup.id}&order=priority,handle`) : [];
+  let pages = 0;
+  try {
+    while (pages < pagesPerCall && st.phase !== 'idle') {
+      if (st.phase === 'products') {
+        const j = await getJson(`${base}/products.json?limit=${PAGE}&page=${st.page}`);
+        pages++;
+        const list = j.products || [];
+        if (!list.length) {
+          const hasCols = (await D.get(`collection_map?select=handle&supplier=eq.${sup.id}&limit=1`)).length > 0;
+          st.phase = hasCols ? 'collections' : 'finish'; st.page = 1; st.col_idx = 0;
+          if (hasCols) cols.push(...(await D.get(`collection_map?select=handle&supplier=eq.${sup.id}&order=priority,handle`)));
+          continue;
+        }
+        const rows = list.map((p) => mapProduct(sup.id, p, st.run_id));
+        for (let i = 0; i < rows.length; i += 125) await D.upsert('products', rows.slice(i, i + 125));
+        st.stats = { ...(st.stats || {}), seen: (st.stats?.seen || 0) + rows.length };
+        log(`${sup.id} products page ${st.page}: ${rows.length}`);
+        st.page++;
+      } else if (st.phase === 'collections') {
+        if (st.col_idx >= cols.length) { st.phase = 'finish'; continue; }
+        const h = cols[st.col_idx].handle;
+        let list = [];
+        try { list = (await getJson(`${base}/collections/${encodeURIComponent(h)}/products.json?limit=${PAGE}&page=${st.page}`)).products || []; }
+        catch (e) { log(`collection ${h} failed: ${e.message}`); list = []; }
+        pages++;
+        if (list.length) await D.rpc('sync_mark_collection', { p_supplier: sup.id, p_handle: h, p_ids: list.map((p) => pid(sup.id, p.id)) });
+        log(`${sup.id} collection ${h} page ${st.page}: ${list.length}`);
+        if (list.length < PAGE) { st.col_idx++; st.page = 1; } else st.page++;
+      } else if (st.phase === 'finish') {
+        const r = await D.rpc('sync_finish', { p_supplier: sup.id, p_run: st.run_id });
+        await D.patch('sync_runs', `id=eq.${st.run_id}`, { products_seen: st.stats?.seen || 0 });
+        st.stats = { ...(st.stats || {}), ...r };
+        st.phase = 'idle'; st.finished_at = new Date().toISOString();
+        st.next_at = new Date(Date.now() + 6 * 3600e3).toISOString();
+        st.last_error = null;
+        log(`${sup.id} finished`, r);
+      }
+    }
+  } catch (e) {
+    st.last_error = String(e.message || e).slice(0, 500);
+    await D.upsertState(st);
+    throw e;
+  }
+  await D.upsertState(st);
+  return { supplier: sup.id, phase: st.phase, page: st.page, col_idx: st.col_idx, stats: st.stats };
+}

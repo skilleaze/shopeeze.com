@@ -8,5 +8,6 @@ Disallow: /search
 Disallow: /api/
 Disallow: /data/
 Disallow: /templates/
+Disallow: /admin
 
 Sitemap: https://shopeiz.com/sitemap.xml
