@@ -13,7 +13,9 @@ export const decode = (s) => String(s || '').replace(/&#(\d+);/g, (m, n) => Stri
 const SUPPLIER_WORDS = /\b(dropplier|deodap|deo\s*dap|baap\s*store|baapstore|wukusy|wukuzy|seasonsway)\b/gi;
 export function cleanTitle(t) {
   let s = decode(t).replace(/\s+/g, ' ').trim();
-  s = s.replace(/^\(?\d{2,6}[a-zA-Z]?\)?[\s_\-:.]+(?=[A-Za-z])/, '');        // leading stock codes: "099 Square ..."
+  // leading stock codes ("099 Square ...", "4023 ...", "0074c ..."), but keep real quantities ("360 Degree", "700 ML", "27 Pcs")
+  if (!/^[1-9]\d{0,2}\s+(degree|ml|l|ltr|litre|liter|cm|mm|m|meter|metre|inch|inches|grid|pcs?|pieces?|pack|in|layers?|tiers?|w|watt|gb|kg|g|gms?|sheets?|compartments?|seater|steps?|holes?|slots?|sections?|cups?|colou?rs?|x|ft|feet|hooks?|modes?|speed|days?|tabs?|blades?)\b/i.test(s))
+    s = s.replace(/^\(?\d{2,6}[a-zA-Z]?\)?[\s_\-:.]+(?=[A-Za-z])/, '');
   s = s.replace(/^[A-Z0-9]{2,}[_-][A-Za-z0-9_-]+\s+/, '');            // "0099_squr_gas ..."
   s = s.replace(SUPPLIER_WORDS, '').replace(/\s{2,}/g, ' ').replace(/^[\s\-|:,]+|[\s\-|:,]+$/g, '');
   if (s === s.toUpperCase() && /[A-Z]{4}/.test(s)) s = s.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase());
@@ -49,17 +51,21 @@ export function textOf(html) { return String(html || '').replace(/<[^>]+>/g, ' '
 /* ---------- Categories from words ---------- */
 const RULES = [
   ['drones', /\bdrone|quadcopter\b/i],
-  ['electronics', /\b(earphone|earbud|headphone|headset|speaker|bluetooth|charger|charging|cable|usb|power ?bank|mobile|smart ?watch|phone|tripod|selfie|ring light|led strip|remote|adapter|mic\b|microphone|keyboard|mouse|camera|projector|gadget|electronic|tws|neckband|smart)(?:s|es)?\b/i],
-  ['fashion', /\b(trackpants?|joggers?|jewels?|jewllery|jhumkas?|shrug|shrugs|wear|ethnic|palazzo|skirt|jacket|hoodie|sweatshirt|tunic|nightwear|co-?ord|jumpsuit|trousers?|pants|shorts|saree|sari|kurti|kurta|lehenga|dupatta|blouse|dress|shirt|t-?shirt|jeans|legging|top|gown|footwear|sandal|slipper|shoe|chappal|jewell?ery|earring|necklace|bangle|bracelet|ring|watch|wallet|handbag|bag|purse|backpack|belt|sunglass|cap|socks|scarf|stole|suit)(?:s|es)?\b/i],
-  ['kids', /\b(toy|toys|kids?|baby|child|children|infant|puzzle|doll|game|rc car|building blocks|school bag|teether|feeding bottle)(?:s|es)?\b/i],
+  // clothing and jewellery words that are never anything else
+  ['fashion', /\b(trackpants?|joggers?|jewels?|jewllery|jewell?ery|jhumkas?|shrugs?|sarees?|saris?|kurtis?|kurtas?|lehengas?|dupattas?|blouses?|palazzos?|skirts?|tunics?|nightwear|co-?ords?|jumpsuits?|leggings?|gowns?|earrings?|necklaces?|bangles?|bracelets?|ethnic wear|western wear)\b/i],
+  ['cleaning', /\b(garbage|trash|dustbin|laundry) bags?\b/i],
+  ['electronics', /\b(earphone|earbud|headphone|headset|speaker|bluetooth|charger|charging|cable|usb|power ?bank|mobile|smart ?watch|phone|tripod|selfie|ring light|led strip|remote|adapter|mic|microphone|keyboard|mouse|camera|projector|gadget|electronic|tws|neckband|smart)(?:s|es)?\b/i],
+  ['kids', /\b(toy|kids?|baby|babies|child|children|infant|puzzle|doll|game|rc car|building blocks|school bag|teether|feeding bottle)(?:s|es)?\b/i],
   ['auto', /\b(car|bike|motorcycle|scooter|helmet|automotive|vehicle|dashboard|tyre|tire)(?:s|es)?\b/i],
+  ['fashion', /\b(wear|jacket|hoodie|sweatshirt|trouser|pants|shorts|dress|shirt|t-?shirt|jeans|top|footwear|sandal|slipper|shoe|chappal|watch|wallet|handbag|purse|backpack|belt|sunglass|cap|sock|scarf|stole|suit)(?:s|es)?\b/i],
   ['beauty', /\b(beauty|makeup|make-up|lipstick|nail|hair|comb|brush|trimmer|shaver|massager|skin|face|facial|cosmetic|perfume|soap|shampoo|bath|personal care|health|wax|mirror|grooming|dental|tooth)(?:s|es)?\b/i],
   ['office', /\b(pen|pencil|notebook|diary|stationery|office|desk|file|folder|stapler|marker|calculator|sticky|craft|art|paint|colou?r)(?:s|es)?\b/i],
-  ['sports', /\b(gym|yoga|fitness|exercise|sport|sports|cricket|football|badminton|cycle|cycling|camping|travel|bottle|garden|plant|outdoor|water bottle|skipping|dumbbell)(?:s|es)?\b/i],
-  ['tools', /\b(tool|tools|drill|screwdriver|plier|spanner|wrench|hammer|tape|glue|sealant|measuring|multimeter|lock|padlock|security|hardware|repair)(?:s|es)?\b/i],
+  ['sports', /\b(gym|yoga|fitness|exercise|sport|cricket|football|badminton|cycle|cycling|camping|travel|garden|plant|outdoor|skipping|dumbbell)(?:s|es)?\b/i],
+  ['tools', /\b(tool|drill|screwdriver|plier|spanner|wrench|hammer|tape|glue|sealant|measuring|multimeter|lock|padlock|security|hardware|repair)(?:s|es)?\b/i],
   ['festive', /\b(pooja|puja|diya|rangoli|festival|festive|diwali|christmas|holi|rakhi|gift|idol|god|toran|decoration light|lantern)(?:s|es)?\b/i],
-  ['kitchen', /\b(kitchen|cook|cooking|chopper|knife|peeler|grater|slicer|cutter|spoon|ladle|pan|tawa|kadai|pot|container|lunch ?box|tiffin|bottle|jar|plate|bowl|cup|mug|glass|tray|strainer|whisk|spatula|mixer|blender|gas|stove|dining|spice|masala|roti|oil dispenser|kettle|flask)(?:s|es)?\b/i],
-  ['cleaning', /\b(clean|cleaning|mop|broom|duster|dustbin|wiper|scrub|sponge|brush holder|storage|organi[sz]er|rack|shelf|hanger|hook|basket|box|drawer|closet|wardrobe|laundry|bathroom|toilet|sink|drain)(?:s|es)?\b/i],
+  ['kitchen', /\b(kitchen|cook|cooking|chopper|knife|knives|peeler|grater|slicer|cutter|spoon|ladle|pan|tawa|kadai|pot|container|lunch ?box|tiffin|bottle|jar|plate|bowl|cup|mug|glass|tray|strainer|whisk|spatula|mixer|blender|gas|stove|dining|spice|masala|roti|oil dispenser|kettle|flask)(?:s|es)?\b/i],
+  ['cleaning', /\b(clean|cleaning|mop|broom|duster|dustbin|wiper|scrub|sponge|brush holder|storage|organi[sz]er|rack|shelf|shelves|hanger|hook|basket|box|drawer|closet|wardrobe|laundry|bathroom|toilet|sink|drain)(?:s|es)?\b/i],
+  ['fashion', /\b(bag|ring)(?:s)?\b/i],
   ['home', /\b(home|decor|curtain|bedsheet|pillow|cushion|carpet|mat|rug|lamp|light|clock|wall|sticker|frame|furniture|chair|table|sofa|bed|door|window|vase|plant|fan|heater)(?:s|es)?\b/i],
 ];
 export function guessCat(title, type, tags) {
