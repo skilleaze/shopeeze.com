@@ -79,26 +79,37 @@
     const counts = {}; P.forEach((p) => (counts[p.cat] = (counts[p.cat] || 0) + 1));
     const cover = (c) => c.img || (P.find((p) => p.cat === c.id && p.img) || {}).img;
     const cats = CATS.filter((c) => counts[c.id]);
+    const count = P.length;
+    const heroCats = cats.filter((c) => c.id !== 'drones').slice(0, 5);
+    const tiles = cats.filter((c) => c.id !== (fl && fl.cat) && cover(c)).sort((x, y) => counts[y.id] - counts[x.id]).slice(0, 2);
     return `
   <section class="hero">
-    <div class="hero-copy">
-      <span class="eyebrow">Shopeiz · From S to Z</span>
-      <h1>The art of having <em>everything.</em></h1>
-      <p class="lead">Anything you need, in one place, at your door. Kitchen, home, electronics, beauty, fashion, toys and drones. Fair prices, cash on delivery, delivered across India.</p>
-      <div class="ctas">
-        <a class="btn btn-wine" href="${url.shop}">Shop everything ${ic('i-arrow')}</a>
-        <a class="btn btn-line" href="${url.deals}">Today's deals</a>
+    <div class="hero-in">
+      <div class="hero-copy">
+        <span class="eyebrow">Shopeiz · From S to Z</span>
+        <h1>The art of having <em>everything.</em></h1>
+        <p class="lead">Anything you need, in one place, at your door. ${count.toLocaleString('en-IN')} carefully priced pieces for the kitchen, home, wardrobe and everything in between.</p>
+        <div class="ctas">
+          <a class="btn btn-dark" href="${url.shop}">Shop the store ${ic('i-arrow')}</a>
+          <a class="btn btn-line" href="${url.deals}">Today's deals</a>
+        </div>
+        <ul class="hero-cats">${heroCats.map((c) => `<li><a href="${url.cat(c.id)}">${c.label}</a></li>`).join('')}</ul>
+        <dl class="hero-facts">
+          <div><dt>${count >= 1000 ? (Math.floor(count / 1000)).toLocaleString('en-IN') + ',000+' : count}</dt><dd>products</dd></div>
+          <div><dt>Cash</dt><dd>on delivery</dd></div>
+          <div><dt>${POLICY.replaceDays} days</dt><dd>replacement</dd></div>
+        </dl>
       </div>
-      <div class="hero-perks">
-        <span>${ic('i-truck')} Free delivery over ${fmt(C.FREE_OVER)}</span>
-        <span>${ic('i-return')} ${POLICY.replaceDays}-day replacement</span>
-        <span>${ic('i-cash')} Cash on delivery</span>
+      <div class="hero-bento">
+        ${fl ? `<a class="tile big" href="${url.product(fl)}">
+          <img src="${imgUrl(fl.img, 1000)}" alt="${esc(fl.title)}" fetchpriority="high">
+          <span class="cap"><span class="k">${esc(catOf(fl).label)}</span><b>${esc(fl.title)}</b><span class="pr">${fmt(fl.price)}${fl.was ? ` <s>${fmt(fl.was)}</s>` : ''}</span></span>
+        </a>` : ''}
+        ${tiles.map((c) => `<a class="tile" href="${url.cat(c.id)}">
+          <img src="${imgUrl(cover(c), 600)}" alt="" loading="lazy">
+          <span class="cap"><span class="k">${counts[c.id].toLocaleString('en-IN')} pieces</span><b>${c.label}</b><span class="go">Shop ${ic('i-arrow')}</span></span>
+        </a>`).join('')}
       </div>
-    </div>
-    <div class="hero-visual" id="heroVis">
-      ${hero.map((p, k) => `<div class="slide ${k ? '' : 'on'}" data-slide="${k}" data-id="${p.id}"><img src="${imgUrl(p.img, 900)}" alt="${esc(p.title)}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}></div>`).join('')}
-      ${hero[0] ? `<a class="hero-tag" id="heroTag" href="${url.product(hero[0])}"><div><div class="t">${esc(hero[0].title)}</div><div class="p">${fmt(hero[0].price)}</div></div><span class="go">${ic('i-arrow')}</span></a>` : ''}
-      ${hero.length > 1 ? `<div class="dots">${hero.map((_, k) => `<button class="${k ? '' : 'on'}" data-act="slide" data-k="${k}" aria-label="Show slide ${k + 1}"></button>`).join('')}</div>` : ''}
     </div>
   </section>
 
