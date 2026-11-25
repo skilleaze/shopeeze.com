@@ -401,7 +401,7 @@
         <div id="pprice">${priceHtml(vp)}</div>
         <p class="tax">Inclusive of all taxes${soldOut ? '' : p.cod === false ? ' · Prepaid by UPI only' : ' · Cash on delivery available'}</p>
         ${fam.length ? `<div class="fam"><span class="vl">Also available in</span><div>${fam.map((f) => `<a href="/products/${esc(f.slug)}" title="${esc(f.title)}"><img src="${esc(imgUrl(f.img, 160))}" alt="${esc(f.title)}" loading="lazy"></a>`).join('')}</div></div>` : ''}
-        ${vars.length > 1 ? `<div class="vars"><span class="vl">Option</span><div>${vars.map((v) => `<button class="${curV && v.id === curV.id ? 'on' : ''}" data-act="pvar" data-v="${esc(v.id)}" data-price="${v.price}" ${v.ok ? '' : 'disabled'}>${esc(v.title)}${v.ok ? '' : ' (sold out)'}</button>`).join('')}</div></div>` : ''}
+        ${vars.length > 1 ? `<div class="vars"><span class="vl">${vars.every((v) => /^(xxs|xs|s|m|l|xl|xxl|xxxl|[2-6]xl|free ?size|\d{1,2}(\.\d)?|uk ?\d+|\d+\s*(cm|in|inch|ml|l|kg|g))$/i.test(v.title.trim())) ? 'Size' : 'Option'}</span><div>${vars.map((v) => `<button class="${curV && v.id === curV.id ? 'on' : ''}" data-act="pvar" data-v="${esc(v.id)}" data-price="${v.price}" ${v.ok ? '' : 'disabled'}>${esc(v.title)}${v.ok ? '' : ' (sold out)'}</button>`).join('')}</div></div>` : ''}
         ${soldOut ? `<div class="stock-out"><b>Currently out of stock.</b> Save it to your wishlist and check back soon.</div>
         <button class="btn btn-line wish-big" data-act="wish" data-id="${p.id}" data-snap="${snap(p)}" style="width:100%">${ic('i-heart')} Save to wishlist</button>` : `
         <div class="buy">
