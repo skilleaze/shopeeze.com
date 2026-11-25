@@ -11,7 +11,7 @@ export const pid = (supplier, id) => `${PREFIX[supplier] || supplier}${id}`;
 const SUPPLIER_WORDS = /\b(dropplier|deodap|deo\s*dap|baap\s*store|baapstore|wukusy|wukuzy)\b/gi;
 export function cleanTitle(t) {
   let s = String(t || '').replace(/\s+/g, ' ').trim();
-  s = s.replace(/^\(?\d{2,6}\)?[\s_\-:.]+(?=[A-Za-z])/, '');        // leading stock codes: "099 Square ..."
+  s = s.replace(/^\(?\d{2,6}[a-zA-Z]?\)?[\s_\-:.]+(?=[A-Za-z])/, '');        // leading stock codes: "099 Square ..."
   s = s.replace(/^[A-Z0-9]{2,}[_-][A-Za-z0-9_-]+\s+/, '');            // "0099_squr_gas ..."
   s = s.replace(SUPPLIER_WORDS, '').replace(/\s{2,}/g, ' ').replace(/^[\s\-|:,]+|[\s\-|:,]+$/g, '');
   if (s === s.toUpperCase() && /[A-Z]{4}/.test(s)) s = s.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase());
