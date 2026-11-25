@@ -93,7 +93,11 @@
   </div>`;
   }
   const co = { pay: 'cod', f: {}, busy: false, err: '' };
+  // DeoDap items (ids starting dd) are prepaid only
+  const prepaidOnly = (l) => l.np || /^dd\d/.test(l.id);
   function vCheckout() {
+    const noCod = store.cart.filter(prepaidOnly);
+    if (noCod.length && co.pay === 'cod') co.pay = 'upi';
     const t = totals(co);
     if (!t.count) return vCart();
     const field = (id, label, type = 'text', full = false, extra = '') => `<div class="field ${full ? 'full' : ''}"><label for="f-${id}">${label}</label><input id="f-${id}" name="${id}" type="${type}" value="${esc(co.f[id] || '')}" ${extra}><p class="msg err">Please fill this in.</p></div>`;
@@ -117,7 +121,7 @@
         </div>
         <p class="note" style="margin:14px 0 0">${ic('i-truck')} Delivered by ${dateIn(maxDays)} (${maxDays <= 5 ? '2 to 5' : MIND + ' to ' + maxDays} working days). ${t.sub >= FREE_OVER ? 'Free delivery.' : `Delivery ${fmt(STD_FEE)}, free over ${fmt(FREE_OVER)}.`}</p></fieldset>
         <fieldset><legend><span>03</span>Payment</legend><div class="opts">
-          ${opt('pay', 'cod', 'Cash on delivery', 'Pay in cash or UPI when it arrives', '+' + fmt(COD_FEE))}
+          ${noCod.length ? `<p class="note" style="margin:0 0 6px">${ic('i-cash')} Cash on delivery isn't available for ${esc(noCod[0].t)}${noCod.length > 1 ? ` and ${noCod.length - 1} more item${noCod.length > 2 ? 's' : ''}` : ''}. Pay by UPI, or remove ${noCod.length > 1 ? 'them' : 'it'} to use cash on delivery.</p>` : opt('pay', 'cod', 'Cash on delivery', 'Pay in cash or UPI when it arrives', '+' + fmt(COD_FEE))}
           ${opt('pay', 'upi', 'Pay by UPI', 'We send a secure payment link to your mobile right after you order', 'No fee')}
         </div></fieldset>
       </div>
@@ -179,6 +183,7 @@
         const ok = r.ok && (!v || v.ok);
         if (price && price !== l.p) { l.p = price; changed = true; }
         if (!ok !== !!l.gone) { l.gone = !ok; changed = true; }
+        if (r.cod === false && !l.np) { l.np = 1; changed = true; }
       });
       if (changed) { save(); renderClient(); if ($('#bag').classList.contains('on')) renderBag(); }
     } catch (e) {}

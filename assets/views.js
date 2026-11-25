@@ -26,7 +26,7 @@
   const imgUrl = (src, w) => (src && /cdn\.shopify\.com/.test(src) ? src.split('?')[0] + '?width=' + w : src);
   const PAGE_SIZE = 48;
   // What the bag needs to know about a product, kept on the Add button
-  const snap = (p, v) => esc(JSON.stringify({ id: p.id, t: p.title, p: p.price, w: p.was || 0, i: p.img || '', s: p.slug, u: p.sub || '', v: v || '' }));
+  const snap = (p, v) => esc(JSON.stringify({ id: p.id, t: p.title, p: p.price, w: p.was || 0, i: p.img || '', s: p.slug, u: p.sub || '', v: v || '', ...(p.cod === false ? { np: 1 } : {}) }));
 
   const url = {
     home: '/', shop: '/shop', deals: '/deals', cart: '/cart', checkout: '/checkout', wishlist: '/wishlist', india: '/online-shopping-india',
@@ -269,9 +269,9 @@
       pick([`The ${p.title} is part of our ${c.label.toLowerCase()} range at Shopeiz, priced at ${fmt(p.price)} including GST.`,
             `Buy the ${p.title} online at Shopeiz for ${fmt(p.price)}, GST included.`,
             `Looking for ${/^[aeiou]/.test(kind) ? 'an' : 'a'} ${kind}? The ${p.title} is ${fmt(p.price)} at Shopeiz, with GST included.`], 0) + save,
-      pick([`It ships to every PIN code in India and usually arrives in ${deliveryText(p)}. Pay by UPI or cash on delivery.`,
-            `Order today and it should reach you by ${dateIn(daysOf(p))}. Cash on delivery is available across India.`,
-            `We deliver it anywhere in India in ${deliveryText(p)}, and you can pay in cash when it arrives.`], 3),
+      pick([`It ships to every PIN code in India and usually arrives in ${deliveryText(p)}. ${p.cod === false ? 'Pay by UPI.' : 'Pay by UPI or cash on delivery.'}`,
+            `Order today and it should reach you by ${dateIn(daysOf(p))}. ${p.cod === false ? 'Pay securely by UPI.' : 'Cash on delivery is available across India.'}`,
+            `We deliver it anywhere in India in ${deliveryText(p)}${p.cod === false ? '. This item is prepaid by UPI' : ', and you can pay in cash when it arrives'}.`], 3),
       pick([`If it arrives damaged or you receive the wrong item, tell us within ${POLICY.replaceDays} days and we will replace it.`,
             `Covered by our ${POLICY.replaceDays}-day replacement promise for damaged, defective or wrong items.`], 6),
     ].join(' ');
@@ -300,7 +300,7 @@
         <h1>${esc(p.title)}</h1>
         ${stars(p)}
         <div id="pprice">${priceHtml(vp)}</div>
-        <p class="tax">Inclusive of all taxes${soldOut ? '' : ' · Cash on delivery available'}</p>
+        <p class="tax">Inclusive of all taxes${soldOut ? '' : p.cod === false ? ' · Prepaid by UPI only' : ' · Cash on delivery available'}</p>
         ${vars.length > 1 ? `<div class="vars"><span class="vl">Option</span><div>${vars.map((v) => `<button class="${curV && v.id === curV.id ? 'on' : ''}" data-act="pvar" data-v="${esc(v.id)}" data-price="${v.price}" ${v.ok ? '' : 'disabled'}>${esc(v.title)}${v.ok ? '' : ' (sold out)'}</button>`).join('')}</div></div>` : ''}
         ${soldOut ? `<div class="stock-out"><b>Currently out of stock.</b> Save it to your wishlist and check back soon.</div>
         <button class="btn btn-line wish-big" data-act="wish" data-id="${p.id}" data-snap="${snap(p)}" style="width:100%">${ic('i-heart')} Save to wishlist</button>` : `
@@ -315,11 +315,11 @@
         <div class="perks">
           <div>${ic('i-truck')}<p style="margin:0"><b>Get it by ${dateIn(daysOf(p))}</b><span>${deliveryText(p)} · ${price >= C.FREE_OVER ? 'Free delivery' : `Free delivery on orders over ${fmt(C.FREE_OVER)}`}</span></p></div>
           <div>${ic('i-return')}<p style="margin:0"><b>${POLICY.replaceDays}-day replacement</b><span>Damaged, defective or wrong item? We replace it.</span></p></div>
-          <div>${ic('i-cash')}<p style="margin:0"><b>Cash on delivery available</b><span>Or pay by UPI with a secure link.</span></p></div>
+          <div>${ic('i-cash')}<p style="margin:0">${p.cod === false ? '<b>Prepaid by UPI only</b><span>Cash on delivery is not available for this item.</span>' : '<b>Cash on delivery available</b><span>Or pay by UPI with a secure link.</span>'}</p></div>
         </div>
         <details class="acc" open><summary>Overview ${ic('i-down')}</summary><div class="in"><p>${esc(overview(p))}</p></div></details>
         <details class="acc" ${p.desc_html ? '' : 'open'}><summary>Details ${ic('i-down')}</summary><div class="in">${desc}${specList(p)}</div></details>
-        <details class="acc"><summary>Delivery &amp; replacement ${ic('i-down')}</summary><div class="in">Delivered across India in ${deliveryText(p)}. Standard delivery is free on orders over ${fmt(C.FREE_OVER)} (otherwise ${fmt(C.STD_FEE)}). Cash on delivery is available for a ${fmt(C.COD_FEE)} fee. If your item arrives damaged, defective or is not what you ordered, contact us within ${POLICY.replaceDays} days of delivery with photos or an unboxing video and we will send a replacement. We do not accept returns for change of mind.</div></details>
+        <details class="acc"><summary>Delivery &amp; replacement ${ic('i-down')}</summary><div class="in">Delivered across India in ${deliveryText(p)}. Standard delivery is free on orders over ${fmt(C.FREE_OVER)} (otherwise ${fmt(C.STD_FEE)}). ${p.cod === false ? 'This item is prepaid only: pay by UPI.' : `Cash on delivery is available for a ${fmt(C.COD_FEE)} fee.`} If your item arrives damaged, defective or is not what you ordered, contact us within ${POLICY.replaceDays} days of delivery with photos or an unboxing video and we will send a replacement. We do not accept returns for change of mind.</div></details>
       </div>
     </div>
   </div>

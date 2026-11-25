@@ -11,5 +11,5 @@ The store runs on our own stock until this is done. After it, supplier products,
    `insert into admins (user_id, email, name, role) select id, email, 'Owner', 'owner' from auth.users where email = '<owner email>';`
 7. Open https://shopeiz.com/admin and sign in.
 
-Pricing: (supplier cost + supplier fee) × (1 + margin), rounded up to end in 9. Default margin 30%, Dropplier fee ₹50.
+Pricing: supplier cost × 1.30 (margin set in Admin → Settings), rounded up to the rupee. Supplier fees count towards profit, not price. DeoDap products are prepaid only.
 Baapstore and DeoDap are added but switched off; turn them on in Admin → Suppliers & sync once you have their plans.

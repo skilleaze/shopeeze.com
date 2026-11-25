@@ -256,7 +256,7 @@
     if (PF.state === 'override') r = r.not('price_override', 'is', null);
     r = PF.sort === 'price' ? r.order('price', { ascending: true }) : PF.sort === 'pricehi' ? r.order('price', { ascending: false }) : PF.sort === 'title' ? r.order('display_title') : r.order('created_at', { ascending: false });
     const { data, count } = await q(r.range(PF.page * 50, PF.page * 50 + 49));
-    $('#main').innerHTML = `<div class="row"><div><h1>Products</h1><p class="sub">Prices = (supplier cost + supplier fee) × (1 + margin), rounded to end in 9. Set a fixed price to override.</p></div><span class="sp"></span><button class="btn pri" id="addp">Add own product</button></div>
+    $('#main').innerHTML = `<div class="row"><div><h1>Products</h1><p class="sub">Price = supplier cost + your margin, rounded up to the rupee. Set a fixed price to override.</p></div><span class="sp"></span><button class="btn pri" id="addp">Add own product</button></div>
     <div class="row" style="margin-bottom:12px">
       <input class="in" id="pq" placeholder="Search products" value="${esc(PF.q)}" style="width:min(280px,100%)">
       <select class="in" id="pc"><option value="">All categories</option>${CATS.map(([k, l]) => `<option value="${k}" ${PF.cat === k ? 'selected' : ''}>${l}</option>`).join('')}</select>
@@ -341,7 +341,7 @@
       Promise.all(suppliers.map(async (s) => { const { count } = await sb.from('products').select('id', { count: 'exact', head: true }).eq('supplier', s.id).eq('available', true).eq('active', true).is('hidden_reason', null); return [s.id, count || 0]; })),
     ]);
     const cnt = Object.fromEntries(counts);
-    $('#main').innerHTML = `<h1>Suppliers & sync</h1><p class="sub">Products, prices and stock are pulled from each enabled supplier every 6 hours. The fee is added per item before your margin (their shipping charge).</p>
+    $('#main').innerHTML = `<h1>Suppliers & sync</h1><p class="sub">Products, prices and stock are pulled from each enabled supplier every 6 hours. The fee is what the supplier charges you per item (shipping); it is counted in profit, not added to the price.</p>
     <div class="tbl"><table><tr><th>Supplier</th><th class="num">Live products</th><th>Fee / item</th><th>Enabled</th><th>Sync status</th><th></th></tr>
     ${suppliers.map((s) => { const x = (states || []).find((y) => y.supplier === s.id); return `<tr><td><b>${esc(s.name)}</b>${s.base_url ? `<div class="muted" style="font-size:12px"><a href="${esc(s.base_url)}" target="_blank">${esc(s.base_url.replace('https://', ''))}</a></div>` : ''}<div class="muted" style="font-size:12px;max-width:360px">${esc(s.notes || '')}</div></td>
       <td class="num">${cnt[s.id].toLocaleString('en-IN')}</td><td><input class="in" type="number" style="width:80px" data-fee="${s.id}" value="${s.fee}"></td><td><input type="checkbox" data-en="${s.id}" ${s.enabled ? 'checked' : ''}></td>
@@ -366,7 +366,7 @@
     const { data: team } = await q(sb.from('admins').select('*').order('created_at'));
     const f = (k, l, t = 'number') => `<div class="f"><label>${l}</label><input class="in" id="s_${k}" type="${t}" value="${esc(s[k] == null ? '' : s[k])}"></div>`;
     $('#main').innerHTML = `<h1>Settings</h1><p class="sub">Changes reach the store within 5 minutes.</p>
-    <div class="card sec"><b>Pricing</b><div class="fgrid" style="margin-top:12px">${f('margin_pct', 'Margin on landed cost (%)')}</div><p class="muted" style="margin:8px 0 0">Example: cost ₹84 + ₹50 fee = ₹134 × ${1 + Number(s.margin_pct) / 100} = ₹${Math.ceil((Math.ceil(134 * (1 + Number(s.margin_pct) / 100)) + 1) / 10) * 10 - 1}</p></div>
+    <div class="card sec"><b>Pricing</b><div class="fgrid" style="margin-top:12px">${f('margin_pct', 'Margin on landed cost (%)')}</div><p class="muted" style="margin:8px 0 0">Example: supplier cost ₹100 → selling price ₹${Math.ceil(100 * (1 + Number(s.margin_pct) / 100))}. Supplier fees are not added to the price, but they are counted in your profit.</p></div>
     <div class="card sec"><b>Delivery and payment</b><div class="fgrid" style="margin-top:12px">${f('free_over', 'Free delivery above (₹)')}${f('std_fee', 'Delivery fee below that (₹)')}${f('cod_fee', 'Cash on delivery fee (₹)')}${f('min_days', 'Delivery promise: from (working days)')}${f('max_days', 'Delivery promise: to (working days)')}${f('replace_days', 'Replacement window (days)')}</div></div>
     <div class="card sec"><b>Welcome offer</b><div class="fgrid" style="margin-top:12px">${f('promo_code', 'Promo code', 'text')}${f('promo_pct', 'Discount (%)')}</div><p class="muted" style="margin:8px 0 0">One use per mobile number. Leave the code empty to switch the offer off.</p></div>
     <button class="btn dark" id="ss">Save settings</button>

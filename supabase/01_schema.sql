@@ -81,10 +81,10 @@ create or replace function ceil9(v numeric) returns numeric language sql immutab
   select (ceil((ceil(v) + 1) / 10.0) * 10 - 1)::numeric
 $fn$;
 
--- Selling price for a supplier cost: (cost + supplier fee) x (1 + margin), rounded up to end in 9
+-- Selling price for a supplier cost: cost x (1 + margin), rounded up to the rupee
 create or replace function sell_price(p_cost numeric, p_supplier text) returns numeric language sql stable set search_path = public as $fn$
   select case when p_cost is null or p_cost <= 0 then null
-    else ceil9((p_cost + coalesce((select fee from suppliers where id = p_supplier), 0)) * (1 + (select margin_pct from settings where id = 1) / 100.0)) end
+    else ceil(p_cost * (1 + (select margin_pct from settings where id = 1) / 100.0)) end
 $fn$;
 
 create or replace function slugify(t text) returns text language sql immutable set search_path = public as $fn$
@@ -228,6 +228,7 @@ declare
   sub numeric := 0; cost_t numeric := 0; fee_t numeric := 0; disc numeric := 0; ship numeric; cod numeric; tot numeric;
   lines jsonb := '[]'; ph text; o orders; v_fee numeric; v_promo text;
 begin
+  perform place_order_checked(p);
   select * into s from settings where id = 1;
   ph := regexp_replace(coalesce(p->>'phone', ''), '[^0-9]', '', 'g');
   if length(ph) = 12 and left(ph, 2) = '91' then ph := right(ph, 10); end if;

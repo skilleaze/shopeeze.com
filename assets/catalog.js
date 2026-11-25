@@ -63,7 +63,7 @@
     { id: 's12', cat: 'cleaning', sub: 'Lint removers', title: 'Mini Lint Roller', cost: 35, price: 169, days: 5, img: '/assets/products/mini-lint-roller.jpg', desc: 'Reusable, washable lint roller for clothes, sofas and car seats. Picks up hair, lint, dust and crumbs.' },
     { id: 's13', cat: 'kids', sub: 'Toy guns', title: 'Automatic Gel Blaster Toy Gun', cost: 380, price: 840, days: 5, img: '/assets/products/gel-blaster-toy-gun.jpg', desc: 'Automatic gel ball blaster with goggles and water gel beads. For outdoor play with adult supervision.' },
   ];
-  OWN.forEach((p) => { p.supplier = 'own'; p.available = true; });
+  OWN.forEach((p) => { p.supplier = 'own'; p.available = true; p.cod = true; });
   // P is the live product list. On the server it is refilled from the database; in the browser it holds our own stock.
   const P = OWN.slice();
   const HERO = ['d4', 'd3', 'd1', 'd2'];
