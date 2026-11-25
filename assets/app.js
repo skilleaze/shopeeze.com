@@ -301,7 +301,7 @@
     }
     if (a === 'promo') { applyPromo(); return; }
     if (a === 'unpromo') { saveFields(); store.promo = false; save(); renderClient(); return; }
-    if (a === 'slide') { heroGo(Number(el.dataset.k)); return; }
+    if (a === 'slide') { heroGo(Number(el.dataset.k)); if (heroTimer) heroStart(); return; }
     if (a === 'copy') { try { navigator.clipboard.writeText(PROMO.code); } catch (err) {} toast(`Code ${PROMO.code} copied`); return; }
   });
   document.addEventListener('change', (e) => {
@@ -350,14 +350,19 @@
   /* ---------- Hero slider ---------- */
   let heroK = 0, heroTimer;
   function heroGo(k) {
-    heroK = k;
-    $$('.slide').forEach((s, i) => s.classList.toggle('on', i === k));
-    $$('.dots button').forEach((s, i) => s.classList.toggle('on', i === k));
-    const sl = $$('.slide')[k], p = sl && byId(sl.dataset.id), tag = $('#heroTag');
-    if (!p) return;
-    if (tag) { tag.href = url.product(p); tag.innerHTML = `<div><div class="t">${esc(p.title)}</div><div class="p">${fmt(p.price)}${p.was ? `<s>${fmt(p.was)}</s>` : ''}</div></div><span class="go">${ic('i-arrow')}</span>`; }
+    const slides = $$('.slide');
+    if (!slides.length) return;
+    heroK = (k + slides.length) % slides.length;
+    slides.forEach((s, i) => { s.classList.toggle('on', i === heroK); s.setAttribute('aria-hidden', i === heroK ? 'false' : 'true'); });
+    $$('.hero-nav .bars button').forEach((b, i) => { b.classList.remove('on'); void b.offsetWidth; b.classList.toggle('on', i === heroK); });
+    const n = $('#heroNum'); if (n) n.textContent = String(heroK + 1).padStart(2, '0');
   }
-  if ($('#heroVis') && !matchMedia('(prefers-reduced-motion: reduce)').matches) if ($$('.slide').length > 1) heroTimer = setInterval(() => heroGo((heroK + 1) % $$('.slide').length), 5500);
+  function heroStart() { clearInterval(heroTimer); heroTimer = setInterval(() => heroGo(heroK + 1), 6500); }
+  if ($('#heroVis') && $$('.slide').length > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    heroStart();
+    $('#heroVis').addEventListener('mouseenter', () => clearInterval(heroTimer));
+    $('#heroVis').addEventListener('mouseleave', heroStart);
+  }
 
   /* ---------- Reveal on scroll ---------- */
   let io;

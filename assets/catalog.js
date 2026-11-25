@@ -69,6 +69,13 @@
   // P is the live product list. On the server it is refilled from the database; in the browser it holds our own stock.
   const P = OWN.filter((p) => p.available);
   const HERO = ['d1', 'd4', 'd3', 'd2'];
+  // Home page hero: full-width editorial photos (Unsplash licence, free for commercial use)
+  const U = (id) => `https://images.unsplash.com/${id}?auto=format&fit=crop&q=80`;
+  const SLIDES = [
+    { cat: 'home', img: U('photo-1631679706909-1844bbd07221'), alt: 'A calm, warm living room with soft furniture', kicker: 'The Shopeiz edit', title: 'The art of having everything.', text: 'Anything you need, in one place, at your door.', cta: 'Shop Home & Decor' },
+    { cat: 'kitchen', img: U('photo-1628797279405-8cd6ffdbeb6c'), alt: 'A sunlit kitchen with wooden table and hanging pans', kicker: 'Kitchen', title: 'A kitchen, quietly upgraded.', text: 'Clever tools, storage and serveware for every day.', cta: 'Shop Kitchen' },
+    { cat: 'fashion', img: U('photo-1663229145211-94d321567f97'), alt: 'A person holding a structured beige handbag', kicker: 'Fashion', title: 'Pieces you will reach for.', text: 'Bags, sarees and wardrobe staples, fairly priced.', cta: 'Shop Fashion' },
+  ];
   const BEST = ['d1'];
   const FREE_OVER = 499, STD_FEE = 40, EXP_FEE = 0, COD_FEE = 49;
   const PROMO = { code: 'SZWELCOME', pct: 10 };
@@ -77,5 +84,5 @@
   const slugify = (s) => String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   OWN.forEach((p) => { p.slug = p.slug || slugify(p.title); });
 
-  return { SITE, CATS, NAV_CATS, OWN, P, HERO, BEST, FREE_OVER, STD_FEE, EXP_FEE, COD_FEE, PROMO, POLICY, slugify };
+  return { SITE, CATS, NAV_CATS, OWN, P, HERO, SLIDES, BEST, FREE_OVER, STD_FEE, EXP_FEE, COD_FEE, PROMO, POLICY, slugify };
 });
