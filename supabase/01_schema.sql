@@ -1,7 +1,7 @@
 -- Shopeiz store database: suppliers, products, orders, settings, sync and admins.
 -- Safe to run more than once.
 
-create extension if not exists pgcrypto;
+create extension if not exists pgcrypto with schema extensions;
 
 -- ---------- Settings (one row) ----------
 create table if not exists settings (
@@ -77,21 +77,21 @@ create index if not exists products_cat_idx on products (category) where active 
 create index if not exists products_supplier_idx on products (supplier);
 create index if not exists products_avail_idx on products (available, active);
 
-create or replace function ceil9(v numeric) returns numeric language sql immutable as $fn$
+create or replace function ceil9(v numeric) returns numeric language sql immutable set search_path = public as $fn$
   select (ceil((ceil(v) + 1) / 10.0) * 10 - 1)::numeric
 $fn$;
 
 -- Selling price for a supplier cost: (cost + supplier fee) x (1 + margin), rounded up to end in 9
-create or replace function sell_price(p_cost numeric, p_supplier text) returns numeric language sql stable as $fn$
+create or replace function sell_price(p_cost numeric, p_supplier text) returns numeric language sql stable set search_path = public as $fn$
   select case when p_cost is null or p_cost <= 0 then null
     else ceil9((p_cost + coalesce((select fee from suppliers where id = p_supplier), 0)) * (1 + (select margin_pct from settings where id = 1) / 100.0)) end
 $fn$;
 
-create or replace function slugify(t text) returns text language sql immutable as $fn$
+create or replace function slugify(t text) returns text language sql immutable set search_path = public as $fn$
   select trim(both '-' from regexp_replace(replace(lower(coalesce(t, '')), '&', ' and '), '[^a-z0-9]+', '-', 'g'))
 $fn$;
 
-create or replace function products_before() returns trigger language plpgsql as $fn$
+create or replace function products_before() returns trigger language plpgsql set search_path = public as $fn$
 declare base text; s text; n int := 1;
 begin
   if new.slug is null or new.slug = '' then
@@ -113,7 +113,7 @@ drop trigger if exists trg_products_before on products;
 create trigger trg_products_before before insert or update on products for each row execute function products_before();
 
 -- Price for one variant (used at checkout)
-create or replace function variant_price(p products, v jsonb) returns numeric language sql stable as $fn$
+create or replace function variant_price(p products, v jsonb) returns numeric language sql stable set search_path = public as $fn$
   select coalesce(p.price_override, sell_price((v->>'cost')::numeric, p.supplier), p.price)
 $fn$;
 
@@ -323,7 +323,7 @@ create table if not exists collection_map (
 );
 -- Private secret the scheduled job sends to the sync function
 create table if not exists private_config (k text primary key, v text not null);
-insert into private_config (k, v) values ('sync_key', encode(gen_random_bytes(24), 'hex')) on conflict do nothing;
+insert into private_config (k, v) values ('sync_key', encode(extensions.gen_random_bytes(24), 'hex')) on conflict do nothing;
 
 -- ---------- Admin analytics ----------
 create or replace function admin_stats(d1 date, d2 date) returns jsonb language plpgsql stable security definer set search_path = public as $fn$
@@ -382,7 +382,7 @@ alter table collection_map enable row level security;
 alter table private_config enable row level security;
 
 drop policy if exists products_public on products;
-create policy products_public on products for select to anon, authenticated using (active and hidden_reason is null);
+create policy products_public on products for select to anon using (active and hidden_reason is null);
 drop policy if exists products_admin on products;
 create policy products_admin on products for all to authenticated using ((select is_admin())) with check ((select is_admin()));
 
@@ -395,7 +395,7 @@ begin
   end loop;
 end $do$;
 drop policy if exists admins_read on admins;
-create policy admins_read on admins for select to authenticated using ((select is_admin()));
+create policy admins_read on admins for select to authenticated using ((select is_admin()) or user_id = (select auth.uid()));
 drop policy if exists admins_owner on admins;
 create policy admins_owner on admins for all to authenticated using ((select is_owner())) with check ((select is_owner()));
 -- private_config: no policies, so only the service role can read it

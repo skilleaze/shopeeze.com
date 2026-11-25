@@ -5,7 +5,7 @@
   else root.SZ = Object.assign(root.SZ || {}, { CFG: factory() });
 })(typeof self !== 'undefined' ? self : this, function () {
   return {
-    url: '',
-    key: '',
+    url: 'https://scgklhbkoezjecumzkgz.supabase.co',
+    key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjZ2tsaGJrb2V6amVjdW16a2d6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU2MDgwMDksImV4cCI6MjExMTE4NDAwOX0.hTE0e64E3us24mNVOnpaV-NPaZ6Z4AqOLmW-qnIDtmY',
   };
 });

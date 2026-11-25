@@ -78,7 +78,7 @@ export function mapProduct(supplier, sp, runId) {
   }));
   const live = variants.filter((v) => v.avail && v.cost > 0);
   const pool = live.length ? live : variants.filter((v) => v.cost > 0);
-  const cheapest = pool.sort((a, b) => a.cost - b.cost)[0];
+  const cheapest = pool.slice().sort((a, b) => a.cost - b.cost)[0];
   const images = (sp.images || []).map((i) => String(i.src || '').split('?')[0]).filter(Boolean).slice(0, 10);
   const tags = Array.isArray(sp.tags) ? sp.tags : String(sp.tags || '').split(',').map((x) => x.trim()).filter(Boolean);
   const name = cleanTitle(sp.title) || String(sp.title || '').trim();
@@ -86,7 +86,6 @@ export function mapProduct(supplier, sp, runId) {
   const cost = cheapest ? cheapest.cost : null;
   const mrp = cheapest ? cheapest.mrp : null;
   const available = live.length > 0;
-  const onlyDefault = variants.length === 1 && /^default title$/i.test(variants[0].title || '');
   return {
     id: pid(supplier, sp.id),
     supplier,
@@ -99,7 +98,7 @@ export function mapProduct(supplier, sp, runId) {
     tags: tags.slice(0, 30),
     desc_html: cleanHtml(sp.body_html),
     images,
-    variants: onlyDefault ? variants.map((v) => ({ ...v, title: 'Default Title' })) : variants,
+    variants,
     cost,
     mrp,
     available,
