@@ -46,13 +46,15 @@
   }
   function loginView() {
     root.innerHTML = `<div class="login"><div class="card"><span class="wm">Shopeiz</span> <b style="margin-left:6px">Admin</b>
-      <form id="lf"><div class="f"><label>Email</label><input class="in" type="email" name="e" required autocomplete="username"></div>
+      <form id="lf"><div class="f"><label>Username or email</label><input class="in" type="text" name="e" required autocomplete="username" autocapitalize="off"></div>
       <div class="f"><label>Password</label><input class="in" type="password" name="p" required autocomplete="current-password"></div>
       <p class="bad" id="le" style="margin:0;min-height:1em"></p><button class="btn pri">Sign in</button></form></div></div>`;
     $('#lf').onsubmit = async (e) => {
       e.preventDefault();
       const f = e.target;
-      const { error } = await sb.auth.signInWithPassword({ email: f.e.value.trim(), password: f.p.value });
+      const u = f.e.value.trim().toLowerCase();
+      const { error } = await sb.auth.signInWithPassword({ email: u.includes('@') ? u : u + '@shopeiz.com', password: f.p.value });
+      if (error && /invalid/i.test(error.message)) { $('#le').textContent = 'Wrong username or password.'; return; }
       if (error) { $('#le').textContent = error.message; return; }
       boot();
     };
@@ -369,7 +371,7 @@
     <div class="card sec"><b>Welcome offer</b><div class="fgrid" style="margin-top:12px">${f('promo_code', 'Promo code', 'text')}${f('promo_pct', 'Discount (%)')}</div><p class="muted" style="margin:8px 0 0">One use per mobile number. Leave the code empty to switch the offer off.</p></div>
     <button class="btn dark" id="ss">Save settings</button>
     <div class="card" style="margin-top:26px"><b>Team</b><table style="margin-top:8px"><tr><th>Email</th><th>Name</th><th>Role</th></tr>${team.map((t) => `<tr><td>${esc(t.email)}</td><td>${esc(t.name || '')}</td><td>${esc(t.role)}</td></tr>`).join('')}</table>
-      ${me.role === 'owner' ? `<div class="fgrid" style="margin-top:14px"><div class="f"><label>Email</label><input class="in" id="ne" type="email"></div><div class="f"><label>Name</label><input class="in" id="nn"></div><div class="f"><label>Temporary password</label><input class="in" id="np2" type="text"></div></div><button class="btn" id="addu" style="margin-top:10px">Add staff login</button>` : ''}</div>
+      ${me.role === 'owner' ? `<div class="fgrid" style="margin-top:14px"><div class="f"><label>Username or email</label><input class="in" id="ne" type="text"></div><div class="f"><label>Name</label><input class="in" id="nn"></div><div class="f"><label>Temporary password</label><input class="in" id="np2" type="text"></div></div><button class="btn" id="addu" style="margin-top:10px">Add staff login</button>` : ''}</div>
     <div class="card" style="margin-top:14px"><b>Your password</b><div class="row" style="margin-top:10px"><input class="in" id="mypw" type="password" placeholder="New password (8+ characters)"><button class="btn" id="chpw">Change</button></div></div>`;
     $('#ss').onclick = async () => {
       const row = {}; ['margin_pct', 'free_over', 'std_fee', 'cod_fee', 'min_days', 'max_days', 'replace_days', 'promo_pct'].forEach((k) => (row[k] = Number($('#s_' + k).value)));
@@ -382,7 +384,7 @@
       } catch (e) { fail(e); }
     };
     if ($('#addu')) $('#addu').onclick = async () => {
-      const { data, error } = await sb.functions.invoke('admin-users', { body: { email: $('#ne').value.trim(), name: $('#nn').value.trim(), password: $('#np2').value } });
+      const { data, error } = await sb.functions.invoke('admin-users', { body: { email: (($v) => ($v.includes('@') ? $v : $v + '@shopeiz.com'))($('#ne').value.trim().toLowerCase()), name: $('#nn').value.trim(), password: $('#np2').value } });
       if (error || (data && data.error)) return fail(error || new Error(data.error));
       toast('Login created'); settings();
     };
