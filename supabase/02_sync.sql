@@ -54,7 +54,7 @@ create or replace function dup_key_sku(v jsonb) returns text language sql immuta
   select nullif(lower(regexp_replace(coalesce(v->0->>'sku', ''), '[^a-zA-Z0-9]+', '', 'g')), '')
 $fn$;
 create or replace function dup_key_name(n text) returns text language sql immutable set search_path = public as $fn$
-  select lower(regexp_replace(regexp_replace(regexp_replace(coalesce(n, ''), '\([^)]*\)', '', 'g'), '\m(\d+\s*(pc|pcs|piece|pieces|set|pack))\M', '', 'gi'), '[^a-zA-Z0-9]+', '', 'g'))
+  select lower(regexp_replace(regexp_replace(coalesce(n, ''), '(\d+)\s*(pcs|pieces|piece|pc)\M', '\1pc', 'gi'), '[^a-zA-Z0-9]+', '', 'g'))
 $fn$;
 
 -- Finish a run: categories from collections, mark products that left the feed,
