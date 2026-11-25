@@ -169,12 +169,12 @@
   </section>
 
   <section class="story"><div class="wrap story-in">
-    <div class="story-mark reveal"><svg class="mono" viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg><svg class="mono z" viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono" transform="matrix(-1 0 0 1 206.04 0)"/></svg></div>
+    <div class="story-mark reveal"><svg class="mono" viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg></div>
     <div class="reveal">
       <span class="eyebrow">Our mark</span>
       <h2>A price tag that carries <em>everything.</em></h2>
-      <p>Every product we sell has one. The tag stands for clear, fair prices; the three bars inside are our shelves: kitchen, home, gadgets and everything in between. Flip the S and it becomes a Z: Shopeiz starts with S and ends with Z, and so does everything you need.</p>
-      <p class="sign">From S to Z.</p>
+      <p>Every product we sell carries one. The tag is our promise of a clear, fair price with nothing hidden. The three bars inside are our shelves: kitchen, home and gadgets, and everything in between. One mark, one standard, on everything we sell.</p>
+      <p class="sign">Everything, fairly priced.</p>
     </div>
   </div></section>
 
