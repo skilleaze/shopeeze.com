@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/tokens/base.css">
+  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/styles.css">
+  <script src="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/_ds_bundle.js"></script>
+  <style>
+    :root { --fs-title: 40px; --ls-heading: -0.035em; }
+    body { margin: 0; background: #fff; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: "ss01", "tnum" 0; }
+    a { color: var(--burgundy-500); cursor: pointer; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    @keyframes szProgress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  </style>
+</helmet>
+<div data-shop-root="1" style="min-height: 100vh; background: var(--white); color: var(--ink); font-family: var(--font-sans); display: flex; flex-direction: column;">
+
+  <div style="background: #F6C25B; color: var(--burgundy-800); font-weight: 600; font-size: 12px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; padding: 10px var(--page-margin, 48px); letter-spacing: 0.01em;">
+    <span>{{ promiseLine }}</span>
+    <span style="display: flex; gap: 6px; align-items: center; color: var(--burgundy-800);">
+      <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="map-pin" size="14" hint-size="14px,14px"></x-import>Deliver to Bandra West, Mumbai</span>
+  </div>
+  <header ref="{{ headerRef }}" style="background: var(--white); position: sticky; top: 0; z-index: 20; transition: box-shadow 260ms cubic-bezier(.2,0,0,1);">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px; padding: 16px var(--page-margin, 48px);">
+      <a onClick="{{ goHome }}" style="display: flex; text-decoration: none;">
+        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Logo" size="30" hint-size="140px,40px"></x-import>
+      </a>
+      <div style="flex: 1 1 280px; max-width: 640px;">
+        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Input" icon="search" placeholder="Search phones, sofas, shampoo…" value="{{ query }}" on-change="{{ onQuery }}" hint-size="100%,44px"></x-import>
+      </div>
+      <nav style="display: flex; align-items: center; gap: 4px; margin-left: auto;">
+        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.IconButton" icon="user" label="Account" hint-size="44px,44px"></x-import>
+        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.IconButton" icon="heart" label="Wishlist" badge="{{ wishCount }}" hint-size="44px,44px"></x-import>
+        <span ref="{{ cartRef }}" style="display: inline-flex;"><x-import component-from-global-scope="ShopeizDesignSystem_fece22.IconButton" icon="shopping-cart" label="Cart" badge="{{ cartCount }}" active="{{ isCartArea }}" on-click="{{ goCart }}" hint-size="44px,44px"></x-import></span>
+      </nav>
+    </div>
+    <nav style="display: flex; gap: 28px; padding: 0 var(--page-margin, 48px); border-bottom: 1px solid var(--gray-300); overflow-x: auto;">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="7">
+        <a onClick="{{ n.go }}" style="font-size: 14px; font-weight: {{ n.weight }}; color: {{ n.color }}; padding: 12px 0; border-bottom: 2px solid {{ n.border }}; white-space: nowrap; text-decoration: none; transition: color 160ms, border-color 200ms cubic-bezier(.2,0,0,1);" style-hover="color: var(--black); border-bottom-color: var(--black);">{{ n.label }}</a>
+      </sc-for>
+    </nav>
+  </header>
+
+  <main ref="{{ mainRef }}" style="flex: 1;">
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <section data-hero="1" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); border-bottom: 1px solid var(--gray-300);">
+        <div style="background: var(--burgundy-500); color: var(--white); padding: 96px var(--page-margin, 48px) 64px; display: flex; flex-direction: column; justify-content: flex-end; gap: 48px; min-height: 560px; position: relative; overflow: hidden;">
+          
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+            <h1 style="margin: 0; font-size: clamp(56px, 7.2vw, 112px); font-weight: 800; line-height: 0.95; letter-spacing: -0.045em; color: var(--white); display: flex; flex-direction: column;">
+              <span style="display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em;"><span data-reveal="line" data-reveal-delay="80" style="display: block;">The art</span></span>
+              <span style="display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em;"><span data-reveal="line" data-reveal-delay="180" style="display: block;">of having</span></span>
+              <span style="display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em;"><span data-reveal="line" data-reveal-delay="280" style="display: block; color: #F6C25B;">everything.</span></span>
+            </h1>
+            <p data-reveal="1" data-reveal-delay="420" style="margin: 0; font-size: 17px; line-height: 1.55; color: var(--burgundy-100); max-width: 420px;">Anything you need, in one place, at your door.</p>
+            <div data-reveal="1" data-reveal-delay="520" style="display: flex; flex-wrap: wrap; gap: 12px;">
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" size="lg" variant="secondary" on-click="{{ goDeals }}" style="background: #F6C25B; color: var(--burgundy-800); border-color: #F6C25B;" hint-size="220px,52px">Shop today's deals</x-import>
+              <a onClick="{{ goDrones }}" style="display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 4px; font-size: 16px; font-weight: 600; color: var(--white); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 6px; transition: text-decoration-color 200ms;" style-hover="text-decoration-color: var(--white);">Visit the drone shop<x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="arrow-right" size="18" hint-size="18px,18px"></x-import></a>
+            </div>
+          </div>
+        </div>
+        <div style="background: #FBEEE4; display: flex; flex-direction: column; min-height: 480px;">
+          <a onClick="{{ heroOpen }}" style="position: relative; flex: 1; min-height: 340px; overflow: hidden; display: block; text-decoration: none; cursor: pointer;">{{ heroStack }}
+            <span style="position: absolute; top: 20px; left: 24px;">
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tag" tone="deal" hint-size="90px,24px">{{ hero.badge }}</x-import>
+            </span>
+          </a>
+          <div style="display: flex; gap: 4px; padding: 0 32px;">
+            <sc-for list="{{ heroDots }}" as="d" hint-placeholder-count="4">
+              <a onClick="{{ d.pick }}" aria-label="{{ d.label }}" style="flex: 1; height: 24px; display: flex; align-items: center; cursor: pointer;">{{ d.bar }}</a>
+            </sc-for>
+          </div>
+          <div ref="{{ heroCapRef }}" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 8px 32px 32px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">{{ hero.eyebrow }}</span>
+              <span style="font-size: 32px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.05;">{{ hero.title }}</span>
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Price" currency="INR" amount="{{ hero.price }}" was="{{ hero.was }}" size="md" hint-size="180px,28px"></x-import>
+            </div>
+            <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" variant="secondary" on-click="{{ heroOpen }}" hint-size="150px,44px">View drone</x-import>
+          </div>
+        </div>
+      </section>
+
+      <section data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); background: #FBF5EF; border-bottom: 1px solid #EFE3D8;">
+        <div style="display: flex; gap: 14px; align-items: center; padding: 20px var(--page-margin, 48px);">
+          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="truck" size="22" color="var(--burgundy-500)" hint-size="22px,22px"></x-import>
+          <div><div style="font-size: 15px; font-weight: 700;">Arrives tomorrow</div><div style="font-size: 13px; color: var(--ink-2);">Fast delivery across India</div></div>
+        </div>
+        <div style="display: flex; gap: 14px; align-items: center; padding: 20px var(--page-margin, 48px); border-left: 1px solid var(--gray-300);">
+          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="rotate-ccw" size="22" color="var(--burgundy-500)" hint-size="22px,22px"></x-import>
+          <div><div style="font-size: 15px; font-weight: 700;">Free returns</div><div style="font-size: 13px; color: var(--ink-2);">For 30 days, no questions</div></div>
+        </div>
+        <div style="display: flex; gap: 14px; align-items: center; padding: 20px var(--page-margin, 48px); border-left: 1px solid var(--gray-300);">
+          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="shield-check" size="22" color="var(--burgundy-500)" hint-size="22px,22px"></x-import>
+          <div><div style="font-size: 15px; font-weight: 700;">Secure checkout</div><div style="font-size: 13px; color: var(--ink-2);">Verified sellers only</div></div>
+        </div>
+      </section>
+
+      <section data-reveal="1" style="padding: 80px var(--page-margin, 48px) 0;">
+        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.SectionHeader" eyebrow="Today only" title="Real deals, real prices." hint-size="100%,90px"></x-import>
+        <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-top: 32px;">
+          <sc-for list="{{ dealItems }}" as="p" hint-placeholder-count="4">
+            <dc-import name="Product Tile" p="{{ p }}" hint-size="100%,400px"></dc-import>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-reveal="1" style="padding: 96px var(--page-margin, 48px) 0;">
+        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.SectionHeader" eyebrow="Drone shop" title="Drones, from first flight to pro." hint-size="100%,90px"></x-import>
+        <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-top: 32px;">
+          <sc-for list="{{ droneItems }}" as="p" hint-placeholder-count="4">
+            <dc-import name="Product Tile" p="{{ p }}" hint-size="100%,420px"></dc-import>
+          </sc-for>
+        </div>
+        <div style="display: flex; margin-top: 20px;">
+          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" variant="secondary" on-click="{{ goDrones }}" hint-size="200px,44px">Visit the drone shop</x-import>
+        </div>
+      </section>
+
+      <section data-reveal="1" style="padding: 96px var(--page-margin, 48px) 0;">
+        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.SectionHeader" eyebrow="Shop by category" title="One search covers every category." hint-size="100%,90px"></x-import>
+        <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; margin-top: 32px;">
+          <sc-for list="{{ catTiles }}" as="c" hint-placeholder-count="6">
+            <a onClick="{{ c.go }}" style="background: {{ c.tint }}; aspect-ratio: 1; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; color: {{ c.ink }}; text-decoration: none; transition: background 220ms cubic-bezier(.2,0,0,1), color 220ms cubic-bezier(.2,0,0,1), transform 320ms cubic-bezier(.2,0,0,1);" style-hover="background: var(--burgundy-500); color: var(--white); text-decoration: none; transform: translateY(-3px);">
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="{{ c.icon }}" size="28" hint-size="28px,28px"></x-import>
+              <span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 16px; font-weight: 700;">{{ c.label }}</span></span>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-reveal="stagger" style="margin: 96px var(--page-margin, 48px) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));">
+        <div style="background: #F6C25B; color: var(--burgundy-800); padding: 48px; display: flex; flex-direction: column; gap: 14px; justify-content: flex-end; min-height: 260px;">
+          <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--burgundy-700);">Returns</span>
+          <h2 style="margin: 0; font-size: 44px; font-weight: 800; line-height: 1.0; letter-spacing: -0.035em; color: var(--burgundy-800);">Changed your mind? Free returns for 30 days.</h2>
+          <span style="font-size: 14px; color: var(--burgundy-800);">Drop it off or book a pickup from your door.</span>
+        </div>
+      </section>
+
+      <section data-reveal="1" style="padding: 96px var(--page-margin, 48px) 0;">
+        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.SectionHeader" eyebrow="New in" title="Just arrived on the shelves." hint-size="100%,90px"></x-import>
+        <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-top: 32px;">
+          <sc-for list="{{ newItems }}" as="p" hint-placeholder-count="4">
+            <dc-import name="Product Tile" p="{{ p }}" hint-size="100%,400px"></dc-import>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isCat }}" hint-placeholder-val="{{ false }}">
+      <section style="padding: 24px var(--page-margin, 48px) 0;">
+        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Breadcrumbs" items="{{ catCrumbs }}" on-navigate="{{ goHome }}" hint-size="100%,20px"></x-import>
+        <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 16px;">
+          <h1 style="margin: 0; font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;">{{ catTitle }}</h1>
+          <span style="font-size: 14px; color: var(--ink-2);">{{ catCountLabel }}</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 40px; margin-top: 28px; align-items: start;">
+          <aside style="display: flex; flex-direction: column; gap: 28px; border-top: 2px solid var(--black); padding-top: 16px; max-width: 260px;">
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">Category</span>
+              <sc-for list="{{ sideCats }}" as="c" hint-placeholder-count="7">
+                <a onClick="{{ c.go }}" style="font-size: 14px; font-weight: {{ c.weight }}; color: {{ c.color }}; text-decoration: none;">{{ c.label }}</a>
+              </sc-for>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--gray-300); padding-top: 16px;">
+              <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">Filter</span>
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Checkbox" label="Arrives today or tomorrow" checked="{{ fFast }}" on-change="{{ toggleFast }}" hint-size="100%,24px"></x-import>
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Checkbox" label="Free delivery" checked="{{ fFree }}" on-change="{{ toggleFree }}" hint-size="100%,24px"></x-import>
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Checkbox" label="On offer" checked="{{ fDeal }}" on-change="{{ toggleDeal }}" hint-size="100%,24px"></x-import>
+            </div>
+          </aside>
+          <div style="grid-column: span 3; min-width: 0;">
+            <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tabs" items="{{ sortItems }}" value="{{ sort }}" on-change="{{ onSort }}" size="sm" hint-size="100%,44px"></x-import>
+            <sc-if value="{{ catEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 48px 0; display: flex; flex-direction: column; gap: 12px; align-items: flex-start;">
+                <span style="font-size: 24px; font-weight: 800; letter-spacing: -0.03em;">Nothing matches those filters.</span>
+                <span style="font-size: 14px; color: var(--ink-2);">Try removing one, or search across every category.</span>
+                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" variant="secondary" arrow="{{ false }}" on-click="{{ clearFilters }}" hint-size="140px,44px">Clear filters</x-import>
+              </div>
+            </sc-if>
+            <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 20px;">
+              <sc-for list="{{ catItems }}" as="p" hint-placeholder-count="6">
+                <dc-import name="Product Tile" p="{{ p }}" hint-size="100%,400px"></dc-import>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isProduct }}" hint-placeholder-val="{{ false }}">
+      <section style="padding: 24px var(--page-margin, 48px) 0;">
+        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Breadcrumbs" items="{{ pCrumbs }}" on-navigate="{{ crumbNav }}" hint-size="100%,20px"></x-import>
+        <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 48px; margin-top: 24px;">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="background: #FBEEE4; aspect-ratio: 1.15; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+              <sc-if value="{{ cur.img }}" hint-placeholder-val="{{ false }}">{{ curImgEl }}</sc-if>
+              <sc-if value="{{ cur.noImg }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="{{ cur.icon }}" size="160" stroke-width="1.5" hint-size="160px,160px"></x-import></sc-if>
+              <sc-if value="{{ cur.tag }}" hint-placeholder-val="{{ false }}">
+                <span style="position: absolute; top: 16px; left: 16px;">
+                  <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tag" tone="deal" hint-size="90px,24px">{{ cur.tagLabel }}</x-import>
+                </span>
+              </sc-if>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+              <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
+                <a onClick="{{ t.pick }}" style="background: {{ t.bg }}; aspect-ratio: 1; outline: {{ t.outline }}; outline-offset: -2px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                  <sc-if value="{{ cur.img }}" hint-placeholder-val="{{ false }}">{{ t.imgEl }}</sc-if>
+                  <sc-if value="{{ cur.noImg }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="{{ cur.icon }}" size="36" stroke-width="1.5" color="{{ t.color }}" hint-size="36px,36px"></x-import></sc-if>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">{{ cur.category }}</span>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-top: 10px;">
+              <h1 style="margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.08;">{{ cur.title }}</h1>
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.IconButton" icon="heart" label="Save to wishlist" variant="outline" active="{{ cur.wished }}" on-click="{{ cur.onWish }}" hint-size="44px,44px"></x-import>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px;">
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tag" tone="outline" icon="shield-check" hint-size="120px,24px">Verified seller</x-import>
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tag" hint-size="100px,24px">Free returns</x-import>
+              <sc-if value="{{ cur.hasRating }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tag" icon="star" hint-size="100px,24px">{{ cur.rating }}</x-import></sc-if>
+            </div>
+            <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 6px;">
+              <sc-if value="{{ cur.was }}" hint-placeholder-val="{{ false }}"><span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">Offer price</span></sc-if>
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Price" currency="INR" amount="{{ cur.price }}" was="{{ cur.was }}" size="lg" hint-size="200px,40px"></x-import>
+            </div>
+            <sc-if value="{{ cur.was }}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; font-size: 14px; font-weight: 600; color: var(--text-accent);">{{ cur.mrpLine }}</p></sc-if>
+            <p style="margin: 6px 0 0; font-size: 13px; color: var(--ink-2);">{{ cur.vatLine }}</p>
+            <div style="margin-top: 24px; padding-top: 16px; border-top: 2px solid var(--black);">
+              <div style="font-size: 14px; font-weight: 700; margin-bottom: 12px;">Delivery</div>
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.RadioGroup" name="ship" value="{{ ship }}" on-change="{{ onShip }}" options="{{ shipOptions }}" hint-size="100%,100px"></x-import>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.QuantityStepper" value="{{ qty }}" min="1" max="10" on-change="{{ onQty }}" hint-size="130px,48px"></x-import>
+              <div style="flex: 1;">
+                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" full-width="{{ true }}" size="lg" on-click="{{ addCur }}" hint-size="100%,52px">Add to cart</x-import>
+              </div>
+            </div>
+            <div style="margin-top: 24px; display: flex; flex-direction: column;">
+              <div style="display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--gray-300);">
+                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="truck" size="20" hint-size="20px,20px"></x-import>
+                <div><div style="font-size: 14px; font-weight: 700;">{{ cur.arrives }}</div><div style="font-size: 13px; color: var(--ink-2);">Delivered to your door</div></div>
+              </div>
+              <div style="display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--gray-300);">
+                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="rotate-ccw" size="20" hint-size="20px,20px"></x-import>
+                <div><div style="font-size: 14px; font-weight: 700;">Free returns for 30 days</div><div style="font-size: 13px; color: var(--ink-2);">Drop off or book a pickup</div></div>
+              </div>
+              <div style="display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--gray-300); border-bottom: 1px solid var(--gray-300);">
+                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="shield-check" size="20" hint-size="20px,20px"></x-import>
+                <div><div style="font-size: 14px; font-weight: 700;">Secure payment</div><div style="font-size: 13px; color: var(--ink-2);">UPI, card or cash on delivery</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 56px;">
+          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tabs" items="{{ tabItems }}" value="{{ tab }}" on-change="{{ onTab }}" hint-size="100%,48px"></x-import>
+          <p style="margin: 0; padding: 20px 0; max-width: 680px; font-size: 15px; line-height: 1.55; text-wrap: pretty;">{{ tabText }}</p>
+        </div>
+        <div style="margin-top: 40px;">
+          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.SectionHeader" eyebrow="You might also need" title="Bought together often." hint-size="100%,90px"></x-import>
+          <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-top: 32px;">
+            <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
+              <dc-import name="Product Tile" p="{{ p }}" hint-size="100%,400px"></dc-import>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isCartEmpty }}" hint-placeholder-val="{{ false }}">
+      <section style="padding: 72px var(--page-margin, 48px) 0; max-width: 560px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start;">
+        <h1 style="margin: 0; font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;">Your cart is empty.</h1>
+        <p style="margin: 0; font-size: 16px; color: var(--ink-2);">Everything you add shows up here, with the delivery date.</p>
+        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" on-click="{{ goHome }}" hint-size="180px,44px">Start shopping</x-import>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isCart }}" hint-placeholder-val="{{ false }}">
+      <section style="padding: 32px var(--page-margin, 48px) 0;">
+        <h1 style="margin: 0; font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;">Cart</h1>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 48px; margin-top: 24px; align-items: start;">
+          <div style="border-top: 2px solid var(--black); grid-column: span 2; min-width: 0;">
+            <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
+              <div style="display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--gray-300);">
+                <a onClick="{{ l.open }}" style="background: #FBEEE4; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                  <sc-if value="{{ l.img }}" hint-placeholder-val="{{ false }}">{{ l.imgEl }}</sc-if>
+                  <sc-if value="{{ l.noImg }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="{{ l.icon }}" size="44" stroke-width="1.5" hint-size="44px,44px"></x-import></sc-if>
+                </a>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">{{ l.category }}</span>
+                  <span style="font-size: 16px; font-weight: 600;">{{ l.title }}</span>
+                  <span style="font-size: 13px; color: var(--ink-2);">{{ l.delivery }}</span>
+                  <div style="display: flex; gap: 16px; align-items: center; margin-top: 8px;">
+                    <x-import component-from-global-scope="ShopeizDesignSystem_fece22.QuantityStepper" size="sm" min="1" max="10" value="{{ l.qty }}" on-change="{{ l.setQty }}" hint-size="110px,36px"></x-import>
+                    <a onClick="{{ l.remove }}" style="font-size: 13px; font-weight: 600;">Remove</a>
+                    <a onClick="{{ l.save }}" style="font-size: 13px; font-weight: 600;">Save for later</a>
+                  </div>
+                </div>
+                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Price" currency="INR" amount="{{ l.total }}" size="sm" hint-size="90px,24px"></x-import>
+              </div>
+            </sc-for>
+          </div>
+          <aside style="background: #FBF5EF; border: 1px solid #EFE3D8; padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+            <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.025em;">Order summary</span>
+            <div style="display: flex; justify-content: space-between; font-size: 14px; font-variant-numeric: tabular-nums;"><span>{{ subLabel }}</span><span>{{ subValue }}</span></div>
+            <div style="display: flex; justify-content: space-between; font-size: 14px; font-variant-numeric: tabular-nums;"><span>Delivery</span><span>{{ delivValue }}</span></div>
+            <sc-if value="{{ promoApplied }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; justify-content: space-between; font-size: 14px; font-variant-numeric: tabular-nums; color: var(--text-accent);"><span>Promo SZWELCOME</span><span>{{ discValue }}</span></div>
+            </sc-if>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 12px; border-top: 2px solid var(--black);">
+              <span style="font-size: 15px; font-weight: 700;">Total</span>
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Price" currency="INR" amount="{{ total }}" size="md" hint-size="120px,30px"></x-import>
+            </div>
+            <span style="font-size: 12px; color: var(--ink-2);">{{ freeHint }}</span>
+            <div style="display: flex; gap: 8px; align-items: flex-start;">
+              <div style="flex: 1;">
+                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Input" placeholder="Promo code" value="{{ promo }}" on-change="{{ onPromo }}" error="{{ promoErr }}" hint-size="100%,44px"></x-import>
+              </div>
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" variant="secondary" arrow="{{ false }}" on-click="{{ applyPromo }}" hint-size="80px,44px">Apply</x-import>
+            </div>
+            <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" full-width="{{ true }}" size="lg" on-click="{{ goCheckout }}" hint-size="100%,52px">Checkout</x-import>
+            <span style="font-size: 12px; color: var(--ink-2);">Free returns for 30 days.</span>
+          </aside>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
+      <section style="padding: 32px var(--page-margin, 48px) 0;">
+        <a onClick="{{ goCart }}" style="font-size: 13px; font-weight: 600;">Back to cart</a>
+        <h1 style="margin: 12px 0 0; font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;">Checkout</h1>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 48px; margin-top: 24px; align-items: start;">
+          <div style="grid-column: span 2; min-width: 0;">
+            <section style="border-top: 2px solid var(--black); padding-top: 16px; margin-bottom: 32px;">
+              <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 16px;"><span style="font-size: 12px; font-weight: 700; color: var(--text-accent);">01</span><span style="font-size: 22px; font-weight: 800; letter-spacing: -0.03em;">Delivery address</span></div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Input" label="Full name" default-value="Ananya Sharma" hint-size="100%,68px"></x-import>
+                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Input" label="Mobile" default-value="+91 98201 23456" hint-size="100%,68px"></x-import>
+                <div style="grid-column: 1 / -1;">
+                  <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Input" label="Address" default-value="Flat 1804, Sea Breeze Towers, Bandra West, Mumbai 400050" hint-size="100%,68px"></x-import>
+                </div>
+              </div>
+            </section>
+            <section style="border-top: 2px solid var(--black); padding-top: 16px; margin-bottom: 32px;">
+              <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 16px;"><span style="font-size: 12px; font-weight: 700; color: var(--text-accent);">02</span><span style="font-size: 22px; font-weight: 800; letter-spacing: -0.03em;">Delivery speed</span></div>
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.RadioGroup" name="ship2" value="{{ ship }}" on-change="{{ onShip }}" options="{{ shipOptions }}" hint-size="100%,100px"></x-import>
+            </section>
+            <section style="border-top: 2px solid var(--black); padding-top: 16px; margin-bottom: 32px;">
+              <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 16px;"><span style="font-size: 12px; font-weight: 700; color: var(--text-accent);">03</span><span style="font-size: 22px; font-weight: 800; letter-spacing: -0.03em;">Payment</span></div>
+              <div style="display: flex; flex-direction: column; gap: 16px;">
+                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.RadioGroup" name="pay" value="{{ pay }}" on-change="{{ onPay }}" options="{{ payOptions }}" hint-size="100%,150px"></x-import>
+                <sc-if value="{{ isCard }}" hint-placeholder-val="{{ true }}">
+                  <div style="max-width: 360px;">
+                    <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Input" label="Security code" placeholder="3 digits" value="{{ cvv }}" on-change="{{ onCvv }}" error="{{ cvvErr }}" hint-size="100%,68px"></x-import>
+                  </div>
+                </sc-if>
+                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Switch" label="Send order updates by SMS" default-checked="{{ true }}" hint-size="260px,28px"></x-import>
+              </div>
+            </section>
+          </div>
+          <aside style="background: #FBF5EF; border: 1px solid #EFE3D8; padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+            <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.025em;">{{ subLabel }}</span>
+            <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
+              <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 13px;"><span>{{ l.summary }}</span><span style="font-variant-numeric: tabular-nums; white-space: nowrap;">{{ l.totalLabel }}</span></div>
+            </sc-for>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; font-variant-numeric: tabular-nums; border-top: 1px solid var(--gray-300); padding-top: 12px;"><span>Delivery</span><span>{{ delivValue }}</span></div>
+            <sc-if value="{{ codFee }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-variant-numeric: tabular-nums;"><span>Cash on delivery fee</span><span>INR 49</span></div>
+            </sc-if>
+            <sc-if value="{{ promoApplied }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-variant-numeric: tabular-nums; color: var(--text-accent);"><span>Promo SZWELCOME</span><span>{{ discValue }}</span></div>
+            </sc-if>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 12px; border-top: 2px solid var(--black);">
+              <span style="font-size: 15px; font-weight: 700;">Total</span>
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Price" currency="INR" amount="{{ payTotal }}" hint-size="120px,30px"></x-import>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--ink-2);">
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="truck" size="16" hint-size="16px,16px"></x-import>
+              <span>{{ arrivesLine }}</span>
+            </div>
+            <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" full-width="{{ true }}" size="lg" on-click="{{ placeOrder }}" hint-size="100%,52px">{{ payLabel }}</x-import>
+            <div style="display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--ink-2);">
+              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="lock" size="14" hint-size="14px,14px"></x-import>
+              <span>Secure payment</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); min-height: 520px;">
+        <div style="padding: 64px var(--page-margin, 48px); display: flex; flex-direction: column; gap: 16px; justify-content: center;">
+          <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">{{ orderLabel }}</span>
+          <h1 style="margin: 0; font-size: 56px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;">{{ orderArrives }}</h1>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--ink-2); max-width: 420px;">We've emailed your receipt. You'll get a text when the courier is on the way.</p>
+          <div style="border-top: 2px solid var(--black); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; max-width: 460px;">
+            <sc-for list="{{ orderLines }}" as="l" hint-placeholder-count="2">
+              <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 14px;"><span>{{ l.summary }}</span><span style="font-variant-numeric: tabular-nums; white-space: nowrap;">{{ l.totalLabel }}</span></div>
+            </sc-for>
+            <div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; border-top: 1px solid var(--gray-300); padding-top: 8px; font-variant-numeric: tabular-nums;"><span>Paid</span><span>{{ orderTotal }}</span></div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px;">
+            <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" on-click="{{ goHome }}" hint-size="170px,44px">Keep shopping</x-import>
+            <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" variant="secondary" arrow="{{ false }}" hint-size="140px,44px">Track order</x-import>
+          </div>
+        </div>
+        <div style="background: var(--burgundy-500); display: flex; align-items: center; justify-content: center; min-height: 320px;">
+          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Monogram" size="200" color="var(--white)" hint-size="180px,200px"></x-import>
+        </div>
+      </section>
+    </sc-if>
+  </main>
+
+  <footer style="background: var(--burgundy-700); color: var(--white); padding: 56px var(--page-margin, 48px) 28px; margin-top: 80px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px;">
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Logo" size="30" lockup="stacked" tone="onBlack" hint-size="140px,90px"></x-import>
+        <span style="font-size: 14px; font-weight: 700;">The art of having everything.</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-on-dark-muted);">Shop</span>
+        <sc-for list="{{ footCats }}" as="c" hint-placeholder-count="5">
+          <a onClick="{{ c.go }}" style="color: var(--white); font-size: 14px;">{{ c.label }}</a>
+        </sc-for>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-on-dark-muted);">Help</span>
+        <a style="color: var(--white); font-size: 14px;">Track an order</a>
+        <a style="color: var(--white); font-size: 14px;">Returns</a>
+        <a style="color: var(--white); font-size: 14px;">Delivery</a>
+        <a style="color: var(--white); font-size: 14px;">Payment</a>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-on-dark-muted);">Shopeiz</span>
+        <a style="color: var(--white); font-size: 14px;">About</a>
+        <a style="color: var(--white); font-size: 14px;">Sell on Shopeiz</a>
+        <a style="color: var(--white); font-size: 14px;">Careers</a>
+        <a style="color: var(--white); font-size: 14px;">brand@shopeiz.com</a>
+      </div>
+    </div>
+    <div style="margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--burgundy-500); font-size: 12px; color: var(--burgundy-200);">© 2026 Shopeiz</div>
+  </footer>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ toastRef }}" style="position: fixed; left: var(--page-margin, 48px); bottom: 24px; z-index: 50; max-width: calc(100vw - 32px);">
+      <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Toast" message="{{ toast.message }}" action="{{ toast.action }}" on-action="{{ toast.onAction }}" on-close="{{ closeToast }}" hint-size="360px,52px"></x-import>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;category&quot;,&quot;product&quot;,&quot;cart&quot;,&quot;checkout&quot;],&quot;default&quot;:&quot;home&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;freeDeliveryOver&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:499,&quot;min&quot;:0,&quot;max&quot;:5000,&quot;step&quot;:100,&quot;unit&quot;:&quot;INR&quot;,&quot;tsType&quot;:&quot;number&quot;}}">
+const CATS = [
+  { id: 'electronics', label: 'Electronics', icon: 'smartphone', tint: '#D9E8F5', ink: '#123B5E' },
+  { id: 'fashion', label: 'Fashion', icon: 'shirt', tint: '#F7D9E0', ink: '#6D001A' },
+  { id: 'home', label: 'Home', icon: 'sofa', tint: '#DCEBD7', ink: '#1F4A22' },
+  { id: 'beauty', label: 'Beauty', icon: 'sparkles', tint: '#EADFF5', ink: '#43236B' },
+  { id: 'gadgets', label: 'Gadgets', icon: 'laptop', tint: '#FBE3C6', ink: '#6A3A06' },
+  { id: 'drones', label: 'Drones', icon: 'package', tint: '#FAEDB0', ink: '#5A4500' },
+];
+const P = [
+  { id: 'p1', cat: 'electronics', sub: 'Audio', title: 'Wireless Noise-Cancelling Headphones', price: 8999, was: 11999, delivery: 'Arrives tomorrow · Free returns', icon: 'headphones', rating: 4.7, reviews: 128, desc: 'Thirty hours of battery, fast charging and active noise cancelling that adapts to where you are. Folds flat into the case included.', specs: 'Battery: 30 h · Charging: USB-C, 10 min = 5 h · Weight: 250 g · Bluetooth 5.3' },
+  { id: 'p2', cat: 'electronics', sub: 'Phones', title: 'Smartphone 128 GB, Graphite', price: 29999, delivery: 'Arrives Thursday · Free delivery', icon: 'smartphone', rating: 4.6, reviews: 342, desc: 'A 6.1-inch display, a camera that handles low light, and a battery that lasts a full day of real use.', specs: 'Storage: 128 GB · Display: 6.1 in OLED · Camera: 48 MP · Dual SIM' },
+  { id: 'p3', cat: 'gadgets', sub: 'Tablets', title: '11-inch Tablet with Keyboard Case', price: 44999, was: 51999, delivery: 'Arrives Thursday', icon: 'tablet', rating: 4.5, reviews: 87, desc: 'Light enough to carry all day, with a keyboard case that turns it into a laptop for email and documents.', specs: 'Display: 11 in · Storage: 256 GB · Battery: 10 h · Weight: 470 g' },
+  { id: 'p4', cat: 'fashion', sub: 'Men', title: 'Heavyweight Cotton T-Shirt', price: 799, delivery: 'Arrives tomorrow', icon: 'shirt', rating: 4.4, reviews: 512, desc: 'Thick 240 gsm cotton that keeps its shape after washing. Relaxed fit, ribbed collar.', specs: 'Material: 100% cotton · Weight: 240 gsm · Sizes: XS to XXL · Machine wash' },
+  { id: 'p5', cat: 'home', sub: 'Living', title: 'Three-Seat Linen Sofa', price: 54999, delivery: 'Arrives in 5 days · Free delivery', icon: 'sofa', rating: 4.8, reviews: 46, desc: 'Deep seats, removable linen covers and a solid oak frame. Delivered and assembled in your living room.', specs: 'Width: 220 cm · Depth: 95 cm · Frame: oak · Covers: washable linen' },
+  { id: 'p6', cat: 'gadgets', sub: 'Laptops', title: '14-inch Laptop, 16 GB RAM', price: 74999, was: 84999, delivery: 'Arrives Friday · Free returns', icon: 'laptop', rating: 4.6, reviews: 203, desc: 'Fast enough for editing photos and quiet enough for a library. All-day battery and a sharp 14-inch screen.', specs: 'Memory: 16 GB · Storage: 512 GB SSD · Display: 14 in 2.8K · Weight: 1.3 kg' },
+  { id: 'p7', cat: 'beauty', sub: 'Skincare', title: 'Daily Moisturiser SPF 30, 50 ml', price: 649, delivery: 'Arrives tomorrow', icon: 'sparkles', rating: 4.5, reviews: 690, desc: 'A light, non-greasy moisturiser with broad-spectrum SPF 30. Suits all skin types.', specs: 'Size: 50 ml · SPF 30 · Fragrance free · Dermatologist tested' },
+  { id: 'p9', cat: 'home', sub: 'Kitchen', title: 'Cast Iron Casserole, 5 L', price: 6499, was: 7999, delivery: 'Arrives tomorrow · Free returns', icon: 'house', rating: 4.9, reviews: 77, desc: 'Enamelled cast iron that goes from hob to oven to table. Holds heat for slow cooking.', specs: 'Capacity: 5 L · Oven safe to 260°C · All hobs including induction' },
+  { id: 'p10', cat: 'fashion', sub: 'Women', title: 'Leather Crossbody Bag', price: 3499, delivery: 'Arrives Thursday', icon: 'package', rating: 4.6, reviews: 94, desc: 'Full-grain leather, an adjustable strap and room for a phone, wallet and keys.', specs: 'Material: full-grain leather · Size: 24 × 16 × 7 cm · Strap: 110–130 cm' },
+  { id: 'p11', cat: 'electronics', sub: 'Smart home', title: 'Video Doorbell with Chime', price: 6999, delivery: 'Arrives tomorrow', icon: 'bell', rating: 4.4, reviews: 211, desc: 'See who is at the door from your phone. Wired or battery, with a plug-in chime for inside.', specs: 'Video: 1080p HD · Night vision · Battery: 6 months · Works with Wi-Fi 2.4 GHz' },
+  { id: 'p12', cat: 'gadgets', sub: 'Wearables', title: 'Fitness Watch with GPS', price: 12999, was: 15999, delivery: 'Arrives Friday · Free returns', icon: 'clock', rating: 4.5, reviews: 365, desc: 'Tracks runs, swims and sleep. Built-in GPS and a battery that lasts a week.', specs: 'Battery: 7 days · Water resistant: 50 m · GPS · Heart rate' },
+  { id: 'p13', cat: 'beauty', sub: 'Hair', title: 'Repair Shampoo, 400 ml', price: 399, delivery: 'Arrives tomorrow', icon: 'sparkles', rating: 4.2, reviews: 430, desc: 'A gentle daily shampoo for dry and coloured hair. Sulphate free.', specs: 'Size: 400 ml · Sulphate free · For dry and coloured hair' },
+  { id: 'd1', cat: 'drones', sub: 'Camera drones', title: 'E88 Pro Drone', price: 1399, was: 2499, delivery: 'Arrives in 3 days · Free returns', icon: 'package', img: 'assets/drones/e88-pro.png', desc: 'Foldable camera drone with a phone-holder remote. Spare batteries, propellers and a carry case are shown in the box.', specs: 'Full specifications from the seller to be added.' },
+  { id: 'd2', cat: 'drones', sub: 'Camera drones', title: 'J2 Drone', price: 1799, was: 2947, delivery: 'Arrives in 3 days · Free returns', icon: 'package', img: 'assets/drones/j2.png', desc: 'Foldable camera drone with coloured arm lights. Comes in a black or red finish.', specs: 'Full specifications from the seller to be added.' },
+  { id: 'd3', cat: 'drones', sub: 'Camera drones', title: 'M3 Max', price: 1999, was: 3888, delivery: 'Arrives in 3 days · Free returns', icon: 'package', img: 'assets/drones/m3-max.png', desc: 'Dual-camera drone with a phone-holder remote for a live view while you fly.', specs: 'Full specifications from the seller to be added.' },
+  { id: 'd4', cat: 'drones', sub: 'Camera drones', title: 'T7 Pro Drone', price: 6499, delivery: 'Arrives in 3 days · Free returns', icon: 'package', img: 'assets/drones/t7-pro.png', desc: 'Our top drone, with a screen remote. Available in orange or black.', specs: 'Full specifications from the seller to be added.' },
+];
+const fmt = (n) => 'INR ' + Math.round(n).toLocaleString('en-US');
+const imgEl = (src, alt, opacity) => src ? React.createElement('img', { src, alt: alt || '', style: { width: '100%', height: '100%', objectFit: 'contain', opacity: opacity ?? 1 } }) : null;
+const findP = (id) => P.find((p) => p.id === id) || P[0];
+
+const EASE = 'cubic-bezier(.2,0,0,1)';
+const HERO_IDS = ['d4', 'd3', 'd1', 'd2'];
+class Component extends DCLogic {
+  mainRef = React.createRef(); headerRef = React.createRef(); cartRef = React.createRef(); toastRef = React.createRef(); heroCapRef = React.createRef();
+  state = {
+    heroIdx: 0,
+    screen: this.props.startScreen ?? 'home',
+    cat: 'deals', pid: 'p1', query: '',
+    cart: [{ id: 'p1', qty: 1 }, { id: 'p4', qty: 2 }],
+    wish: {}, qty: 1, ship: 'std', tab: 'details', thumb: 0,
+    pay: 'card', cvv: '', cvvErr: '',
+    fFast: false, fFree: false, fDeal: false, sort: 'popular',
+    promo: '', promoErr: '', promoOk: false,
+    toast: null, order: null,
+  };
+  componentDidMount() {
+    this.prevSnap = this.state;
+    try { this.setup(); } catch (e) { console.warn('motion setup failed', e); }
+  }
+  setup() {
+    this.reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.onScroll = () => { const el = this.headerRef.current; if (el) el.style.boxShadow = window.scrollY > 40 ? '0 1px 0 var(--gray-300), 0 8px 24px rgba(0,0,0,0.06)' : 'none'; };
+    window.addEventListener('scroll', this.onScroll, { passive: true }); this.onScroll();
+    this.heroTimer = setInterval(() => { if (this.state.screen === 'home') this.setState((s) => ({ heroIdx: (s.heroIdx + 1) % HERO_IDS.length })); }, 5500);
+    if (this.reduce) return;
+    this.pending = new Set();
+    this.check = () => {
+      const vh = window.innerHeight || 800;
+      this.pending.forEach((el) => {
+        if (!el.isConnected) { this.pending.delete(el); return; }
+        const r = el.getBoundingClientRect();
+        if (r.top < vh - 40 || el.closest('[data-hero]')) { this.pending.delete(el); this.play(el); }
+      });
+    };
+    this.scan = () => { clearTimeout(this.raf); this.raf = setTimeout(() => {
+      document.querySelectorAll('[data-reveal]:not([data-rv])').forEach((el) => {
+        el.setAttribute('data-rv', '1');
+        const kids = el.getAttribute('data-reveal') === 'stagger' ? Array.from(el.children) : [el];
+        kids.forEach((k) => { k.style.opacity = '0'; });
+        this.pending.add(el);
+      });
+      this.check();
+    }, 16); };
+    window.addEventListener('scroll', this.check, { passive: true });
+    this.safety = setInterval(() => { if (document.hidden) return; this.pending.forEach((el) => { const r = el.getBoundingClientRect(); if (r.bottom < 0) { this.pending.delete(el); this.play(el); } }); }, 1500);
+    window.addEventListener('resize', this.check);
+    this.mo = new MutationObserver(this.scan);
+    const root = document.querySelector('[data-shop-root]') || document.body;
+    this.mo.observe(root, { childList: true, subtree: true });
+    this.scan();
+  }
+  play(el) {
+    const mode = el.getAttribute('data-reveal');
+    const base = +(el.getAttribute('data-reveal-delay') || 0);
+    const kids = mode === 'stagger' ? Array.from(el.children) : [el];
+    kids.forEach((k, i) => {
+      const from = mode === 'line' ? 'translateY(105%)' : 'translateY(28px)';
+      const a = k.animate([{ opacity: 0, transform: from }, { opacity: 1, transform: 'none' }], { duration: mode === 'line' ? 900 : 700, delay: base + i * 70, easing: EASE, fill: 'backwards' });
+      k.style.opacity = '';
+      a.onfinish = () => { k.style.transform = ''; };
+    });
+  }
+  componentDidUpdate() {
+    const ps = this.prevSnap || this.state;
+    this.prevSnap = this.state;
+    if (this.reduce || ps === this.state) return;
+    if (ps.screen !== this.state.screen && this.mainRef.current) this.mainRef.current.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: EASE });
+    if (ps.heroIdx !== this.state.heroIdx && this.heroCapRef.current) this.heroCapRef.current.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 500, easing: EASE });
+    if (!ps.toast && this.state.toast && this.toastRef.current) this.toastRef.current.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: EASE });
+    if (ps.cart !== this.state.cart && this.cartRef.current && this.state.cart.reduce((a, l) => a + l.qty, 0) > ps.cart.reduce((a, l) => a + l.qty, 0)) this.cartRef.current.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.22)' }, { transform: 'scale(1)' }], { duration: 420, easing: EASE });
+  }
+  componentWillUnmount() { clearTimeout(this.tt); clearInterval(this.heroTimer); window.removeEventListener('scroll', this.onScroll); if (this.check) { window.removeEventListener('scroll', this.check); window.removeEventListener('resize', this.check); } this.mo && this.mo.disconnect(); clearTimeout(this.raf); clearInterval(this.safety); }
+  go(screen, extra = {}) { this.setState({ screen, ...extra }); try { window.scrollTo(0, 0); } catch (e) {} }
+  showToast(message, action, onAction) {
+    clearTimeout(this.tt);
+    this.setState({ toast: { message, action, onAction } });
+    this.tt = setTimeout(() => this.setState({ toast: null }), 4500);
+  }
+  add(p, qty = 1) {
+    this.setState((s) => {
+      const has = s.cart.find((l) => l.id === p.id);
+      const cart = has ? s.cart.map((l) => l.id === p.id ? { ...l, qty: Math.min(10, l.qty + qty) } : l) : [...s.cart, { id: p.id, qty }];
+      return { cart };
+    });
+    this.showToast('Added to your cart.', 'View cart', () => { this.setState({ toast: null }); this.go('cart'); });
+  }
+  toggleWish(p) {
+    const on = !this.state.wish[p.id];
+    this.setState((s) => ({ wish: { ...s.wish, [p.id]: on } }));
+    this.showToast(on ? 'Saved to your wishlist.' : 'Removed from your wishlist.');
+  }
+  card(p) {
+    return {
+      ...p, category: (CATS.find((c) => c.id === p.cat) || {}).label + ' · ' + p.sub,
+      tag: p.was ? '−' + Math.round((1 - p.price / p.was) * 100) + '%' : undefined,
+      wished: !!this.state.wish[p.id],
+      noImg: !p.img,
+      saveLine: p.was ? 'You save ' + fmt(p.was - p.price) : '',
+      onWish: () => this.toggleWish(p),
+      onWishStop: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.toggleWish(p); },
+      onAdd: () => this.add(p),
+      onOpen: () => this.go('product', { pid: p.id, qty: 1, tab: 'details', thumb: 0 }),
+    };
+  }
+  renderVals() {
+    const s = this.state;
+    const threshold = this.props.freeDeliveryOver ?? 499;
+    const goCat = (id) => () => this.go('category', { cat: id, query: '' });
+    const q = s.query.trim().toLowerCase();
+
+    const navItems = [{ id: 'deals', label: "Today's deals" }, ...CATS].map((c) => {
+      const on = s.screen === 'category' && s.cat === c.id && !q;
+      return { label: c.label, go: goCat(c.id), weight: on || c.id === 'deals' ? 700 : 500, color: c.id === 'deals' ? 'var(--burgundy-500)' : on ? 'var(--black)' : 'var(--ink-2)', border: on ? 'var(--burgundy-500)' : 'transparent' };
+    });
+
+    // category / search
+    let list = q ? P.filter((p) => (p.title + ' ' + p.cat + ' ' + p.sub).toLowerCase().includes(q))
+      : s.cat === 'deals' ? P.filter((p) => p.was) : P.filter((p) => p.cat === s.cat);
+    if (s.fFast) list = list.filter((p) => /today|tomorrow/i.test(p.delivery));
+    if (s.fFree) list = list.filter((p) => /free delivery/i.test(p.delivery) || p.price >= threshold);
+    if (s.fDeal) list = list.filter((p) => p.was);
+    if (s.sort === 'low') list = [...list].sort((a, b) => a.price - b.price);
+    if (s.sort === 'high') list = [...list].sort((a, b) => b.price - a.price);
+    if (s.sort === 'rated') list = [...list].sort((a, b) => b.rating - a.rating);
+    const catObj = CATS.find((c) => c.id === s.cat);
+    const catTitle = q ? 'Results for “' + s.query.trim() + '”' : s.cat === 'deals' ? "Today's deals." : catObj.label + '.';
+
+    // product
+    const cp = findP(s.pid);
+    const cur = this.card(cp);
+    cur.tagLabel = cur.tag ? cur.tag + ' today' : '';
+    cur.hasRating = !!cp.rating;
+    cur.rating = cp.rating ? cp.rating + ' · ' + cp.reviews + ' reviews' : '';
+    cur.mrpLine = cp.was ? 'MRP ' + fmt(cp.was) + ' · You save ' + fmt(cp.was - cp.price) + ' (' + Math.round((1 - cp.price / cp.was) * 100) + '%)' : '';
+    cur.vatLine = 'Includes GST. Or 3 no-cost EMIs of ' + fmt(Math.ceil(cp.price / 3)) + '.';
+    cur.arrives = cp.delivery.split(' · ')[0];
+    const related = P.filter((p) => p.cat === cp.cat && p.id !== cp.id).concat(P.filter((p) => p.cat !== cp.cat)).slice(0, 4).map((p) => this.card(p));
+    const catLabel = (CATS.find((c) => c.id === cp.cat) || {}).label;
+
+    // cart
+    const lines = s.cart.map((l) => {
+      const p = findP(l.id);
+      return {
+        ...this.card(p), imgEl: imgEl(p.img, ''), qty: l.qty, total: p.price * l.qty, totalLabel: fmt(p.price * l.qty), summary: l.qty + ' × ' + p.title,
+        setQty: (v) => this.setState((st) => ({ cart: st.cart.map((x) => x.id === l.id ? { ...x, qty: v } : x) })),
+        open: () => this.go('product', { pid: p.id, qty: 1, tab: 'details', thumb: 0 }),
+        remove: () => {
+          const prev = this.state.cart;
+          this.setState((st) => ({ cart: st.cart.filter((x) => x.id !== l.id) }));
+          this.showToast('Removed from your cart.', 'Undo', () => this.setState({ cart: prev, toast: null }));
+        },
+        save: () => {
+          this.setState((st) => ({ cart: st.cart.filter((x) => x.id !== l.id), wish: { ...st.wish, [l.id]: true } }));
+          this.showToast('Moved to your wishlist.');
+        },
+      };
+    });
+    const count = s.cart.reduce((a, l) => a + l.qty, 0);
+    const sub = lines.reduce((a, l) => a + l.total, 0);
+    const express = s.ship === 'exp';
+    const deliv = (sub >= threshold ? 0 : 40) + (express ? 99 : 0);
+    const disc = s.promoOk ? Math.round(sub * 0.1) : 0;
+    const total = sub + deliv - disc;
+    const codFee = s.pay === 'cod';
+    const payTotal = total + (codFee ? 49 : 0);
+    const arrivesLine = express ? 'Arrives tomorrow' : 'Arrives Thursday';
+
+    const order = s.order;
+    const heroP = findP(HERO_IDS[s.heroIdx]);
+    const heroStack = React.createElement('div', { style: { position: 'absolute', inset: 0 } }, HERO_IDS.map((id, i) => {
+      const p = findP(id); const on = i === s.heroIdx;
+      return React.createElement('img', { key: id, src: p.img, alt: p.title, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', padding: '48px 32px 16px', boxSizing: 'border-box', opacity: on ? 1 : 0, transform: on ? 'scale(1)' : 'scale(1.06)', transition: 'opacity 900ms ' + EASE + ', transform 1400ms ' + EASE } });
+    }));
+    const heroDots = HERO_IDS.map((id, i) => ({
+      label: findP(id).title,
+      pick: () => this.setState({ heroIdx: i }),
+      bar: React.createElement('span', { style: { display: 'block', width: '100%', height: 2, background: 'var(--burgundy-200)', position: 'relative', overflow: 'hidden' } },
+        React.createElement('span', { key: i === s.heroIdx ? 'on' + s.heroIdx : 'off', style: { position: 'absolute', inset: 0, background: 'var(--burgundy-500)', transformOrigin: 'left', transform: i < s.heroIdx ? 'scaleX(1)' : 'scaleX(0)', animation: i === s.heroIdx && !this.reduce ? 'szProgress 5500ms linear forwards' : 'none' } })),
+    }));
+    return {
+      mainRef: this.mainRef, headerRef: this.headerRef, cartRef: this.cartRef, toastRef: this.toastRef, heroCapRef: this.heroCapRef,
+      heroStack, heroDots,
+      hero: { title: heroP.title, price: heroP.price, was: heroP.was, eyebrow: 'Drone shop', badge: heroP.was ? 'Save ' + fmt(heroP.was - heroP.price) : 'Top pick' },
+      heroOpen: () => this.go('product', { pid: heroP.id, qty: 1, tab: 'details', thumb: 0 }),
+      promiseLine: 'Free delivery over ' + fmt(threshold) + '. Free returns for 30 days.',
+      query: s.query,
+      onQuery: (e) => { const v = e.target.value; this.setState({ query: v, screen: v.trim() ? 'category' : s.screen === 'category' && s.cat ? 'category' : s.screen }); },
+      cartCount: count || undefined,
+      wishCount: Object.values(s.wish).filter(Boolean).length || undefined,
+      isCartArea: s.screen === 'cart' || s.screen === 'checkout',
+      goHome: () => this.go('home', { query: '' }),
+      goCart: () => this.go('cart'),
+      goDeals: goCat('deals'),
+      goDrones: goCat('drones'),
+      droneItems: P.filter((p) => p.cat === 'drones').map((p) => this.card(p)),
+      navItems,
+      footCats: CATS.map((c) => ({ label: c.label, go: goCat(c.id) })),
+
+      isHome: s.screen === 'home',
+      dealItems: P.filter((p) => p.was).slice(0, 4).map((p) => this.card(p)),
+      newItems: ['p11', 'p10', 'p13', 'p7'].map((id) => this.card(findP(id))),
+      catTiles: CATS.map((c) => ({ ...c, go: goCat(c.id), countLabel: (P.filter((p) => p.cat === c.id).length * 1250).toLocaleString('en-US') + ' items' })),
+
+      isCat: s.screen === 'category',
+      catCrumbs: ['Home', q ? 'Search' : s.cat === 'deals' ? "Today's deals" : catObj.label],
+      catTitle,
+      catCountLabel: list.length === 1 ? '1 product' : list.length + ' products',
+      catItems: list.map((p) => this.card(p)),
+      catEmpty: list.length === 0,
+      sideCats: [{ id: 'deals', label: "Today's deals" }, ...CATS].map((c) => {
+        const on = !q && s.cat === c.id;
+        return { label: c.label, go: goCat(c.id), weight: on ? 700 : 400, color: on ? 'var(--black)' : 'var(--ink-2)' };
+      }),
+      fFast: s.fFast, fFree: s.fFree, fDeal: s.fDeal,
+      toggleFast: (v) => this.setState({ fFast: typeof v === 'boolean' ? v : !s.fFast }),
+      toggleFree: (v) => this.setState({ fFree: typeof v === 'boolean' ? v : !s.fFree }),
+      toggleDeal: (v) => this.setState({ fDeal: typeof v === 'boolean' ? v : !s.fDeal }),
+      clearFilters: () => this.setState({ fFast: false, fFree: false, fDeal: false }),
+      sortItems: [{ value: 'popular', label: 'Most popular' }, { value: 'rated', label: 'Top rated' }, { value: 'low', label: 'Price, low to high' }, { value: 'high', label: 'Price, high to low' }],
+      sort: s.sort, onSort: (v) => this.setState({ sort: v }),
+
+      isProduct: s.screen === 'product',
+      cur,
+      curImgEl: imgEl(cp.img, cp.title),
+      pCrumbs: ['Home', catLabel, cp.sub, cp.title],
+      crumbNav: (i) => i === 0 ? this.go('home') : this.go('category', { cat: cp.cat, query: '' }),
+      thumbs: [0, 1, 2, 3].map((i) => ({ pick: () => this.setState({ thumb: i }), bg: i === s.thumb ? '#FBEEE4' : '#FBF5EF', outline: i === s.thumb ? '2px solid var(--black)' : 'none', color: i === s.thumb ? 'var(--black)' : 'var(--gray-400)', opacity: i === s.thumb ? 1 : 0.5, imgEl: imgEl(cp.img, '', i === s.thumb ? 1 : 0.5) })),
+      ship: s.ship, onShip: (v) => this.setState({ ship: v }),
+      shipOptions: [{ value: 'std', label: 'Standard', description: sub >= threshold ? 'Arrives Thursday · Free' : 'Arrives Thursday · Free over ' + fmt(threshold) }, { value: 'exp', label: 'Express', description: 'Arrives tomorrow · INR 99' }],
+      qty: s.qty, onQty: (v) => this.setState({ qty: v }),
+      addCur: () => this.add(cp, s.qty),
+      tabItems: [{ value: 'details', label: 'Details' }, { value: 'specs', label: 'Specs' }, { value: 'reviews', label: 'Reviews', count: cp.reviews || undefined }],
+      tab: s.tab, onTab: (v) => this.setState({ tab: v }),
+      tabText: s.tab === 'details' ? cp.desc : s.tab === 'specs' ? cp.specs : (cp.rating ? cp.rating + ' out of 5 from ' + cp.reviews + ' verified buyers.' : 'No reviews yet. Buy it and be the first to review.'),
+      related,
+
+      isCartEmpty: s.screen === 'cart' && !lines.length,
+      isCart: s.screen === 'cart' && lines.length > 0,
+      lines,
+      subLabel: count === 1 ? '1 item' : count + ' items',
+      subValue: fmt(sub),
+      delivValue: deliv ? fmt(deliv) : 'Free',
+      freeHint: sub >= threshold ? 'Your order qualifies for free delivery.' : 'Add ' + fmt(threshold - sub) + ' more for free delivery.',
+      promo: s.promo, promoErr: s.promoErr || undefined, promoApplied: s.promoOk, discValue: '−' + fmt(disc),
+      onPromo: (e) => this.setState({ promo: e.target.value, promoErr: '' }),
+      applyPromo: () => {
+        if (s.promo.trim().toUpperCase() === 'SZWELCOME') { this.setState({ promoOk: true, promoErr: '' }); this.showToast('Promo applied. 10% off your order.'); }
+        else this.setState({ promoOk: false, promoErr: "We don't recognise that code. Check the spelling?" });
+      },
+      total,
+      goCheckout: () => this.go('checkout'),
+
+      isCheckout: s.screen === 'checkout' && lines.length > 0,
+      pay: s.pay, onPay: (v) => this.setState({ pay: v, cvvErr: '' }),
+      payOptions: [{ value: 'upi', label: 'UPI', description: 'ananya@okhdfc' }, { value: 'card', label: 'Card', description: 'Visa ending 4242' }, { value: 'cod', label: 'Cash on delivery', description: 'INR 49 fee' }],
+      isCard: s.pay === 'card',
+      cvv: s.cvv, cvvErr: s.cvvErr || undefined,
+      onCvv: (e) => this.setState({ cvv: e.target.value.replace(/\D/g, '').slice(0, 3), cvvErr: '' }),
+      codFee, payTotal, arrivesLine,
+      payLabel: s.pay === 'cod' ? 'Place order' : 'Pay ' + fmt(payTotal),
+      placeOrder: () => {
+        if (s.pay === 'card' && s.cvv.length < 3) { this.setState({ cvvErr: 'Enter the 3 digits on the back of your card.' }); return; }
+        this.go('done', { order: { id: 'SZ-' + (40000 + Math.floor(Math.random() * 9999)), lines: lines.map((l) => ({ summary: l.summary, totalLabel: l.totalLabel })), total: payTotal, arrives: arrivesLine + '.' }, cart: [], cvv: '', promo: '', promoOk: false });
+      },
+
+      isDone: s.screen === 'done' || (s.screen === 'checkout' && !lines.length && !!order),
+      orderLabel: order ? 'Order ' + order.id : 'Order SZ-40218',
+      orderArrives: order ? order.arrives : 'Arrives Thursday.',
+      orderLines: order ? order.lines : [],
+      orderTotal: order ? fmt(order.total) : '',
+
+      toast: s.toast,
+      closeToast: () => this.setState({ toast: null }),
+    };
+  }
+}
+</script>
+</body>
+</html>

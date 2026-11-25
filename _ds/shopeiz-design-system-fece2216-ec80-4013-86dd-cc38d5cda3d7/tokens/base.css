@@ -1,0 +1,8 @@
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:var(--type-body);color:var(--text-primary);background:var(--surface-page);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 0}
+h1,h2,h3,h4{font-family:var(--font-sans);font-weight:var(--fw-extrabold);letter-spacing:var(--ls-heading);line-height:var(--lh-heading);margin:0;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
+a{color:var(--action-link);text-decoration:none}a:hover{color:var(--action-primary-hover);text-decoration:underline;text-underline-offset:3px}
+.tnum{font-variant-numeric:tabular-nums}
+::selection{background:var(--burgundy-200)}
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
