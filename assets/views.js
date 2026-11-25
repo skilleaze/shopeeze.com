@@ -210,6 +210,45 @@
       return [sc + (p.rank || 0) / 100, p];
     }).filter(Boolean).sort((x, y) => y[0] - x[0]).map((x) => x[1]);
   }
+
+  /* Live search suggestions: phrases, categories and top products for the typed text */
+  const STOP = new Set(['for','with','and','the','of','in','to','a','an','set','pack','pcs','pc','piece','pieces','multicolor','multicolour','black','white','blue','red','pink','green','grey','gray','yellow','brown','free','size','new','combo']);
+  function suggest(q) {
+    const s = String(q || '').trim().toLowerCase().replace(/\s+/g, ' ').slice(0, 60);
+    const out = { q: s, terms: [], cats: [], items: [], total: 0 };
+    if (s.length < 2) return out;
+    const list = searchList(s);
+    out.total = list.length;
+    const words = s.replace(/[^a-z0-9 ]+/g, ' ').split(' ').filter(Boolean);
+    const last = words[words.length - 1] || '';
+    // Phrases: 1 to 3 word runs from matching titles that contain the last typed word
+    const cnt = {};
+    list.slice(0, 500).forEach((p) => {
+      const t = p.title.toLowerCase().replace(/\([^)]*\)/g, ' ').replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter(Boolean);
+      const seen = new Set();
+      t.forEach((w, i) => {
+        if (!w.startsWith(last)) return;
+        for (let a = Math.max(0, i - 1); a <= i; a++) for (let b = i; b <= Math.min(t.length - 1, i + 1); b++) {
+          const g = t.slice(a, b + 1);
+          if (g.some((x) => /^\d/.test(x)) || STOP.has(g[0]) || STOP.has(g[g.length - 1])) continue;
+          const ph = g.join(' ');
+          if (ph.length < 3 || seen.has(ph)) continue;
+          seen.add(ph); cnt[ph] = (cnt[ph] || 0) + (g.length > 1 ? 1.2 : 1);
+        }
+      });
+    });
+    const head = words.slice(0, -1).join(' ');
+    out.terms = [...new Set(Object.entries(cnt).filter(([, n]) => n >= 2).sort((a, b) => b[1] - a[1])
+      .map(([ph]) => (head && !ph.includes(head) ? head + ' ' + ph : ph)))].filter((ph) => ph !== s).slice(0, 5);
+    // Categories: named by the query, then where the results mostly sit
+    const byCat = {};
+    list.forEach((p) => { byCat[p.cat] = (byCat[p.cat] || 0) + 1; });
+    const named = CATS.filter((c) => c.label.toLowerCase().includes(s) || c.id.includes(s));
+    const busy = CATS.filter((c) => byCat[c.id]).sort((a, b) => byCat[b.id] - byCat[a.id]);
+    out.cats = [...new Set([...named, ...busy])].slice(0, 3).map((c) => ({ label: c.label, href: url.cat(c.id), n: byCat[c.id] || P.filter((p) => p.cat === c.id).length }));
+    out.items = list.slice(0, 6).map((p) => ({ t: p.title, href: url.product(p), img: imgUrl(p.img, 120) || '', p: fmt(p.price), w: p.was && p.was > p.price ? fmt(p.was) : '', r: p.rating || 0 }));
+    return out;
+  }
   function listData(kind, key) {
     if (kind === 'search') {
       const list = searchList(key);
@@ -465,5 +504,5 @@
     return `<div class="wrap"><div class="empty" style="padding:110px 0 130px"><span class="eyebrow">Page not found</span><h2 style="margin-top:14px">We couldn't find that page.</h2><p style="margin-bottom:26px">It may have moved. Everything you need is still one search away.</p><a class="btn btn-dark" href="${url.shop}">Shop all</a></div></div>`;
   }
 
-  return { fmt, esc, ic, byId, bySlug, catOf, off, dateIn, daysOf, deliveryText, imgUrl, snap, url, media, stars, priceHtml, card, gridOf, crumbs, vHome, vList, listData, listView, searchList, PAGE_SIZE, vProduct, overview, faqs, specList, starRow, vHelp, HELP, vNotFound };
+  return { fmt, esc, ic, byId, bySlug, catOf, off, dateIn, daysOf, deliveryText, imgUrl, snap, url, media, stars, priceHtml, card, gridOf, crumbs, vHome, vList, listData, listView, searchList, suggest, PAGE_SIZE, vProduct, overview, faqs, specList, starRow, vHelp, HELP, vNotFound };
 });

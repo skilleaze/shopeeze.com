@@ -71,7 +71,37 @@ header.site.scrolled{border-color:var(--line)}
 .icon-btn:hover{background:var(--sand)}
 .count{position:absolute;top:5px;right:3px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--wine);color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center}
 .count:empty{display:none}
-.search{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--ink-2);width:min(260px,26vw);padding:6px 2px}
+.search{position:relative;display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:22px;background:var(--paper);width:min(340px,28vw);height:42px;padding:0 16px;transition:border-color .2s,box-shadow .2s,width .3s}
+.search:focus-within,.search.sg-on{border-color:var(--ink);box-shadow:0 0 0 3px rgba(26,21,18,.06)}
+.search .i{flex:none;opacity:.7}
+.search input[type=search]::-webkit-search-cancel-button{display:none}
+.sg{position:absolute;top:calc(100% + 10px);left:-1px;width:min(680px,calc(100vw - 48px));max-height:min(72vh,620px);overflow:auto;background:var(--paper);border:1px solid var(--line);box-shadow:0 24px 60px -20px rgba(26,21,18,.28);z-index:80;padding:22px 24px 0;text-align:left}
+.sg-cols{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:28px}
+.sg-sec{margin:0 0 20px}
+.sg-h{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.sg-clear{font-size:12px;letter-spacing:0;text-transform:none;color:var(--muted);text-decoration:underline;background:none;border:0;cursor:pointer;padding:0}
+.sg-term{display:flex;align-items:center;gap:12px;padding:8px 10px;margin:0 -10px;font-size:14.5px;color:var(--ink-2);border-radius:4px}
+.sg-term .i{width:15px;height:15px;opacity:.45;flex:none}
+.sg-term .sg-typed{color:var(--muted)}
+.sg-term b{font-weight:600;color:var(--ink)}
+.sg-cat{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;margin:0 -10px;font-size:14.5px;border-radius:4px}
+.sg-cat small{font-size:12px;color:var(--muted)}
+.sg-item{display:flex;gap:14px;align-items:center;padding:8px;margin:0 -8px;border-radius:4px}
+.sg-img{flex:none;width:56px;height:56px;background:#F4F1EE;overflow:hidden}
+.sg-img img{width:100%;height:100%;object-fit:cover}
+.sg-txt{display:flex;flex-direction:column;gap:4px;min-width:0}
+.sg-t{font-size:13.5px;line-height:1.35;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sg-t .sg-typed{font-weight:600}
+.sg-t b{font-weight:400}
+.sg-p{font-size:13px;font-weight:500}
+.sg-p s{color:var(--muted);font-weight:400;margin-left:4px}
+.sg a:hover,.sg a.on{background:var(--cream)}
+.sg-pills{display:flex;flex-wrap:wrap;gap:8px}
+.sg-pill{display:inline-flex;align-items:center;height:34px;padding:0 15px;border:1px solid var(--line);border-radius:17px;font-size:13.5px}
+.sg .sg-pill:hover{border-color:var(--ink);background:transparent}
+.sg-none{font-size:14px;color:var(--ink-2);margin:0 0 20px}
+.sg-all{position:sticky;bottom:0;display:flex;justify-content:space-between;align-items:center;margin:4px -24px 0;padding:16px 24px;border-top:1px solid var(--line);background:var(--paper);font-size:14px;font-weight:500}
+.sg a.sg-all:hover,.sg a.sg-all.on{background:var(--cream)}
 .search input{border:0;background:transparent;outline:0;width:100%;font-size:14px}
 .search input::placeholder{color:var(--muted)}
 nav.cats{display:flex;justify-content:center;gap:clamp(18px,3vw,44px);height:48px;align-items:center;border-top:1px solid var(--line)}
@@ -334,6 +364,15 @@ details.acc .in{padding:0 0 22px;color:var(--ink-2)}
 /* Mobile nav */
 .mnav a{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--line);font-family:var(--serif);font-size:26px}
 .mnav .search{width:100%;margin:18px 0 8px}
+.mnav .sg{position:static;width:auto;max-height:none;box-shadow:none;border:0;padding:16px 0 0;margin:0}
+.mnav .search.sg-on{flex-wrap:wrap;height:auto;border-radius:0;border-width:0 0 1px;box-shadow:none;padding:10px 0}
+.mnav .search.sg-on input{flex:1;height:22px}
+.mnav .sg a{border-bottom:0;padding:9px 0;margin:0;font-family:var(--sans);font-size:14.5px;justify-content:flex-start}
+.mnav .sg a.sg-cat,.mnav .sg a.sg-all{justify-content:space-between}
+.mnav .sg a.sg-pill{padding:0 15px;font-size:13.5px}
+.mnav .sg .sg-item{padding:8px 0}
+.mnav .sg-all{margin:4px 0 0;padding:16px 0}
+@media (max-width:700px){.sg-cols{grid-template-columns:1fr;gap:4px}}
 
 /* Cart & checkout pages */
 .two{display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(28px,5vw,72px);padding:40px 0 100px;align-items:start}
@@ -606,7 +645,7 @@ legend span{font-family:var(--sans);font-size:12px;color:var(--gold);font-weight
       <form class="search only-d" action="/search" role="search">
         <svg class="i"><use href="#i-search"/></svg>
         <label class="sr" for="q">Search</label>
-        <input id="q" name="q" placeholder="Search kitchen tools, earbuds, drones…" autocomplete="off" value="{{Q}}">
+        <input id="q" name="q" type="search" enterkeyhint="search" aria-autocomplete="list" placeholder="Search kitchen tools, earbuds, drones…" autocomplete="off" value="{{Q}}">
       </form>
     </div>
     <a href="/" class="logo" aria-label="Shopeiz home"><span class="wm">Shopeiz</span><small>The art of having everything</small></a>

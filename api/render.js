@@ -11,7 +11,7 @@ const { SITE, CATS, P, NAV_CATS, POLICY } = C;
 const { esc, url, fmt, bySlug, catOf, ic } = V;
 
 const SHELL = fs.readFileSync(path.join(__dirname, '..', 'templates', 'shell.html'), 'utf8');
-const VERSION = '16';
+const VERSION = '17';
 const DEFAULT_DESC = 'The art of having everything. Anything you need, in one place, at your door: kitchen, home, electronics, beauty, fashion, toys and drones. Free delivery over ₹499, cash on delivery, 7-day replacement.';
 
 function headHtml(h) {
@@ -233,6 +233,12 @@ module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
     res.setHeader('Cache-Control', 'public, s-maxage=21600, stale-while-revalidate=604800');
     return res.end(body || '');
+  }
+  if (pathname === '/suggest') {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=86400');
+    res.setHeader('X-Robots-Tag', 'noindex');
+    return res.end(JSON.stringify(V.suggest(u.searchParams.get('q') || '')));
   }
   // Lower-case and trailing-slash clean-up for consistent URLs
   const clean = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;

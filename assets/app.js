@@ -210,7 +210,7 @@
   function renderMenu() {
     $('#menu').innerHTML = `<div class="dhead"><span class="wm" style="font-size:24px">Shopeiz</span><button class="icon-btn" data-act="close" aria-label="Close">${ic('i-x')}</button></div>
     <div class="dbody mnav">
-      <form class="search" action="/search" role="search">${ic('i-search')}<input name="q" placeholder="Search the store" autocomplete="off" aria-label="Search"></form>
+      <form class="search" action="/search" role="search">${ic('i-search')}<input name="q" type="search" enterkeyhint="search" placeholder="Search kitchen tools, earbuds, drones…" autocomplete="off" aria-label="Search"></form>
       <a href="${url.shop}">Shop all ${ic('i-arrow')}</a>
       ${SZ.CATS.map((c) => `<a href="${url.cat(c.id)}">${c.label} ${ic('i-arrow')}</a>`).join('')}
       <a href="${url.deals}" style="color:var(--wine)">Deals ${ic('i-arrow')}</a>
@@ -416,4 +416,86 @@
   syncWish();
   updateCounts();
   observe();
+})();
+
+/* Search suggestions: phrases, categories and products as you type, recent and popular searches on focus */
+(function () {
+  if (typeof document === 'undefined') return;
+  const POP = ['Drones', 'Earbuds', 'Kettle', 'Sarees', 'Storage containers', 'Lunch box'];
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const recent = { get() { try { return JSON.parse(localStorage.getItem('sz-recent') || '[]'); } catch (e) { return []; } },
+    add(q) { try { const r = [q, ...this.get().filter((x) => x.toLowerCase() !== q.toLowerCase())].slice(0, 5); localStorage.setItem('sz-recent', JSON.stringify(r)); } catch (e) {} },
+    clear() { try { localStorage.removeItem('sz-recent'); } catch (e) {} } };
+  const cache = {};
+  const sHref = (q) => '/search?q=' + encodeURIComponent(q);
+  const bold = (ph, q) => { const i = ph.toLowerCase().indexOf(q.toLowerCase()); return i < 0 ? esc(ph) : esc(ph.slice(0, i)) + '<span class="sg-typed">' + esc(ph.slice(i, i + q.length)) + '</span><b>' + esc(ph.slice(i + q.length)) + '</b>'; };
+  const icS = '<svg class="i"><use href="#i-search"/></svg>';
+
+  function panelFor(form) {
+    let p = form.querySelector('.sg');
+    if (!p) { p = document.createElement('div'); p.className = 'sg'; p.setAttribute('role', 'listbox'); p.hidden = true; form.appendChild(p); }
+    return p;
+  }
+  function idle(form) {
+    const r = recent.get();
+    return (r.length ? `<div class="sg-sec"><div class="sg-h">Recent searches <button type="button" class="sg-clear" data-sg-clear>Clear</button></div>${r.map((q) => `<a class="sg-term" href="${sHref(q)}" data-q="${esc(q)}">${icS}<span>${esc(q)}</span></a>`).join('')}</div>` : '') +
+      `<div class="sg-sec"><div class="sg-h">Popular right now</div><div class="sg-pills">${POP.map((q) => `<a class="sg-pill" href="${sHref(q)}" data-q="${esc(q)}">${esc(q)}</a>`).join('')}</div></div>`;
+  }
+  function results(d) {
+    if (!d.total) return `<div class="sg-none">No matches for “${esc(d.q)}”. Try a simpler word, like “kettle” or “drone”.</div><div class="sg-sec"><div class="sg-h">Popular right now</div><div class="sg-pills">${POP.map((q) => `<a class="sg-pill" href="${sHref(q)}" data-q="${esc(q)}">${esc(q)}</a>`).join('')}</div></div>`;
+    const terms = [d.q, ...d.terms].slice(0, 6);
+    return `<div class="sg-cols"><div class="sg-left">
+      <div class="sg-sec"><div class="sg-h">Suggestions</div>${terms.map((t) => `<a class="sg-term" href="${sHref(t)}" data-q="${esc(t)}">${icS}<span>${bold(t, d.q)}</span></a>`).join('')}</div>
+      ${d.cats.length ? `<div class="sg-sec"><div class="sg-h">Categories</div>${d.cats.map((c) => `<a class="sg-cat" href="${c.href}"><span>${esc(c.label)}</span><small>${c.n.toLocaleString('en-IN')}</small></a>`).join('')}</div>` : ''}
+    </div><div class="sg-right"><div class="sg-h">Products</div>
+      ${d.items.map((p) => `<a class="sg-item" href="${p.href}"><span class="sg-img">${p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : ''}</span><span class="sg-txt"><span class="sg-t">${bold(p.t, d.q.split(' ').pop())}</span><span class="sg-p">${p.p}${p.w ? ` <s>${p.w}</s>` : ''}</span></span></a>`).join('')}
+    </div></div>
+    <a class="sg-all" href="${sHref(d.q)}" data-q="${esc(d.q)}">See all ${d.total.toLocaleString('en-IN')} result${d.total === 1 ? '' : 's'} for “${esc(d.q)}” <svg class="i"><use href="#i-arrow"/></svg></a>`;
+  }
+  function show(form, html) { const p = panelFor(form); p.innerHTML = html; p.hidden = false; form.classList.add('sg-on'); p.querySelectorAll('a').forEach((a) => a.setAttribute('role', 'option')); }
+  function hide(form) { const p = form.querySelector('.sg'); if (p) p.hidden = true; form.classList.remove('sg-on'); }
+  let timer, seq = 0;
+  function update(input) {
+    const form = input.closest('form'), q = input.value.trim();
+    clearTimeout(timer);
+    if (q.length < 2) return show(form, idle(form));
+    if (cache[q.toLowerCase()]) return show(form, results(cache[q.toLowerCase()]));
+    timer = setTimeout(async () => {
+      const my = ++seq;
+      try {
+        const r = await fetch('/suggest?q=' + encodeURIComponent(q.toLowerCase()));
+        const d = await r.json(); cache[q.toLowerCase()] = d;
+        if (my === seq && input.value.trim() === q) show(form, results(d));
+      } catch (e) {}
+    }, 160);
+  }
+  const isSearch = (el) => el && el.matches && el.matches('form.search input[name="q"]');
+  document.addEventListener('focusin', (e) => { if (isSearch(e.target)) update(e.target); });
+  document.addEventListener('input', (e) => { if (isSearch(e.target)) update(e.target); });
+  document.addEventListener('keydown', (e) => {
+    if (!isSearch(e.target)) return;
+    const form = e.target.closest('form'), p = form.querySelector('.sg');
+    if (e.key === 'Escape') { hide(form); return; }
+    if (!p || p.hidden || !['ArrowDown', 'ArrowUp'].includes(e.key)) return;
+    e.preventDefault();
+    const links = [...p.querySelectorAll('a')], cur = p.querySelector('a.on');
+    let i = links.indexOf(cur) + (e.key === 'ArrowDown' ? 1 : -1);
+    if (i >= links.length) i = 0; if (i < 0) i = links.length - 1;
+    links.forEach((a) => a.classList.remove('on')); links[i].classList.add('on'); links[i].scrollIntoView({ block: 'nearest' });
+  }, true);
+  document.addEventListener('submit', (e) => {
+    const form = e.target;
+    if (!form.matches('form.search')) return;
+    const on = form.querySelector('.sg a.on');
+    if (on) { e.preventDefault(); if (on.dataset.q) recent.add(on.dataset.q); location.href = on.href; return; }
+    const q = (form.querySelector('input[name="q"]').value || '').trim();
+    if (!q) { e.preventDefault(); return; }
+    recent.add(q);
+  }, true);
+  document.addEventListener('mousedown', (e) => {
+    const clr = e.target.closest('[data-sg-clear]');
+    if (clr) { e.preventDefault(); recent.clear(); const f = clr.closest('form'); show(f, idle(f)); return; }
+    const a = e.target.closest('.sg a[data-q]'); if (a) recent.add(a.dataset.q);
+    document.querySelectorAll('form.search.sg-on').forEach((f) => { if (!f.contains(e.target)) hide(f); });
+  });
 })();
