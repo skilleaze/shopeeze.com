@@ -10,14 +10,18 @@ const { SITE, CATS, P, FREE_OVER, STD_FEE } = C;
 const { esc, url, fmt, bySlug, catOf, ic } = V;
 
 const SHELL = fs.readFileSync(path.join(__dirname, '..', 'templates', 'shell.html'), 'utf8');
-const VERSION = '8';
+const VERSION = '9';
 const DEFAULT_DESC = 'The art of having everything. Anything you need, in one place, at your door: drones, electronics, fashion, home and beauty. Free delivery over ₹499, free returns for 30 days, cash on delivery.';
 
 function headHtml(h) {
   const title = esc(h.title || 'Shopeiz | The art of having everything');
   const desc = esc(h.description || DEFAULT_DESC);
   const canon = h.canonical ? SITE + h.canonical : null;
-  const img = h.image ? (h.image.startsWith('http') ? h.image : SITE + h.image) : SITE + '/assets/drones/t7-pro.png';
+  const SHARE = SITE + '/assets/brand/shopeiz-share.jpg';
+  const img = h.image ? (h.image.startsWith('http') ? h.image : SITE + h.image) : SHARE;
+  const imgMeta = img === SHARE
+    ? `<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:type" content="image/jpeg">\n<meta property="og:image:alt" content="Shopeiz: The art of having everything. Free delivery over ₹499, cash on delivery, 30-day free returns.">`
+    : `<meta property="og:image:alt" content="${title}">`;
   const ld = (h.ld || []).map((o) => `<script type="application/ld+json">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`).join('\n');
   return `<title>${title}</title>
 <meta name="description" content="${desc}">
@@ -28,9 +32,14 @@ ${canon ? `<link rel="canonical" href="${canon}">\n<link rel="alternate" hreflan
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${desc}">
 <meta property="og:image" content="${img}">
+<meta property="og:image:secure_url" content="${img}">
+${imgMeta}
 <meta property="og:type" content="${h.ogType || 'website'}">
 ${canon ? `<meta property="og:url" content="${canon}">` : ''}
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${desc}">
+<meta name="twitter:image" content="${img}">
 <meta property="og:locale" content="en_IN">
 ${ld}`;
 }
@@ -59,7 +68,7 @@ const ORG_ID = SITE + '/#organization', SITE_ID = SITE + '/#website';
 const RETURN_POLICY = { '@type': 'MerchantReturnPolicy', applicableCountry: 'IN', returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow', merchantReturnDays: 30, returnMethod: 'https://schema.org/ReturnByMail', returnFees: 'https://schema.org/FreeReturn', refundType: 'https://schema.org/FullRefund' };
 const ORG = {
   '@context': 'https://schema.org', '@type': 'OnlineStore', '@id': ORG_ID, name: 'Shopeiz', url: SITE + '/',
-  logo: { '@type': 'ImageObject', url: SITE + '/assets/brand/shopeiz-logo.png', width: 512, height: 512 }, image: SITE + '/assets/brand/shopeiz-logo.png',
+  logo: { '@type': 'ImageObject', url: SITE + '/assets/brand/shopeiz-logo.png', width: 512, height: 512 }, image: [SITE + '/assets/brand/shopeiz-share.jpg', SITE + '/assets/brand/shopeiz-logo.png'],
   slogan: 'The art of having everything.',
   description: 'Shopeiz is an online store for drones, electronics, gadgets, fashion, home and beauty, delivering across India with free delivery over ₹499, cash on delivery and 30-day free returns.',
   areaServed: { '@type': 'Country', name: 'India' }, currenciesAccepted: 'INR', paymentAccepted: 'UPI, Credit Card, Debit Card, Cash on Delivery',
