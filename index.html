@@ -1,775 +1,1048 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shopeiz — Considered essentials, delivered across India</title>
+<meta name="description" content="Shop camera drones, electronics, fashion, home and beauty at Shopeiz. Free delivery over ₹499, 30-day free returns and cash on delivery.">
+<meta name="theme-color" content="#F8F5EF">
+<meta property="og:title" content="Shopeiz — Considered essentials, delivered">
+<meta property="og:description" content="Camera drones, electronics, fashion, home and beauty. Free delivery over ₹499 · 30-day returns · Cash on delivery.">
+<meta property="og:image" content="/assets/drones/t7-pro.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%235B1424'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' fill='%23F8F5EF' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#F8F5EF; --paper:#FFFFFF; --sand:#F1ECE3; --sand-2:#E9E2D6;
+  --ink:#17130F; --ink-2:#3B352E; --muted:#7A7166; --line:#E6DFD3;
+  --wine:#5B1424; --wine-2:#741D31; --gold:#B08D57; --gold-2:#C9A774;
+  --ok:#2F6B45; --err:#A3261F;
+  --serif:'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans:'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --pad:clamp(18px, 4.5vw, 64px); --max:1360px;
+  --r:4px; --ease:cubic-bezier(.2,.7,.1,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ivory);color:var(--ink);font:400 15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0}
+input,select{font:inherit;color:inherit}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.serif{font-family:var(--serif);font-weight:500;letter-spacing:-.01em}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+:focus-visible{outline:2px solid var(--wine);outline-offset:3px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 30px;border-radius:var(--r);font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;transition:background .25s var(--ease),color .25s,border-color .25s,transform .2s;white-space:nowrap}
+.btn-dark{background:var(--ink);color:var(--ivory)}
+.btn-dark:hover{background:var(--wine)}
+.btn-wine{background:var(--wine);color:var(--ivory)}
+.btn-wine:hover{background:var(--wine-2)}
+.btn-line{border:1px solid var(--ink);color:var(--ink)}
+.btn-line:hover{background:var(--ink);color:var(--ivory)}
+.btn-light{background:var(--ivory);color:var(--ink)}
+.btn-light:hover{background:var(--paper)}
+.btn-block{width:100%}
+.btn:active{transform:translateY(1px)}
+.link{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid currentColor;padding-bottom:3px;display:inline-flex;gap:8px;align-items:center}
+.link:hover{color:var(--wine)}
+
+/* Announcement */
+.announce{background:var(--wine);color:#F3E7DA;font-size:12px;letter-spacing:.08em;text-align:center;padding:10px var(--pad)}
+.announce b{color:var(--gold-2);font-weight:600;letter-spacing:.14em}
+
+/* Header */
+header.site{position:sticky;top:0;z-index:40;background:rgba(248,245,239,.94);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid transparent;transition:border-color .3s}
+header.site.scrolled{border-color:var(--line)}
+.hbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:76px}
+.logo{font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:.28em;padding-left:.28em;text-transform:uppercase;line-height:1}
+.logo small{display:block;font-family:var(--sans);font-size:9px;letter-spacing:.42em;font-weight:500;color:var(--muted);text-align:center;margin-top:6px}
+.hleft,.hright{display:flex;align-items:center;gap:4px}
+.hright{justify-content:flex-end}
+.icon-btn{position:relative;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s}
+.icon-btn:hover{background:var(--sand)}
+.count{position:absolute;top:5px;right:3px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--wine);color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.count:empty{display:none}
+.search{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--ink-2);width:min(260px,26vw);padding:6px 2px}
+.search input{border:0;background:transparent;outline:0;width:100%;font-size:14px}
+.search input::placeholder{color:var(--muted)}
+nav.cats{display:flex;justify-content:center;gap:clamp(18px,3vw,44px);height:48px;align-items:center;border-top:1px solid var(--line)}
+nav.cats a{font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);position:relative;padding:14px 0}
+nav.cats a::after{content:"";position:absolute;left:0;right:0;bottom:8px;height:1px;background:var(--wine);transform:scaleX(0);transition:transform .35s var(--ease)}
+nav.cats a:hover::after,nav.cats a.on::after{transform:scaleX(1)}
+nav.cats a.on{color:var(--wine)}
+nav.cats a.sale{color:var(--wine)}
+.only-m{display:none}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;min-height:min(78vh,720px);border-bottom:1px solid var(--line)}
+.hero-copy{display:flex;flex-direction:column;justify-content:center;padding:72px var(--pad) 72px max(var(--pad), calc((100vw - var(--max))/2 + var(--pad)))}
+.hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(46px,6.4vw,92px);line-height:.98;letter-spacing:-.02em;margin:22px 0 22px}
+.hero h1 em{font-style:italic;color:var(--wine)}
+.hero p.lead{font-size:17px;color:var(--ink-2);max-width:460px;margin:0 0 36px}
+.hero .ctas{display:flex;gap:14px;flex-wrap:wrap}
+.hero-perks{display:flex;gap:28px;flex-wrap:wrap;margin-top:48px;padding-top:28px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.hero-perks span{display:inline-flex;gap:8px;align-items:center}
+.hero-perks svg{color:var(--gold)}
+.hero-visual{position:relative;background:var(--sand);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.hero-visual::before{content:"";position:absolute;inset:8%;border-radius:50%;background:radial-gradient(closest-side,#fff 0%,rgba(255,255,255,0) 100%);opacity:.9}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:9% 8% 16%;opacity:0;transform:scale(1.03);transition:opacity .9s var(--ease),transform 1.4s var(--ease)}
+.slide.on{opacity:1;transform:none}
+.slide img{max-height:100%;object-fit:contain;mix-blend-mode:multiply}
+.hero-tag{position:absolute;left:clamp(18px,4vw,48px);bottom:clamp(18px,4vw,44px);background:var(--paper);padding:18px 22px;display:flex;gap:28px;align-items:center;box-shadow:0 20px 50px -24px rgba(40,25,10,.35);z-index:2;min-width:min(360px,80%)}
+.hero-tag .t{font-family:var(--serif);font-size:24px;line-height:1.1}
+.hero-tag .p{font-size:13px;color:var(--ink-2);margin-top:4px}
+.hero-tag .p s{color:var(--muted);margin-left:6px}
+.hero-tag .go{margin-left:auto;width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--ivory);display:flex;align-items:center;justify-content:center;transition:background .2s}
+.hero-tag .go:hover{background:var(--wine)}
+.dots{position:absolute;right:clamp(18px,4vw,48px);bottom:clamp(30px,5vw,60px);display:flex;gap:8px;z-index:2}
+.dots button{width:28px;height:2px;background:rgba(23,19,15,.2);transition:background .3s}
+.dots button.on{background:var(--ink)}
+
+/* Trust strip */
+.trust{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line);background:var(--paper)}
+.trust div{display:flex;gap:14px;align-items:center;padding:26px var(--pad);border-right:1px solid var(--line)}
+.trust div:last-child{border-right:0}
+.trust svg{width:26px;height:26px;color:var(--wine)}
+.trust b{display:block;font-size:13px;font-weight:600;letter-spacing:.02em}
+.trust span{font-size:12.5px;color:var(--muted)}
+
+/* Sections */
+section.block{padding:clamp(64px,9vw,120px) 0}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:44px;flex-wrap:wrap}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:clamp(34px,4.2vw,56px);line-height:1;margin:12px 0 0;letter-spacing:-.015em}
+.sec-head p{margin:12px 0 0;color:var(--muted);max-width:460px}
+
+/* Category tiles */
+.cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.cat-tile{position:relative;aspect-ratio:3/4;border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;isolation:isolate}
+.cat-tile .bg{position:absolute;inset:0;z-index:-1;display:flex;align-items:center;justify-content:center;transition:transform 1s var(--ease)}
+.cat-tile .bg svg{width:42%;height:auto;stroke-width:.9;opacity:.55}
+.cat-tile .bg{align-items:flex-start;padding-top:14%}
+.cat-tile .bg svg{margin-top:22%}
+.cat-tile .bg img{width:72%;mix-blend-mode:multiply;border-radius:2px}
+.cat-tile:hover .bg{transform:scale(1.06)}
+.cat-tile h3{font-family:var(--serif);font-weight:500;font-size:26px;margin:0;line-height:1}
+.cat-tile span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin-top:6px;display:flex;justify-content:space-between;align-items:center}
+
+/* Product grid & cards */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:44px 22px}
+.card{position:relative;display:flex;flex-direction:column}
+.media{position:relative;aspect-ratio:4/5;background:var(--sand);border-radius:var(--r);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.media img{width:100%;height:100%;object-fit:contain;padding:9%;mix-blend-mode:multiply;transition:transform 1s var(--ease)}
+.card:hover .media img,.card:hover .ph svg{transform:scale(1.05)}
+.ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.ph svg{width:34%;height:auto;stroke-width:.8;transition:transform 1s var(--ease)}
+.ph em{font-family:var(--serif);font-size:15px;font-style:italic;opacity:.7}
+.badge{position:absolute;top:14px;left:14px;background:var(--wine);color:#fff;font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;border-radius:2px;z-index:1}
+.badge.light{background:var(--paper);color:var(--ink)}
+.wish{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;z-index:2;transition:background .2s,color .2s}
+.wish:hover{background:#fff}
+.wish.on{color:var(--wine)}
+.wish.on svg{fill:var(--wine)}
+.quick{display:flex;align-items:center;justify-content:center;position:absolute;left:12px;right:12px;bottom:12px;height:46px;background:var(--ink);color:var(--ivory);font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border-radius:2px;opacity:0;transform:translateY(8px);transition:opacity .3s var(--ease),transform .3s var(--ease),background .2s;z-index:2}
+.quick:hover{background:var(--wine)}
+.card:hover .quick,.card:focus-within .quick{opacity:1;transform:none}
+.card-body{padding-top:16px}
+.card-sub{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.card h3{font-family:var(--serif);font-weight:500;font-size:21px;line-height:1.2;margin:0 0 8px}
+.card h3 a:hover{color:var(--wine)}
+.stars{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-bottom:8px}
+.stars i{display:inline-flex;gap:1px;color:var(--gold)}
+.stars svg{width:12px;height:12px;fill:currentColor;stroke:none}
+.price{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.price b{font-weight:600;font-size:15.5px}
+.price s{color:var(--muted);font-size:13.5px}
+.price .off{color:var(--wine);font-size:12.5px;font-weight:600}
+
+/* Editorial */
+.feature{display:grid;grid-template-columns:1fr 1fr;background:var(--ink);color:var(--ivory)}
+.feature .pic{background:var(--sand);display:flex;align-items:center;justify-content:center;padding:6%;min-height:520px}
+.feature .pic img{mix-blend-mode:multiply;max-height:520px;object-fit:contain}
+.feature .copy{padding:clamp(48px,7vw,110px);display:flex;flex-direction:column;justify-content:center}
+.feature h2{font-family:var(--serif);font-weight:500;font-size:clamp(38px,4.6vw,64px);line-height:1;margin:16px 0 22px}
+.feature h2 em{color:var(--gold-2)}
+.feature p{color:#CFC6B8;max-width:440px;margin:0 0 34px}
+.feature ul{list-style:none;padding:0;margin:0 0 38px;display:grid;gap:12px;font-size:14px;color:#E8E0D3}
+.feature li{display:flex;gap:12px;align-items:center}
+.feature li svg{color:var(--gold-2)}
+
+.offer{background:var(--sand);text-align:center;padding:clamp(64px,8vw,104px) var(--pad)}
+.offer h2{font-family:var(--serif);font-weight:500;font-size:clamp(36px,4.6vw,62px);line-height:1.02;margin:14px auto 16px;max-width:820px}
+.offer p{color:var(--ink-2);margin:0 auto 30px;max-width:520px}
+.code{display:inline-flex;align-items:center;gap:18px;border:1px dashed var(--ink-2);padding:12px 12px 12px 24px;border-radius:var(--r);background:var(--paper)}
+.code b{font-size:16px;letter-spacing:.22em}
+
+.promise{display:grid;grid-template-columns:repeat(3,1fr);gap:56px}
+.promise div h3{font-family:var(--serif);font-weight:500;font-size:28px;margin:18px 0 10px}
+.promise div p{color:var(--muted);margin:0}
+.promise .n{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:22px}
+
+.news{background:var(--wine);color:var(--ivory);padding:clamp(56px,7vw,90px) 0}
+.news .wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.news h2{font-family:var(--serif);font-weight:500;font-size:clamp(32px,3.8vw,48px);margin:10px 0 0;line-height:1.05}
+.news form{display:flex;border-bottom:1px solid rgba(248,245,239,.5)}
+.news input{flex:1;background:transparent;border:0;outline:0;color:var(--ivory);padding:16px 0;font-size:15px}
+.news input::placeholder{color:rgba(248,245,239,.6)}
+.news button{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-2);padding:0 4px}
+.news small{display:block;margin-top:12px;color:rgba(248,245,239,.65);font-size:12px}
+
+footer.site{background:var(--ink);color:#BDB3A5;padding:72px 0 32px;font-size:14px}
+.fgrid{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:40px}
+footer .logo{color:var(--ivory);font-size:26px;padding-left:0;text-align:left}
+footer h4{color:var(--ivory);font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;margin:0 0 18px}
+footer ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+footer a:hover{color:var(--ivory)}
+.fbottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;border-top:1px solid #2E2822;margin-top:56px;padding-top:24px;font-size:12px;color:#8E8578}
+.pay-chips{display:flex;gap:8px;flex-wrap:wrap}
+.pay-chips span{border:1px solid #3A332B;border-radius:3px;padding:4px 9px;font-size:11px;letter-spacing:.06em;color:#BDB3A5}
+
+/* Listing */
+.page-head{padding:56px 0 34px;border-bottom:1px solid var(--line)}
+.crumbs{font-size:12px;color:var(--muted);letter-spacing:.04em;display:flex;gap:8px;flex-wrap:wrap}
+.crumbs a:hover{color:var(--ink)}
+.page-head h1{font-family:var(--serif);font-weight:500;font-size:clamp(42px,5.6vw,76px);line-height:1;margin:16px 0 12px;letter-spacing:-.02em}
+.page-head p{color:var(--muted);margin:0;max-width:560px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:20px 0 36px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{height:38px;padding:0 16px;border:1px solid var(--line);border-radius:19px;font-size:13px;background:var(--paper);transition:border-color .2s,background .2s}
+.chip:hover{border-color:var(--ink-2)}
+.chip.on{background:var(--ink);color:var(--ivory);border-color:var(--ink)}
+.sort{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.sort select{height:38px;border:1px solid var(--line);background:var(--paper);border-radius:var(--r);padding:0 12px;color:var(--ink)}
+.empty{text-align:center;padding:90px 0;color:var(--muted)}
+.empty h2{font-family:var(--serif);font-weight:500;color:var(--ink);font-size:36px;margin:0 0 10px}
+
+/* PDP */
+.pdp{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(28px,5vw,80px);padding:28px 0 90px}
+.pdp .gallery{position:sticky;top:140px;align-self:start}
+.pdp .gallery .media{aspect-ratio:1/1}
+.pdp .gallery .media img{padding:7%}
+.pdp h1{font-family:var(--serif);font-weight:500;font-size:clamp(36px,4vw,54px);line-height:1.04;margin:14px 0 14px;letter-spacing:-.015em}
+.pdp .price{margin:18px 0 6px}
+.pdp .price b{font-size:24px}
+.pdp .price s{font-size:16px}
+.pdp .price .off{font-size:13px;background:#F3E3E2;padding:3px 8px;border-radius:2px}
+.pdp .tax{font-size:13px;color:var(--muted);margin:0 0 26px}
+.pdp .desc{color:var(--ink-2);font-size:16px;margin:0 0 30px}
+.buy{display:grid;grid-template-columns:auto 1fr;gap:12px;margin-bottom:12px}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--ink-2);border-radius:var(--r);height:52px}
+.qty button{width:44px;height:100%;display:flex;align-items:center;justify-content:center}
+.qty button:hover{color:var(--wine)}
+.qty span{min-width:28px;text-align:center;font-weight:600}
+.qty.sm{height:38px}
+.qty.sm button{width:34px}
+.qty.sm svg{width:16px;height:16px}
+.perks{margin:28px 0;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
+.perks div{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-bottom:1px solid var(--line);font-size:14px}
+.perks div:last-child{border-bottom:0}
+.perks svg{color:var(--wine);margin-top:2px}
+.perks b{font-weight:600}
+.perks span{color:var(--muted);display:block;font-size:13px}
+details.acc{border-top:1px solid var(--line)}
+details.acc:last-of-type{border-bottom:1px solid var(--line)}
+details.acc summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:20px 0;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary svg{transition:transform .3s}
+details.acc[open] summary svg{transform:rotate(180deg)}
+details.acc .in{padding:0 0 22px;color:var(--ink-2)}
+.specs{display:grid;gap:0;margin:0}
+.specs div{display:flex;justify-content:space-between;gap:20px;padding:10px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.specs div:last-child{border:0}
+.specs dt{color:var(--muted)}
+.specs dd{margin:0;text-align:right}
+.sticky-buy{display:none}
+
+/* Drawer */
+.scrim{position:fixed;inset:0;background:rgba(23,19,15,.42);opacity:0;pointer-events:none;transition:opacity .35s var(--ease);z-index:60}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--ivory);z-index:61;transform:translateX(100%);transition:transform .45s var(--ease);display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.drawer.left{left:0;right:auto;transform:translateX(-100%)}
+.drawer.left.on{transform:none}
+.dhead{display:flex;justify-content:space-between;align-items:center;padding:22px 24px;border-bottom:1px solid var(--line)}
+.dhead h3{font-family:var(--serif);font-weight:500;font-size:28px;margin:0}
+.dbody{flex:1;overflow:auto;padding:8px 24px}
+.dfoot{padding:20px 24px 24px;border-top:1px solid var(--line);background:var(--paper)}
+.ship-bar{padding:16px 24px;background:var(--sand);font-size:13px}
+.ship-bar .track{height:3px;background:rgba(23,19,15,.12);border-radius:2px;margin-top:10px;overflow:hidden}
+.ship-bar .track i{display:block;height:100%;background:var(--wine);transition:width .6s var(--ease)}
+.line{display:grid;grid-template-columns:88px 1fr auto;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
+.line .media{aspect-ratio:1/1}
+.line .media img{padding:8%}
+.line .ph svg{width:46%}
+.line .ph em{display:none}
+.line h4{font-family:var(--serif);font-weight:500;font-size:19px;line-height:1.15;margin:0 0 4px}
+.line .meta{font-size:12px;color:var(--muted);margin-bottom:10px}
+.line .right{text-align:right;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end}
+.line .rm{font-size:12px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.line .rm:hover{color:var(--wine)}
+.sum-row{display:flex;justify-content:space-between;font-size:14px;margin:8px 0}
+.sum-row.total{font-size:17px;font-weight:600;margin:16px 0 18px;padding-top:16px;border-top:1px solid var(--line)}
+.sum-row .ok{color:var(--ok)}
+.note{font-size:12px;color:var(--muted);text-align:center;margin-top:12px;display:flex;gap:6px;justify-content:center;align-items:center}
+.note svg{width:14px;height:14px}
+
+/* Mobile nav */
+.mnav a{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--line);font-family:var(--serif);font-size:26px}
+.mnav .search{width:100%;margin:18px 0 8px}
+
+/* Cart & checkout pages */
+.two{display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(28px,5vw,72px);padding:40px 0 100px;align-items:start}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:28px}
+.panel h3{font-family:var(--serif);font-weight:500;font-size:26px;margin:0 0 18px}
+.sticky{position:sticky;top:140px}
+.promo{display:flex;gap:8px;margin:18px 0 6px}
+.promo input{flex:1;height:46px;border:1px solid var(--line);border-radius:var(--r);padding:0 14px;background:var(--ivory);text-transform:uppercase;letter-spacing:.08em}
+.promo button{height:46px;padding:0 18px;border:1px solid var(--ink);border-radius:var(--r);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.promo button:hover{background:var(--ink);color:var(--ivory)}
+.msg{font-size:12.5px;margin:4px 0 0}
+.msg.err{color:var(--err)}
+.msg.ok{color:var(--ok)}
+.steps{display:flex;gap:10px;align-items:center;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:18px}
+.steps b{color:var(--ink);font-weight:600}
+fieldset{border:0;padding:0;margin:0 0 34px}
+legend{font-family:var(--serif);font-size:28px;font-weight:500;margin-bottom:18px;padding:0;display:flex;gap:12px;align-items:baseline}
+legend span{font-family:var(--sans);font-size:12px;color:var(--gold);font-weight:600;letter-spacing:.1em}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fields .full{grid-column:1/-1}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--ink-2);margin-bottom:6px;letter-spacing:.02em}
+.field input{width:100%;height:50px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);padding:0 14px;outline:0;transition:border-color .2s}
+.field input:focus{border-color:var(--ink)}
+.field.bad input{border-color:var(--err)}
+.field .msg{display:none}
+.field.bad .msg{display:block}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:14px;align-items:center;border:1px solid var(--line);background:var(--paper);border-radius:var(--r);padding:16px 18px;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.opt:hover{border-color:var(--ink-2)}
+.opt.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.opt input{accent-color:var(--wine);width:18px;height:18px;margin:0}
+.opt .grow{flex:1}
+.opt b{font-weight:600;font-size:14px;display:block}
+.opt span{font-size:13px;color:var(--muted)}
+.opt .amt{font-weight:600;font-size:14px}
+.mini{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.mini .media{aspect-ratio:1/1;position:relative;overflow:visible}
+.mini .media img{padding:8%}
+.mini .ph svg{width:48%}
+.mini .ph em{display:none}
+.mini .q{position:absolute;top:-7px;right:-7px;background:var(--ink-2);color:#fff;width:20px;height:20px;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center}
+.mini h4{font-family:var(--serif);font-weight:500;font-size:17px;margin:0;line-height:1.2}
+.mini small{color:var(--muted);font-size:12px}
+.done{text-align:center;padding:100px 0 120px;max-width:640px;margin:0 auto}
+.done .tick{width:76px;height:76px;border-radius:50%;background:var(--wine);color:var(--ivory);display:flex;align-items:center;justify-content:center;margin:0 auto 28px}
+.done .tick svg{width:34px;height:34px;stroke-width:1.8}
+.done h1{font-family:var(--serif);font-weight:500;font-size:clamp(40px,5vw,64px);margin:12px 0 14px;line-height:1}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);background:var(--ink);color:var(--ivory);padding:14px 22px;border-radius:var(--r);font-size:14px;opacity:0;pointer-events:none;transition:all .4s var(--ease);z-index:80;display:flex;gap:16px;align-items:center;box-shadow:0 18px 40px -18px rgba(0,0,0,.5)}
+.toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast a{color:var(--gold-2);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}}
+
+/* Responsive */
+@media (max-width:1100px){
+  .grid{grid-template-columns:repeat(3,1fr)}
+  .cat-grid{grid-template-columns:repeat(3,1fr)}
+  .trust{grid-template-columns:repeat(2,1fr)}
+  .trust div:nth-child(2){border-right:0}
+  .trust div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+}
+@media (max-width:860px){
+  .only-d{display:none!important}
+  .only-m{display:inline-flex}
+  .hbar{height:64px}
+  .logo{font-size:24px}
+  .logo small{display:none}
+  nav.cats{justify-content:flex-start;overflow-x:auto;padding:0 var(--pad);scrollbar-width:none;gap:24px}
+  nav.cats::-webkit-scrollbar{display:none}
+  nav.cats a{white-space:nowrap}
+  .hero{grid-template-columns:1fr;min-height:0}
+  .hero-visual{order:-1;aspect-ratio:1/1.02}
+  .hero-copy{padding:40px var(--pad) 48px}
+  .hero-perks{gap:14px 22px;margin-top:34px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:32px 14px}
+  .card h3{font-size:18px}
+  .quick{opacity:1;transform:none;position:static;margin-top:12px;height:42px;background:transparent;color:var(--ink);border:1px solid var(--ink);order:3}
+  .card .media .quick{display:none}
+  .feature,.news .wrap{grid-template-columns:1fr}
+  .feature .pic{min-height:0;aspect-ratio:1/1}
+  .promise{grid-template-columns:1fr;gap:34px}
+  .fgrid{grid-template-columns:1fr 1fr}
+  .fgrid>div:first-child{grid-column:1/-1}
+  .pdp{grid-template-columns:1fr;padding-bottom:120px}
+  .pdp .gallery{position:static}
+  .two{grid-template-columns:1fr}
+  .sticky{position:static}
+  .fields{grid-template-columns:1fr}
+  .sticky-buy{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--paper);border-top:1px solid var(--line);padding:12px var(--pad) calc(12px + env(safe-area-inset-bottom));gap:14px;align-items:center;transform:translateY(110%);transition:transform .4s var(--ease)}
+  .sticky-buy.on{transform:none}
+  .sticky-buy .p{flex:1;font-size:13px;line-height:1.3}
+  .sticky-buy .p b{display:block;font-size:16px}
+  .sticky-buy .btn{height:48px;padding:0 22px}
+}
+@media (max-width:520px){
+  .cat-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .trust{grid-template-columns:1fr}
+  .trust div{border-right:0;border-bottom:1px solid var(--line);padding:18px var(--pad)}
+  .hero-tag{padding:14px 16px;gap:16px}
+  .dots{top:20px;bottom:auto}
+  .hero-tag .t{font-size:20px}
+  .line{grid-template-columns:72px 1fr auto;gap:12px}
+  .panel{padding:22px}
+  .code{flex-direction:column;gap:10px;padding:16px}
+}
+</style>
 </head>
 <body>
-<x-dc>
-<helmet>
-  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/tokens/fonts.css">
-  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/tokens/colors.css">
-  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/tokens/typography.css">
-  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/tokens/spacing.css">
-  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/tokens/effects.css">
-  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/tokens/base.css">
-  <link rel="stylesheet" href="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/styles.css">
-  <script src="_ds/shopeiz-design-system-fece2216-ec80-4013-86dd-cc38d5cda3d7/_ds_bundle.js"></script>
-  <style>
-    :root { --fs-title: 40px; --ls-heading: -0.035em; }
-    body { margin: 0; background: #fff; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: "ss01", "tnum" 0; }
-    a { color: var(--burgundy-500); cursor: pointer; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    @keyframes szProgress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-  </style>
-</helmet>
-<div data-shop-root="1" style="min-height: 100vh; background: var(--white); color: var(--ink); font-family: var(--font-sans); display: flex; flex-direction: column;">
+<div class="announce" id="announce"></div>
 
-  <div style="background: #F6C25B; color: var(--burgundy-800); font-weight: 600; font-size: 12px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; padding: 10px var(--page-margin, 48px); letter-spacing: 0.01em;">
-    <span>{{ promiseLine }}</span>
-    <span style="display: flex; gap: 6px; align-items: center; color: var(--burgundy-800);">
-      <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="map-pin" size="14" hint-size="14px,14px"></x-import>Deliver to Bandra West, Mumbai</span>
+<header class="site" id="hdr">
+  <div class="wrap hbar">
+    <div class="hleft">
+      <button class="icon-btn only-m" data-act="menu" aria-label="Open menu"><svg class="i"><use href="#i-menu"/></svg></button>
+      <form class="search only-d" data-form="search" role="search">
+        <svg class="i"><use href="#i-search"/></svg>
+        <label class="sr" for="q">Search</label>
+        <input id="q" name="q" placeholder="Search drones, headphones…" autocomplete="off">
+      </form>
+    </div>
+    <a href="#/" class="logo" aria-label="Shopeiz home">Shopeiz<small>EST. INDIA</small></a>
+    <div class="hright">
+      <button class="icon-btn only-m" data-act="menu" aria-label="Search"><svg class="i"><use href="#i-search"/></svg></button>
+      <a class="icon-btn only-d" href="#/wishlist" aria-label="Wishlist"><svg class="i"><use href="#i-heart"/></svg><span class="count" data-count="wish"></span></a>
+      <button class="icon-btn" data-act="bag" aria-label="Shopping bag"><svg class="i"><use href="#i-bag"/></svg><span class="count" data-count="bag"></span></button>
+    </div>
   </div>
-  <header ref="{{ headerRef }}" style="background: var(--white); position: sticky; top: 0; z-index: 20; transition: box-shadow 260ms cubic-bezier(.2,0,0,1);">
-    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px; padding: 16px var(--page-margin, 48px);">
-      <a onClick="{{ goHome }}" style="display: flex; text-decoration: none;">
-        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Logo" size="30" hint-size="140px,40px"></x-import>
-      </a>
-      <div style="flex: 1 1 280px; max-width: 640px;">
-        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Input" icon="search" placeholder="Search phones, sofas, shampoo…" value="{{ query }}" on-change="{{ onQuery }}" hint-size="100%,44px"></x-import>
+  <nav class="cats" id="nav" aria-label="Categories"></nav>
+</header>
+
+<main id="app" tabindex="-1"></main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <div class="logo">Shopeiz</div>
+        <p style="max-width:340px;margin:18px 0 22px">Considered essentials for home, work and play — chosen with care and delivered across India.</p>
+        <div class="pay-chips"><span>UPI</span><span>VISA</span><span>MASTERCARD</span><span>RUPAY</span><span>COD</span></div>
       </div>
-      <nav style="display: flex; align-items: center; gap: 4px; margin-left: auto;">
-        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.IconButton" icon="user" label="Account" hint-size="44px,44px"></x-import>
-        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.IconButton" icon="heart" label="Wishlist" badge="{{ wishCount }}" hint-size="44px,44px"></x-import>
-        <span ref="{{ cartRef }}" style="display: inline-flex;"><x-import component-from-global-scope="ShopeizDesignSystem_fece22.IconButton" icon="shopping-cart" label="Cart" badge="{{ cartCount }}" active="{{ isCartArea }}" on-click="{{ goCart }}" hint-size="44px,44px"></x-import></span>
-      </nav>
+      <div><h4>Shop</h4><ul id="fcats"></ul></div>
+      <div><h4>Help</h4><ul><li><a href="#/help/delivery">Delivery</a></li><li><a href="#/help/returns">Returns &amp; refunds</a></li><li><a href="#/help/payment">Payment options</a></li><li><a href="#/wishlist">Your wishlist</a></li></ul></div>
+      <div><h4>Shopeiz</h4><ul><li><a href="#/help/about">About us</a></li><li><a href="#/help/contact">Contact</a></li><li><a href="#/c/deals">Offers</a></li></ul></div>
     </div>
-    <nav style="display: flex; gap: 28px; padding: 0 var(--page-margin, 48px); border-bottom: 1px solid var(--gray-300); overflow-x: auto;">
-      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="7">
-        <a onClick="{{ n.go }}" style="font-size: 14px; font-weight: {{ n.weight }}; color: {{ n.color }}; padding: 12px 0; border-bottom: 2px solid {{ n.border }}; white-space: nowrap; text-decoration: none; transition: color 160ms, border-color 200ms cubic-bezier(.2,0,0,1);" style-hover="color: var(--black); border-bottom-color: var(--black);">{{ n.label }}</a>
-      </sc-for>
-    </nav>
-  </header>
+    <div class="fbottom"><span>© <span id="yr"></span> Shopeiz. All prices include GST.</span><span>Made in India</span></div>
+  </div>
+</footer>
 
-  <main ref="{{ mainRef }}" style="flex: 1;">
+<div class="scrim" id="scrim" data-act="close"></div>
+<aside class="drawer" id="bag" aria-label="Shopping bag" aria-hidden="true"></aside>
+<aside class="drawer left" id="menu" aria-label="Menu" aria-hidden="true"></aside>
+<div class="sticky-buy" id="stickyBuy"></div>
+<div class="toast" id="toast" role="status"></div>
 
-    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
-      <section data-hero="1" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); border-bottom: 1px solid var(--gray-300);">
-        <div style="background: var(--burgundy-500); color: var(--white); padding: 96px var(--page-margin, 48px) 64px; display: flex; flex-direction: column; justify-content: flex-end; gap: 48px; min-height: 560px; position: relative; overflow: hidden;">
-          
-          <div style="display: flex; flex-direction: column; gap: 24px;">
-            <h1 style="margin: 0; font-size: clamp(56px, 7.2vw, 112px); font-weight: 800; line-height: 0.95; letter-spacing: -0.045em; color: var(--white); display: flex; flex-direction: column;">
-              <span style="display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em;"><span data-reveal="line" data-reveal-delay="80" style="display: block;">The art</span></span>
-              <span style="display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em;"><span data-reveal="line" data-reveal-delay="180" style="display: block;">of having</span></span>
-              <span style="display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em;"><span data-reveal="line" data-reveal-delay="280" style="display: block; color: #F6C25B;">everything.</span></span>
-            </h1>
-            <p data-reveal="1" data-reveal-delay="420" style="margin: 0; font-size: 17px; line-height: 1.55; color: var(--burgundy-100); max-width: 420px;">Anything you need, in one place, at your door.</p>
-            <div data-reveal="1" data-reveal-delay="520" style="display: flex; flex-wrap: wrap; gap: 12px;">
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" size="lg" variant="secondary" on-click="{{ goDeals }}" style="background: #F6C25B; color: var(--burgundy-800); border-color: #F6C25B;" hint-size="220px,52px">Shop today's deals</x-import>
-              <a onClick="{{ goDrones }}" style="display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 4px; font-size: 16px; font-weight: 600; color: var(--white); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 6px; transition: text-decoration-color 200ms;" style-hover="text-decoration-color: var(--white);">Visit the drone shop<x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="arrow-right" size="18" hint-size="18px,18px"></x-import></a>
-            </div>
-          </div>
-        </div>
-        <div style="background: #FBEEE4; display: flex; flex-direction: column; min-height: 480px;">
-          <a onClick="{{ heroOpen }}" style="position: relative; flex: 1; min-height: 340px; overflow: hidden; display: block; text-decoration: none; cursor: pointer;">{{ heroStack }}
-            <span style="position: absolute; top: 20px; left: 24px;">
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tag" tone="deal" hint-size="90px,24px">{{ hero.badge }}</x-import>
-            </span>
-          </a>
-          <div style="display: flex; gap: 4px; padding: 0 32px;">
-            <sc-for list="{{ heroDots }}" as="d" hint-placeholder-count="4">
-              <a onClick="{{ d.pick }}" aria-label="{{ d.label }}" style="flex: 1; height: 24px; display: flex; align-items: center; cursor: pointer;">{{ d.bar }}</a>
-            </sc-for>
-          </div>
-          <div ref="{{ heroCapRef }}" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 8px 32px 32px;">
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">{{ hero.eyebrow }}</span>
-              <span style="font-size: 32px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.05;">{{ hero.title }}</span>
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Price" currency="INR" amount="{{ hero.price }}" was="{{ hero.was }}" size="md" hint-size="180px,28px"></x-import>
-            </div>
-            <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" variant="secondary" on-click="{{ heroOpen }}" hint-size="150px,44px">View drone</x-import>
-          </div>
-        </div>
-      </section>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9.4A5 5 0 0 1 12 6.6a5 5 0 0 1 9.3 4.5c-1.8 4.8-9.3 9.4-9.3 9.4z"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1.2 12.5H6.2L5 8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3.5 7h17M3.5 12h17M3.5 17h11"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24"><path d="M2.5 6.5h11v10h-11zM13.5 10h4.2l3.3 3.4v3.1h-7.5"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></symbol>
+    <symbol id="i-return" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.8 3.2 8 7.5 9.5 4.3-1.5 7.5-4.7 7.5-9.5V6L12 3z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5 12v8.5h14V12M12 8v12.5M12 8c-1.5-3.5-5-4-5-1.5S10 8 12 8zm0 0c1.5-3.5 5-4 5-1.5S14 8 12 8z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/></symbol>
+    <symbol id="p-drone" viewBox="0 0 24 24"><circle cx="5" cy="5" r="2.6"/><circle cx="19" cy="5" r="2.6"/><circle cx="5" cy="19" r="2.6"/><circle cx="19" cy="19" r="2.6"/><rect x="9" y="9" width="6" height="6" rx="1.6"/><path d="M7 7l2 2M17 7l-2 2M7 17l2-2M17 17l-2-2"/></symbol>
+    <symbol id="p-headphones" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2.8" y="13.5" width="4.2" height="7" rx="1.6"/><rect x="17" y="13.5" width="4.2" height="7" rx="1.6"/></symbol>
+    <symbol id="p-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.8 18.5h2.4"/></symbol>
+    <symbol id="p-tablet" viewBox="0 0 24 24"><rect x="3.5" y="3" width="17" height="18" rx="2.4"/><path d="M10.8 18h2.4"/></symbol>
+    <symbol id="p-shirt" viewBox="0 0 24 24"><path d="M8.5 3 3 6l2 5 3-1.2V21h8V9.8l3 1.2 2-5-5.5-3a3.5 3.5 0 0 1-7 0z"/></symbol>
+    <symbol id="p-sofa" viewBox="0 0 24 24"><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><path d="M3 13a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v5H3z"/><path d="M5 18v2M19 18v2"/></symbol>
+    <symbol id="p-laptop" viewBox="0 0 24 24"><rect x="4.5" y="4.5" width="15" height="10.5" rx="1.5"/><path d="M2 19h20"/></symbol>
+    <symbol id="p-bottle" viewBox="0 0 24 24"><path d="M10 2.5h4v3h-4z"/><path d="M9 5.5h6l1.5 3v11a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2v-11z"/><path d="M7.5 12h9"/></symbol>
+    <symbol id="p-jar" viewBox="0 0 24 24"><rect x="5" y="9" width="14" height="11.5" rx="3"/><rect x="6.5" y="5" width="11" height="4" rx="1"/><path d="M9 14.5h6"/></symbol>
+    <symbol id="p-pot" viewBox="0 0 24 24"><path d="M4 10h16v6a4.5 4.5 0 0 1-4.5 4.5h-7A4.5 4.5 0 0 1 4 16z"/><path d="M1.5 10h21M9 6.5h6M12 6.5V4"/></symbol>
+    <symbol id="p-handbag" viewBox="0 0 24 24"><path d="M4.5 9.5h15l-1 11h-13z"/><path d="M8 9.5c0-4 1.5-6.5 4-6.5s4 2.5 4 6.5"/></symbol>
+    <symbol id="p-bell" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="5"/><circle cx="12" cy="8.5" r="2.2"/><circle cx="12" cy="16" r="1.4"/></symbol>
+    <symbol id="p-watch" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="3.2"/><path d="M9 6l.8-3.5h4.4L15 6M9 18l.8 3.5h4.4L15 18M12 9v3l2 1.2"/></symbol>
+  </defs>
+</svg>
 
-      <section data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); background: #FBF5EF; border-bottom: 1px solid #EFE3D8;">
-        <div style="display: flex; gap: 14px; align-items: center; padding: 20px var(--page-margin, 48px);">
-          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="truck" size="22" color="var(--burgundy-500)" hint-size="22px,22px"></x-import>
-          <div><div style="font-size: 15px; font-weight: 700;">Arrives tomorrow</div><div style="font-size: 13px; color: var(--ink-2);">Fast delivery across India</div></div>
-        </div>
-        <div style="display: flex; gap: 14px; align-items: center; padding: 20px var(--page-margin, 48px); border-left: 1px solid var(--gray-300);">
-          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="rotate-ccw" size="22" color="var(--burgundy-500)" hint-size="22px,22px"></x-import>
-          <div><div style="font-size: 15px; font-weight: 700;">Free returns</div><div style="font-size: 13px; color: var(--ink-2);">For 30 days, no questions</div></div>
-        </div>
-        <div style="display: flex; gap: 14px; align-items: center; padding: 20px var(--page-margin, 48px); border-left: 1px solid var(--gray-300);">
-          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="shield-check" size="22" color="var(--burgundy-500)" hint-size="22px,22px"></x-import>
-          <div><div style="font-size: 15px; font-weight: 700;">Secure checkout</div><div style="font-size: 13px; color: var(--ink-2);">Verified sellers only</div></div>
-        </div>
-      </section>
-
-      <section data-reveal="1" style="padding: 80px var(--page-margin, 48px) 0;">
-        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.SectionHeader" eyebrow="Today only" title="Real deals, real prices." hint-size="100%,90px"></x-import>
-        <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-top: 32px;">
-          <sc-for list="{{ dealItems }}" as="p" hint-placeholder-count="4">
-            <dc-import name="Product Tile" p="{{ p }}" hint-size="100%,400px"></dc-import>
-          </sc-for>
-        </div>
-      </section>
-
-      <section data-reveal="1" style="padding: 96px var(--page-margin, 48px) 0;">
-        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.SectionHeader" eyebrow="Drone shop" title="Drones, from first flight to pro." hint-size="100%,90px"></x-import>
-        <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-top: 32px;">
-          <sc-for list="{{ droneItems }}" as="p" hint-placeholder-count="4">
-            <dc-import name="Product Tile" p="{{ p }}" hint-size="100%,420px"></dc-import>
-          </sc-for>
-        </div>
-        <div style="display: flex; margin-top: 20px;">
-          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" variant="secondary" on-click="{{ goDrones }}" hint-size="200px,44px">Visit the drone shop</x-import>
-        </div>
-      </section>
-
-      <section data-reveal="1" style="padding: 96px var(--page-margin, 48px) 0;">
-        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.SectionHeader" eyebrow="Shop by category" title="One search covers every category." hint-size="100%,90px"></x-import>
-        <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; margin-top: 32px;">
-          <sc-for list="{{ catTiles }}" as="c" hint-placeholder-count="6">
-            <a onClick="{{ c.go }}" style="background: {{ c.tint }}; aspect-ratio: 1; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; color: {{ c.ink }}; text-decoration: none; transition: background 220ms cubic-bezier(.2,0,0,1), color 220ms cubic-bezier(.2,0,0,1), transform 320ms cubic-bezier(.2,0,0,1);" style-hover="background: var(--burgundy-500); color: var(--white); text-decoration: none; transform: translateY(-3px);">
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="{{ c.icon }}" size="28" hint-size="28px,28px"></x-import>
-              <span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 16px; font-weight: 700;">{{ c.label }}</span></span>
-            </a>
-          </sc-for>
-        </div>
-      </section>
-
-      <section data-reveal="stagger" style="margin: 96px var(--page-margin, 48px) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));">
-        <div style="background: #F6C25B; color: var(--burgundy-800); padding: 48px; display: flex; flex-direction: column; gap: 14px; justify-content: flex-end; min-height: 260px;">
-          <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--burgundy-700);">Returns</span>
-          <h2 style="margin: 0; font-size: 44px; font-weight: 800; line-height: 1.0; letter-spacing: -0.035em; color: var(--burgundy-800);">Changed your mind? Free returns for 30 days.</h2>
-          <span style="font-size: 14px; color: var(--burgundy-800);">Drop it off or book a pickup from your door.</span>
-        </div>
-      </section>
-
-      <section data-reveal="1" style="padding: 96px var(--page-margin, 48px) 0;">
-        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.SectionHeader" eyebrow="New in" title="Just arrived on the shelves." hint-size="100%,90px"></x-import>
-        <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-top: 32px;">
-          <sc-for list="{{ newItems }}" as="p" hint-placeholder-count="4">
-            <dc-import name="Product Tile" p="{{ p }}" hint-size="100%,400px"></dc-import>
-          </sc-for>
-        </div>
-      </section>
-    </sc-if>
-
-    <sc-if value="{{ isCat }}" hint-placeholder-val="{{ false }}">
-      <section style="padding: 24px var(--page-margin, 48px) 0;">
-        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Breadcrumbs" items="{{ catCrumbs }}" on-navigate="{{ goHome }}" hint-size="100%,20px"></x-import>
-        <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 16px;">
-          <h1 style="margin: 0; font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;">{{ catTitle }}</h1>
-          <span style="font-size: 14px; color: var(--ink-2);">{{ catCountLabel }}</span>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 40px; margin-top: 28px; align-items: start;">
-          <aside style="display: flex; flex-direction: column; gap: 28px; border-top: 2px solid var(--black); padding-top: 16px; max-width: 260px;">
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">Category</span>
-              <sc-for list="{{ sideCats }}" as="c" hint-placeholder-count="7">
-                <a onClick="{{ c.go }}" style="font-size: 14px; font-weight: {{ c.weight }}; color: {{ c.color }}; text-decoration: none;">{{ c.label }}</a>
-              </sc-for>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--gray-300); padding-top: 16px;">
-              <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">Filter</span>
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Checkbox" label="Arrives today or tomorrow" checked="{{ fFast }}" on-change="{{ toggleFast }}" hint-size="100%,24px"></x-import>
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Checkbox" label="Free delivery" checked="{{ fFree }}" on-change="{{ toggleFree }}" hint-size="100%,24px"></x-import>
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Checkbox" label="On offer" checked="{{ fDeal }}" on-change="{{ toggleDeal }}" hint-size="100%,24px"></x-import>
-            </div>
-          </aside>
-          <div style="grid-column: span 3; min-width: 0;">
-            <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tabs" items="{{ sortItems }}" value="{{ sort }}" on-change="{{ onSort }}" size="sm" hint-size="100%,44px"></x-import>
-            <sc-if value="{{ catEmpty }}" hint-placeholder-val="{{ false }}">
-              <div style="padding: 48px 0; display: flex; flex-direction: column; gap: 12px; align-items: flex-start;">
-                <span style="font-size: 24px; font-weight: 800; letter-spacing: -0.03em;">Nothing matches those filters.</span>
-                <span style="font-size: 14px; color: var(--ink-2);">Try removing one, or search across every category.</span>
-                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" variant="secondary" arrow="{{ false }}" on-click="{{ clearFilters }}" hint-size="140px,44px">Clear filters</x-import>
-              </div>
-            </sc-if>
-            <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 20px;">
-              <sc-for list="{{ catItems }}" as="p" hint-placeholder-count="6">
-                <dc-import name="Product Tile" p="{{ p }}" hint-size="100%,400px"></dc-import>
-              </sc-for>
-            </div>
-          </div>
-        </div>
-      </section>
-    </sc-if>
-
-    <sc-if value="{{ isProduct }}" hint-placeholder-val="{{ false }}">
-      <section style="padding: 24px var(--page-margin, 48px) 0;">
-        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Breadcrumbs" items="{{ pCrumbs }}" on-navigate="{{ crumbNav }}" hint-size="100%,20px"></x-import>
-        <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 48px; margin-top: 24px;">
-          <div style="display: flex; flex-direction: column; gap: 12px;">
-            <div style="background: #FBEEE4; aspect-ratio: 1.15; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-              <sc-if value="{{ cur.img }}" hint-placeholder-val="{{ false }}">{{ curImgEl }}</sc-if>
-              <sc-if value="{{ cur.noImg }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="{{ cur.icon }}" size="160" stroke-width="1.5" hint-size="160px,160px"></x-import></sc-if>
-              <sc-if value="{{ cur.tag }}" hint-placeholder-val="{{ false }}">
-                <span style="position: absolute; top: 16px; left: 16px;">
-                  <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tag" tone="deal" hint-size="90px,24px">{{ cur.tagLabel }}</x-import>
-                </span>
-              </sc-if>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
-              <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
-                <a onClick="{{ t.pick }}" style="background: {{ t.bg }}; aspect-ratio: 1; outline: {{ t.outline }}; outline-offset: -2px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                  <sc-if value="{{ cur.img }}" hint-placeholder-val="{{ false }}">{{ t.imgEl }}</sc-if>
-                  <sc-if value="{{ cur.noImg }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="{{ cur.icon }}" size="36" stroke-width="1.5" color="{{ t.color }}" hint-size="36px,36px"></x-import></sc-if>
-                </a>
-              </sc-for>
-            </div>
-          </div>
-          <div>
-            <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">{{ cur.category }}</span>
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-top: 10px;">
-              <h1 style="margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.08;">{{ cur.title }}</h1>
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.IconButton" icon="heart" label="Save to wishlist" variant="outline" active="{{ cur.wished }}" on-click="{{ cur.onWish }}" hint-size="44px,44px"></x-import>
-            </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px;">
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tag" tone="outline" icon="shield-check" hint-size="120px,24px">Verified seller</x-import>
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tag" hint-size="100px,24px">Free returns</x-import>
-              <sc-if value="{{ cur.hasRating }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tag" icon="star" hint-size="100px,24px">{{ cur.rating }}</x-import></sc-if>
-            </div>
-            <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 6px;">
-              <sc-if value="{{ cur.was }}" hint-placeholder-val="{{ false }}"><span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">Offer price</span></sc-if>
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Price" currency="INR" amount="{{ cur.price }}" was="{{ cur.was }}" size="lg" hint-size="200px,40px"></x-import>
-            </div>
-            <sc-if value="{{ cur.was }}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; font-size: 14px; font-weight: 600; color: var(--text-accent);">{{ cur.mrpLine }}</p></sc-if>
-            <p style="margin: 6px 0 0; font-size: 13px; color: var(--ink-2);">{{ cur.vatLine }}</p>
-            <div style="margin-top: 24px; padding-top: 16px; border-top: 2px solid var(--black);">
-              <div style="font-size: 14px; font-weight: 700; margin-bottom: 12px;">Delivery</div>
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.RadioGroup" name="ship" value="{{ ship }}" on-change="{{ onShip }}" options="{{ shipOptions }}" hint-size="100%,100px"></x-import>
-            </div>
-            <div style="display: flex; gap: 12px; margin-top: 24px;">
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.QuantityStepper" value="{{ qty }}" min="1" max="10" on-change="{{ onQty }}" hint-size="130px,48px"></x-import>
-              <div style="flex: 1;">
-                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" full-width="{{ true }}" size="lg" on-click="{{ addCur }}" hint-size="100%,52px">Add to cart</x-import>
-              </div>
-            </div>
-            <div style="margin-top: 24px; display: flex; flex-direction: column;">
-              <div style="display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--gray-300);">
-                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="truck" size="20" hint-size="20px,20px"></x-import>
-                <div><div style="font-size: 14px; font-weight: 700;">{{ cur.arrives }}</div><div style="font-size: 13px; color: var(--ink-2);">Delivered to your door</div></div>
-              </div>
-              <div style="display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--gray-300);">
-                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="rotate-ccw" size="20" hint-size="20px,20px"></x-import>
-                <div><div style="font-size: 14px; font-weight: 700;">Free returns for 30 days</div><div style="font-size: 13px; color: var(--ink-2);">Drop off or book a pickup</div></div>
-              </div>
-              <div style="display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--gray-300); border-bottom: 1px solid var(--gray-300);">
-                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="shield-check" size="20" hint-size="20px,20px"></x-import>
-                <div><div style="font-size: 14px; font-weight: 700;">Secure payment</div><div style="font-size: 13px; color: var(--ink-2);">UPI, card or cash on delivery</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="margin-top: 56px;">
-          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Tabs" items="{{ tabItems }}" value="{{ tab }}" on-change="{{ onTab }}" hint-size="100%,48px"></x-import>
-          <p style="margin: 0; padding: 20px 0; max-width: 680px; font-size: 15px; line-height: 1.55; text-wrap: pretty;">{{ tabText }}</p>
-        </div>
-        <div style="margin-top: 40px;">
-          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.SectionHeader" eyebrow="You might also need" title="Bought together often." hint-size="100%,90px"></x-import>
-          <div data-reveal="stagger" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-top: 32px;">
-            <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
-              <dc-import name="Product Tile" p="{{ p }}" hint-size="100%,400px"></dc-import>
-            </sc-for>
-          </div>
-        </div>
-      </section>
-    </sc-if>
-
-    <sc-if value="{{ isCartEmpty }}" hint-placeholder-val="{{ false }}">
-      <section style="padding: 72px var(--page-margin, 48px) 0; max-width: 560px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start;">
-        <h1 style="margin: 0; font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;">Your cart is empty.</h1>
-        <p style="margin: 0; font-size: 16px; color: var(--ink-2);">Everything you add shows up here, with the delivery date.</p>
-        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" on-click="{{ goHome }}" hint-size="180px,44px">Start shopping</x-import>
-      </section>
-    </sc-if>
-
-    <sc-if value="{{ isCart }}" hint-placeholder-val="{{ false }}">
-      <section style="padding: 32px var(--page-margin, 48px) 0;">
-        <h1 style="margin: 0; font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;">Cart</h1>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 48px; margin-top: 24px; align-items: start;">
-          <div style="border-top: 2px solid var(--black); grid-column: span 2; min-width: 0;">
-            <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
-              <div style="display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--gray-300);">
-                <a onClick="{{ l.open }}" style="background: #FBEEE4; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                  <sc-if value="{{ l.img }}" hint-placeholder-val="{{ false }}">{{ l.imgEl }}</sc-if>
-                  <sc-if value="{{ l.noImg }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="{{ l.icon }}" size="44" stroke-width="1.5" hint-size="44px,44px"></x-import></sc-if>
-                </a>
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                  <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">{{ l.category }}</span>
-                  <span style="font-size: 16px; font-weight: 600;">{{ l.title }}</span>
-                  <span style="font-size: 13px; color: var(--ink-2);">{{ l.delivery }}</span>
-                  <div style="display: flex; gap: 16px; align-items: center; margin-top: 8px;">
-                    <x-import component-from-global-scope="ShopeizDesignSystem_fece22.QuantityStepper" size="sm" min="1" max="10" value="{{ l.qty }}" on-change="{{ l.setQty }}" hint-size="110px,36px"></x-import>
-                    <a onClick="{{ l.remove }}" style="font-size: 13px; font-weight: 600;">Remove</a>
-                    <a onClick="{{ l.save }}" style="font-size: 13px; font-weight: 600;">Save for later</a>
-                  </div>
-                </div>
-                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Price" currency="INR" amount="{{ l.total }}" size="sm" hint-size="90px,24px"></x-import>
-              </div>
-            </sc-for>
-          </div>
-          <aside style="background: #FBF5EF; border: 1px solid #EFE3D8; padding: 24px; display: flex; flex-direction: column; gap: 12px;">
-            <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.025em;">Order summary</span>
-            <div style="display: flex; justify-content: space-between; font-size: 14px; font-variant-numeric: tabular-nums;"><span>{{ subLabel }}</span><span>{{ subValue }}</span></div>
-            <div style="display: flex; justify-content: space-between; font-size: 14px; font-variant-numeric: tabular-nums;"><span>Delivery</span><span>{{ delivValue }}</span></div>
-            <sc-if value="{{ promoApplied }}" hint-placeholder-val="{{ false }}">
-              <div style="display: flex; justify-content: space-between; font-size: 14px; font-variant-numeric: tabular-nums; color: var(--text-accent);"><span>Promo SZWELCOME</span><span>{{ discValue }}</span></div>
-            </sc-if>
-            <div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 12px; border-top: 2px solid var(--black);">
-              <span style="font-size: 15px; font-weight: 700;">Total</span>
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Price" currency="INR" amount="{{ total }}" size="md" hint-size="120px,30px"></x-import>
-            </div>
-            <span style="font-size: 12px; color: var(--ink-2);">{{ freeHint }}</span>
-            <div style="display: flex; gap: 8px; align-items: flex-start;">
-              <div style="flex: 1;">
-                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Input" placeholder="Promo code" value="{{ promo }}" on-change="{{ onPromo }}" error="{{ promoErr }}" hint-size="100%,44px"></x-import>
-              </div>
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" variant="secondary" arrow="{{ false }}" on-click="{{ applyPromo }}" hint-size="80px,44px">Apply</x-import>
-            </div>
-            <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" full-width="{{ true }}" size="lg" on-click="{{ goCheckout }}" hint-size="100%,52px">Checkout</x-import>
-            <span style="font-size: 12px; color: var(--ink-2);">Free returns for 30 days.</span>
-          </aside>
-        </div>
-      </section>
-    </sc-if>
-
-    <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
-      <section style="padding: 32px var(--page-margin, 48px) 0;">
-        <a onClick="{{ goCart }}" style="font-size: 13px; font-weight: 600;">Back to cart</a>
-        <h1 style="margin: 12px 0 0; font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;">Checkout</h1>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 48px; margin-top: 24px; align-items: start;">
-          <div style="grid-column: span 2; min-width: 0;">
-            <section style="border-top: 2px solid var(--black); padding-top: 16px; margin-bottom: 32px;">
-              <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 16px;"><span style="font-size: 12px; font-weight: 700; color: var(--text-accent);">01</span><span style="font-size: 22px; font-weight: 800; letter-spacing: -0.03em;">Delivery address</span></div>
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
-                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Input" label="Full name" default-value="Ananya Sharma" hint-size="100%,68px"></x-import>
-                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Input" label="Mobile" default-value="+91 98201 23456" hint-size="100%,68px"></x-import>
-                <div style="grid-column: 1 / -1;">
-                  <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Input" label="Address" default-value="Flat 1804, Sea Breeze Towers, Bandra West, Mumbai 400050" hint-size="100%,68px"></x-import>
-                </div>
-              </div>
-            </section>
-            <section style="border-top: 2px solid var(--black); padding-top: 16px; margin-bottom: 32px;">
-              <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 16px;"><span style="font-size: 12px; font-weight: 700; color: var(--text-accent);">02</span><span style="font-size: 22px; font-weight: 800; letter-spacing: -0.03em;">Delivery speed</span></div>
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.RadioGroup" name="ship2" value="{{ ship }}" on-change="{{ onShip }}" options="{{ shipOptions }}" hint-size="100%,100px"></x-import>
-            </section>
-            <section style="border-top: 2px solid var(--black); padding-top: 16px; margin-bottom: 32px;">
-              <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 16px;"><span style="font-size: 12px; font-weight: 700; color: var(--text-accent);">03</span><span style="font-size: 22px; font-weight: 800; letter-spacing: -0.03em;">Payment</span></div>
-              <div style="display: flex; flex-direction: column; gap: 16px;">
-                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.RadioGroup" name="pay" value="{{ pay }}" on-change="{{ onPay }}" options="{{ payOptions }}" hint-size="100%,150px"></x-import>
-                <sc-if value="{{ isCard }}" hint-placeholder-val="{{ true }}">
-                  <div style="max-width: 360px;">
-                    <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Input" label="Security code" placeholder="3 digits" value="{{ cvv }}" on-change="{{ onCvv }}" error="{{ cvvErr }}" hint-size="100%,68px"></x-import>
-                  </div>
-                </sc-if>
-                <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Switch" label="Send order updates by SMS" default-checked="{{ true }}" hint-size="260px,28px"></x-import>
-              </div>
-            </section>
-          </div>
-          <aside style="background: #FBF5EF; border: 1px solid #EFE3D8; padding: 24px; display: flex; flex-direction: column; gap: 12px;">
-            <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.025em;">{{ subLabel }}</span>
-            <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
-              <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 13px;"><span>{{ l.summary }}</span><span style="font-variant-numeric: tabular-nums; white-space: nowrap;">{{ l.totalLabel }}</span></div>
-            </sc-for>
-            <div style="display: flex; justify-content: space-between; font-size: 13px; font-variant-numeric: tabular-nums; border-top: 1px solid var(--gray-300); padding-top: 12px;"><span>Delivery</span><span>{{ delivValue }}</span></div>
-            <sc-if value="{{ codFee }}" hint-placeholder-val="{{ false }}">
-              <div style="display: flex; justify-content: space-between; font-size: 13px; font-variant-numeric: tabular-nums;"><span>Cash on delivery fee</span><span>INR 49</span></div>
-            </sc-if>
-            <sc-if value="{{ promoApplied }}" hint-placeholder-val="{{ false }}">
-              <div style="display: flex; justify-content: space-between; font-size: 13px; font-variant-numeric: tabular-nums; color: var(--text-accent);"><span>Promo SZWELCOME</span><span>{{ discValue }}</span></div>
-            </sc-if>
-            <div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 12px; border-top: 2px solid var(--black);">
-              <span style="font-size: 15px; font-weight: 700;">Total</span>
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Price" currency="INR" amount="{{ payTotal }}" hint-size="120px,30px"></x-import>
-            </div>
-            <div style="display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--ink-2);">
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="truck" size="16" hint-size="16px,16px"></x-import>
-              <span>{{ arrivesLine }}</span>
-            </div>
-            <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" full-width="{{ true }}" size="lg" on-click="{{ placeOrder }}" hint-size="100%,52px">{{ payLabel }}</x-import>
-            <div style="display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--ink-2);">
-              <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Icon" name="lock" size="14" hint-size="14px,14px"></x-import>
-              <span>Secure payment</span>
-            </div>
-          </aside>
-        </div>
-      </section>
-    </sc-if>
-
-    <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
-      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); min-height: 520px;">
-        <div style="padding: 64px var(--page-margin, 48px); display: flex; flex-direction: column; gap: 16px; justify-content: center;">
-          <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-accent);">{{ orderLabel }}</span>
-          <h1 style="margin: 0; font-size: 56px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;">{{ orderArrives }}</h1>
-          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--ink-2); max-width: 420px;">We've emailed your receipt. You'll get a text when the courier is on the way.</p>
-          <div style="border-top: 2px solid var(--black); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; max-width: 460px;">
-            <sc-for list="{{ orderLines }}" as="l" hint-placeholder-count="2">
-              <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 14px;"><span>{{ l.summary }}</span><span style="font-variant-numeric: tabular-nums; white-space: nowrap;">{{ l.totalLabel }}</span></div>
-            </sc-for>
-            <div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; border-top: 1px solid var(--gray-300); padding-top: 8px; font-variant-numeric: tabular-nums;"><span>Paid</span><span>{{ orderTotal }}</span></div>
-          </div>
-          <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px;">
-            <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" on-click="{{ goHome }}" hint-size="170px,44px">Keep shopping</x-import>
-            <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Button" variant="secondary" arrow="{{ false }}" hint-size="140px,44px">Track order</x-import>
-          </div>
-        </div>
-        <div style="background: var(--burgundy-500); display: flex; align-items: center; justify-content: center; min-height: 320px;">
-          <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Monogram" size="200" color="var(--white)" hint-size="180px,200px"></x-import>
-        </div>
-      </section>
-    </sc-if>
-  </main>
-
-  <footer style="background: var(--burgundy-700); color: var(--white); padding: 56px var(--page-margin, 48px) 28px; margin-top: 80px;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px;">
-      <div style="display: flex; flex-direction: column; gap: 16px;">
-        <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Logo" size="30" lockup="stacked" tone="onBlack" hint-size="140px,90px"></x-import>
-        <span style="font-size: 14px; font-weight: 700;">The art of having everything.</span>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-on-dark-muted);">Shop</span>
-        <sc-for list="{{ footCats }}" as="c" hint-placeholder-count="5">
-          <a onClick="{{ c.go }}" style="color: var(--white); font-size: 14px;">{{ c.label }}</a>
-        </sc-for>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-on-dark-muted);">Help</span>
-        <a style="color: var(--white); font-size: 14px;">Track an order</a>
-        <a style="color: var(--white); font-size: 14px;">Returns</a>
-        <a style="color: var(--white); font-size: 14px;">Delivery</a>
-        <a style="color: var(--white); font-size: 14px;">Payment</a>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <span style="font-size: 11px; letter-spacing: var(--ls-label, 0.08em); text-transform: uppercase; color: var(--text-on-dark-muted);">Shopeiz</span>
-        <a style="color: var(--white); font-size: 14px;">About</a>
-        <a style="color: var(--white); font-size: 14px;">Sell on Shopeiz</a>
-        <a style="color: var(--white); font-size: 14px;">Careers</a>
-        <a style="color: var(--white); font-size: 14px;">brand@shopeiz.com</a>
-      </div>
-    </div>
-    <div style="margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--burgundy-500); font-size: 12px; color: var(--burgundy-200);">© 2026 Shopeiz</div>
-  </footer>
-
-  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
-    <div ref="{{ toastRef }}" style="position: fixed; left: var(--page-margin, 48px); bottom: 24px; z-index: 50; max-width: calc(100vw - 32px);">
-      <x-import component-from-global-scope="ShopeizDesignSystem_fece22.Toast" message="{{ toast.message }}" action="{{ toast.action }}" on-action="{{ toast.onAction }}" on-close="{{ closeToast }}" hint-size="360px,52px"></x-import>
-    </div>
-  </sc-if>
-</div>
-</x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;category&quot;,&quot;product&quot;,&quot;cart&quot;,&quot;checkout&quot;],&quot;default&quot;:&quot;home&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;freeDeliveryOver&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:499,&quot;min&quot;:0,&quot;max&quot;:5000,&quot;step&quot;:100,&quot;unit&quot;:&quot;INR&quot;,&quot;tsType&quot;:&quot;number&quot;}}">
+<script>
+/* ============================================================
+   CATALOGUE — edit products here.
+   price = selling price, was = MRP (optional), img = photo path (optional).
+   ============================================================ */
 const CATS = [
-  { id: 'electronics', label: 'Electronics', icon: 'smartphone', tint: '#D9E8F5', ink: '#123B5E' },
-  { id: 'fashion', label: 'Fashion', icon: 'shirt', tint: '#F7D9E0', ink: '#6D001A' },
-  { id: 'home', label: 'Home', icon: 'sofa', tint: '#DCEBD7', ink: '#1F4A22' },
-  { id: 'beauty', label: 'Beauty', icon: 'sparkles', tint: '#EADFF5', ink: '#43236B' },
-  { id: 'gadgets', label: 'Gadgets', icon: 'laptop', tint: '#FBE3C6', ink: '#6A3A06' },
-  { id: 'drones', label: 'Drones', icon: 'package', tint: '#FAEDB0', ink: '#5A4500' },
+  { id: 'drones',      label: 'Drones',      blurb: 'Foldable camera drones, ready to fly out of the box.', icon: 'p-drone',      tone: '#ECE6DB', ink: '#3A322A', img: 'assets/drones/m3-max.png' },
+  { id: 'electronics', label: 'Electronics', blurb: 'Sound, smartphones and smart-home tech that just works.', icon: 'p-headphones', tone: '#E4E7EA', ink: '#2C3946' },
+  { id: 'gadgets',     label: 'Gadgets',     blurb: 'Laptops, tablets and wearables for work and play.',      icon: 'p-laptop',     tone: '#ECE4D8', ink: '#5A4327' },
+  { id: 'fashion',     label: 'Fashion',     blurb: 'Wardrobe staples in honest materials.',                  icon: 'p-shirt',      tone: '#EEE2DE', ink: '#6A2E2A' },
+  { id: 'home',        label: 'Home',        blurb: 'Pieces that make home feel finished.',                   icon: 'p-sofa',       tone: '#E3E7DE', ink: '#34452F' },
+  { id: 'beauty',      label: 'Beauty',      blurb: 'Everyday skin and hair care, gently made.',              icon: 'p-jar',        tone: '#ECE3EA', ink: '#5A3553' },
 ];
 const P = [
-  { id: 'p1', cat: 'electronics', sub: 'Audio', title: 'Wireless Noise-Cancelling Headphones', price: 8999, was: 11999, delivery: 'Arrives tomorrow · Free returns', icon: 'headphones', rating: 4.7, reviews: 128, desc: 'Thirty hours of battery, fast charging and active noise cancelling that adapts to where you are. Folds flat into the case included.', specs: 'Battery: 30 h · Charging: USB-C, 10 min = 5 h · Weight: 250 g · Bluetooth 5.3' },
-  { id: 'p2', cat: 'electronics', sub: 'Phones', title: 'Smartphone 128 GB, Graphite', price: 29999, delivery: 'Arrives Thursday · Free delivery', icon: 'smartphone', rating: 4.6, reviews: 342, desc: 'A 6.1-inch display, a camera that handles low light, and a battery that lasts a full day of real use.', specs: 'Storage: 128 GB · Display: 6.1 in OLED · Camera: 48 MP · Dual SIM' },
-  { id: 'p3', cat: 'gadgets', sub: 'Tablets', title: '11-inch Tablet with Keyboard Case', price: 44999, was: 51999, delivery: 'Arrives Thursday', icon: 'tablet', rating: 4.5, reviews: 87, desc: 'Light enough to carry all day, with a keyboard case that turns it into a laptop for email and documents.', specs: 'Display: 11 in · Storage: 256 GB · Battery: 10 h · Weight: 470 g' },
-  { id: 'p4', cat: 'fashion', sub: 'Men', title: 'Heavyweight Cotton T-Shirt', price: 799, delivery: 'Arrives tomorrow', icon: 'shirt', rating: 4.4, reviews: 512, desc: 'Thick 240 gsm cotton that keeps its shape after washing. Relaxed fit, ribbed collar.', specs: 'Material: 100% cotton · Weight: 240 gsm · Sizes: XS to XXL · Machine wash' },
-  { id: 'p5', cat: 'home', sub: 'Living', title: 'Three-Seat Linen Sofa', price: 54999, delivery: 'Arrives in 5 days · Free delivery', icon: 'sofa', rating: 4.8, reviews: 46, desc: 'Deep seats, removable linen covers and a solid oak frame. Delivered and assembled in your living room.', specs: 'Width: 220 cm · Depth: 95 cm · Frame: oak · Covers: washable linen' },
-  { id: 'p6', cat: 'gadgets', sub: 'Laptops', title: '14-inch Laptop, 16 GB RAM', price: 74999, was: 84999, delivery: 'Arrives Friday · Free returns', icon: 'laptop', rating: 4.6, reviews: 203, desc: 'Fast enough for editing photos and quiet enough for a library. All-day battery and a sharp 14-inch screen.', specs: 'Memory: 16 GB · Storage: 512 GB SSD · Display: 14 in 2.8K · Weight: 1.3 kg' },
-  { id: 'p7', cat: 'beauty', sub: 'Skincare', title: 'Daily Moisturiser SPF 30, 50 ml', price: 649, delivery: 'Arrives tomorrow', icon: 'sparkles', rating: 4.5, reviews: 690, desc: 'A light, non-greasy moisturiser with broad-spectrum SPF 30. Suits all skin types.', specs: 'Size: 50 ml · SPF 30 · Fragrance free · Dermatologist tested' },
-  { id: 'p9', cat: 'home', sub: 'Kitchen', title: 'Cast Iron Casserole, 5 L', price: 6499, was: 7999, delivery: 'Arrives tomorrow · Free returns', icon: 'house', rating: 4.9, reviews: 77, desc: 'Enamelled cast iron that goes from hob to oven to table. Holds heat for slow cooking.', specs: 'Capacity: 5 L · Oven safe to 260°C · All hobs including induction' },
-  { id: 'p10', cat: 'fashion', sub: 'Women', title: 'Leather Crossbody Bag', price: 3499, delivery: 'Arrives Thursday', icon: 'package', rating: 4.6, reviews: 94, desc: 'Full-grain leather, an adjustable strap and room for a phone, wallet and keys.', specs: 'Material: full-grain leather · Size: 24 × 16 × 7 cm · Strap: 110–130 cm' },
-  { id: 'p11', cat: 'electronics', sub: 'Smart home', title: 'Video Doorbell with Chime', price: 6999, delivery: 'Arrives tomorrow', icon: 'bell', rating: 4.4, reviews: 211, desc: 'See who is at the door from your phone. Wired or battery, with a plug-in chime for inside.', specs: 'Video: 1080p HD · Night vision · Battery: 6 months · Works with Wi-Fi 2.4 GHz' },
-  { id: 'p12', cat: 'gadgets', sub: 'Wearables', title: 'Fitness Watch with GPS', price: 12999, was: 15999, delivery: 'Arrives Friday · Free returns', icon: 'clock', rating: 4.5, reviews: 365, desc: 'Tracks runs, swims and sleep. Built-in GPS and a battery that lasts a week.', specs: 'Battery: 7 days · Water resistant: 50 m · GPS · Heart rate' },
-  { id: 'p13', cat: 'beauty', sub: 'Hair', title: 'Repair Shampoo, 400 ml', price: 399, delivery: 'Arrives tomorrow', icon: 'sparkles', rating: 4.2, reviews: 430, desc: 'A gentle daily shampoo for dry and coloured hair. Sulphate free.', specs: 'Size: 400 ml · Sulphate free · For dry and coloured hair' },
-  { id: 'd1', cat: 'drones', sub: 'Camera drones', title: 'E88 Pro Drone', price: 1399, was: 2499, delivery: 'Arrives in 3 days · Free returns', icon: 'package', img: 'assets/drones/e88-pro.png', desc: 'Foldable camera drone with a phone-holder remote. Spare batteries, propellers and a carry case are shown in the box.', specs: 'Full specifications from the seller to be added.' },
-  { id: 'd2', cat: 'drones', sub: 'Camera drones', title: 'J2 Drone', price: 1799, was: 2947, delivery: 'Arrives in 3 days · Free returns', icon: 'package', img: 'assets/drones/j2.png', desc: 'Foldable camera drone with coloured arm lights. Comes in a black or red finish.', specs: 'Full specifications from the seller to be added.' },
-  { id: 'd3', cat: 'drones', sub: 'Camera drones', title: 'M3 Max', price: 1999, was: 3888, delivery: 'Arrives in 3 days · Free returns', icon: 'package', img: 'assets/drones/m3-max.png', desc: 'Dual-camera drone with a phone-holder remote for a live view while you fly.', specs: 'Full specifications from the seller to be added.' },
-  { id: 'd4', cat: 'drones', sub: 'Camera drones', title: 'T7 Pro Drone', price: 6499, delivery: 'Arrives in 3 days · Free returns', icon: 'package', img: 'assets/drones/t7-pro.png', desc: 'Our top drone, with a screen remote. Available in orange or black.', specs: 'Full specifications from the seller to be added.' },
+  { id: 'd4', cat: 'drones', sub: 'Camera drones', title: 'T7 Pro Drone', price: 6499, days: 3, img: 'assets/drones/t7-pro.png', tag: 'Flagship', desc: 'Our top drone, with a screen remote. Available in orange or black.', specs: 'Full specifications from the seller to be added.' },
+  { id: 'd3', cat: 'drones', sub: 'Camera drones', title: 'M3 Max', price: 1999, was: 3888, days: 3, img: 'assets/drones/m3-max.png', desc: 'Dual-camera drone with a phone-holder remote for a live view while you fly.', specs: 'Full specifications from the seller to be added.' },
+  { id: 'd2', cat: 'drones', sub: 'Camera drones', title: 'J2 Drone', price: 1799, was: 2947, days: 3, img: 'assets/drones/j2.png', desc: 'Foldable camera drone with coloured arm lights. Comes in a black or red finish.', specs: 'Full specifications from the seller to be added.' },
+  { id: 'd1', cat: 'drones', sub: 'Camera drones', title: 'E88 Pro Drone', price: 1399, was: 2499, days: 3, img: 'assets/drones/e88-pro.png', tag: 'Best value', desc: 'Foldable camera drone with a phone-holder remote. Spare batteries, propellers and a carry case are shown in the box.', specs: 'Full specifications from the seller to be added.' },
+  { id: 'p1', cat: 'electronics', sub: 'Audio', title: 'Wireless Noise-Cancelling Headphones', price: 8999, was: 11999, days: 1, icon: 'p-headphones', rating: 4.7, reviews: 128, desc: 'Thirty hours of battery, fast charging and active noise cancelling that adapts to where you are. Folds flat into the case included.', specs: 'Battery: 30 h · Charging: USB-C, 10 min = 5 h · Weight: 250 g · Bluetooth 5.3' },
+  { id: 'p2', cat: 'electronics', sub: 'Phones', title: 'Smartphone 128 GB, Graphite', price: 29999, days: 3, icon: 'p-phone', rating: 4.6, reviews: 342, desc: 'A 6.1-inch display, a camera that handles low light, and a battery that lasts a full day of real use.', specs: 'Storage: 128 GB · Display: 6.1 in OLED · Camera: 48 MP · Dual SIM' },
+  { id: 'p11', cat: 'electronics', sub: 'Smart home', title: 'Video Doorbell with Chime', price: 6999, days: 1, icon: 'p-bell', rating: 4.4, reviews: 211, desc: 'See who is at the door from your phone. Wired or battery, with a plug-in chime for inside.', specs: 'Video: 1080p HD · Night vision · Battery: 6 months · Works with Wi-Fi 2.4 GHz' },
+  { id: 'p3', cat: 'gadgets', sub: 'Tablets', title: '11-inch Tablet with Keyboard Case', price: 44999, was: 51999, days: 3, icon: 'p-tablet', rating: 4.5, reviews: 87, desc: 'Light enough to carry all day, with a keyboard case that turns it into a laptop for email and documents.', specs: 'Display: 11 in · Storage: 256 GB · Battery: 10 h · Weight: 470 g' },
+  { id: 'p6', cat: 'gadgets', sub: 'Laptops', title: '14-inch Laptop, 16 GB RAM', price: 74999, was: 84999, days: 3, icon: 'p-laptop', rating: 4.6, reviews: 203, desc: 'Fast enough for editing photos and quiet enough for a library. All-day battery and a sharp 14-inch screen.', specs: 'Memory: 16 GB · Storage: 512 GB SSD · Display: 14 in 2.8K · Weight: 1.3 kg' },
+  { id: 'p12', cat: 'gadgets', sub: 'Wearables', title: 'Fitness Watch with GPS', price: 12999, was: 15999, days: 3, icon: 'p-watch', rating: 4.5, reviews: 365, desc: 'Tracks runs, swims and sleep. Built-in GPS and a battery that lasts a week.', specs: 'Battery: 7 days · Water resistant: 50 m · GPS · Heart rate' },
+  { id: 'p4', cat: 'fashion', sub: 'Men', title: 'Heavyweight Cotton T-Shirt', price: 799, days: 1, icon: 'p-shirt', rating: 4.4, reviews: 512, desc: 'Thick 240 gsm cotton that keeps its shape after washing. Relaxed fit, ribbed collar.', specs: 'Material: 100% cotton · Weight: 240 gsm · Sizes: XS to XXL · Machine wash' },
+  { id: 'p10', cat: 'fashion', sub: 'Women', title: 'Leather Crossbody Bag', price: 3499, days: 3, icon: 'p-handbag', rating: 4.6, reviews: 94, desc: 'Full-grain leather, an adjustable strap and room for a phone, wallet and keys.', specs: 'Material: full-grain leather · Size: 24 × 16 × 7 cm · Strap: 110–130 cm' },
+  { id: 'p5', cat: 'home', sub: 'Living', title: 'Three-Seat Linen Sofa', price: 54999, days: 5, icon: 'p-sofa', rating: 4.8, reviews: 46, desc: 'Deep seats, removable linen covers and a solid oak frame. Delivered and assembled in your living room.', specs: 'Width: 220 cm · Depth: 95 cm · Frame: oak · Covers: washable linen' },
+  { id: 'p9', cat: 'home', sub: 'Kitchen', title: 'Cast Iron Casserole, 5 L', price: 6499, was: 7999, days: 1, icon: 'p-pot', rating: 4.9, reviews: 77, desc: 'Enamelled cast iron that goes from hob to oven to table. Holds heat for slow cooking.', specs: 'Capacity: 5 L · Oven safe to 260°C · All hobs including induction' },
+  { id: 'p7', cat: 'beauty', sub: 'Skincare', title: 'Daily Moisturiser SPF 30, 50 ml', price: 649, days: 1, icon: 'p-jar', rating: 4.5, reviews: 690, desc: 'A light, non-greasy moisturiser with broad-spectrum SPF 30. Suits all skin types.', specs: 'Size: 50 ml · SPF 30 · Fragrance free · Dermatologist tested' },
+  { id: 'p13', cat: 'beauty', sub: 'Hair', title: 'Repair Shampoo, 400 ml', price: 399, days: 1, icon: 'p-bottle', rating: 4.2, reviews: 430, desc: 'A gentle daily shampoo for dry and coloured hair. Sulphate free.', specs: 'Size: 400 ml · Sulphate free · For dry and coloured hair' },
 ];
-const fmt = (n) => 'INR ' + Math.round(n).toLocaleString('en-US');
-const imgEl = (src, alt, opacity) => src ? React.createElement('img', { src, alt: alt || '', style: { width: '100%', height: '100%', objectFit: 'contain', opacity: opacity ?? 1 } }) : null;
-const findP = (id) => P.find((p) => p.id === id) || P[0];
+const HERO = ['d4', 'd3', 'd1', 'd2'];
+const FREE_OVER = 499, STD_FEE = 40, EXP_FEE = 99, COD_FEE = 49;
+const PROMO = { code: 'SZWELCOME', pct: 10 };
 
-const EASE = 'cubic-bezier(.2,0,0,1)';
-const HERO_IDS = ['d4', 'd3', 'd1', 'd2'];
-class Component extends DCLogic {
-  mainRef = React.createRef(); headerRef = React.createRef(); cartRef = React.createRef(); toastRef = React.createRef(); heroCapRef = React.createRef();
-  state = {
-    heroIdx: 0,
-    screen: this.props.startScreen ?? 'home',
-    cat: 'deals', pid: 'p1', query: '',
-    cart: [{ id: 'p1', qty: 1 }, { id: 'p4', qty: 2 }],
-    wish: {}, qty: 1, ship: 'std', tab: 'details', thumb: 0,
-    pay: 'card', cvv: '', cvvErr: '',
-    fFast: false, fFree: false, fDeal: false, sort: 'popular',
-    promo: '', promoErr: '', promoOk: false,
-    toast: null, order: null,
-  };
-  componentDidMount() {
-    this.prevSnap = this.state;
-    try { this.setup(); } catch (e) { console.warn('motion setup failed', e); }
-  }
-  setup() {
-    this.reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    this.onScroll = () => { const el = this.headerRef.current; if (el) el.style.boxShadow = window.scrollY > 40 ? '0 1px 0 var(--gray-300), 0 8px 24px rgba(0,0,0,0.06)' : 'none'; };
-    window.addEventListener('scroll', this.onScroll, { passive: true }); this.onScroll();
-    this.heroTimer = setInterval(() => { if (this.state.screen === 'home') this.setState((s) => ({ heroIdx: (s.heroIdx + 1) % HERO_IDS.length })); }, 5500);
-    if (this.reduce) return;
-    this.pending = new Set();
-    this.check = () => {
-      const vh = window.innerHeight || 800;
-      this.pending.forEach((el) => {
-        if (!el.isConnected) { this.pending.delete(el); return; }
-        const r = el.getBoundingClientRect();
-        if (r.top < vh - 40 || el.closest('[data-hero]')) { this.pending.delete(el); this.play(el); }
-      });
-    };
-    this.scan = () => { clearTimeout(this.raf); this.raf = setTimeout(() => {
-      document.querySelectorAll('[data-reveal]:not([data-rv])').forEach((el) => {
-        el.setAttribute('data-rv', '1');
-        const kids = el.getAttribute('data-reveal') === 'stagger' ? Array.from(el.children) : [el];
-        kids.forEach((k) => { k.style.opacity = '0'; });
-        this.pending.add(el);
-      });
-      this.check();
-    }, 16); };
-    window.addEventListener('scroll', this.check, { passive: true });
-    this.safety = setInterval(() => { if (document.hidden) return; this.pending.forEach((el) => { const r = el.getBoundingClientRect(); if (r.bottom < 0) { this.pending.delete(el); this.play(el); } }); }, 1500);
-    window.addEventListener('resize', this.check);
-    this.mo = new MutationObserver(this.scan);
-    const root = document.querySelector('[data-shop-root]') || document.body;
-    this.mo.observe(root, { childList: true, subtree: true });
-    this.scan();
-  }
-  play(el) {
-    const mode = el.getAttribute('data-reveal');
-    const base = +(el.getAttribute('data-reveal-delay') || 0);
-    const kids = mode === 'stagger' ? Array.from(el.children) : [el];
-    kids.forEach((k, i) => {
-      const from = mode === 'line' ? 'translateY(105%)' : 'translateY(28px)';
-      const a = k.animate([{ opacity: 0, transform: from }, { opacity: 1, transform: 'none' }], { duration: mode === 'line' ? 900 : 700, delay: base + i * 70, easing: EASE, fill: 'backwards' });
-      k.style.opacity = '';
-      a.onfinish = () => { k.style.transform = ''; };
-    });
-  }
-  componentDidUpdate() {
-    const ps = this.prevSnap || this.state;
-    this.prevSnap = this.state;
-    if (this.reduce || ps === this.state) return;
-    if (ps.screen !== this.state.screen && this.mainRef.current) this.mainRef.current.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: EASE });
-    if (ps.heroIdx !== this.state.heroIdx && this.heroCapRef.current) this.heroCapRef.current.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 500, easing: EASE });
-    if (!ps.toast && this.state.toast && this.toastRef.current) this.toastRef.current.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: EASE });
-    if (ps.cart !== this.state.cart && this.cartRef.current && this.state.cart.reduce((a, l) => a + l.qty, 0) > ps.cart.reduce((a, l) => a + l.qty, 0)) this.cartRef.current.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.22)' }, { transform: 'scale(1)' }], { duration: 420, easing: EASE });
-  }
-  componentWillUnmount() { clearTimeout(this.tt); clearInterval(this.heroTimer); window.removeEventListener('scroll', this.onScroll); if (this.check) { window.removeEventListener('scroll', this.check); window.removeEventListener('resize', this.check); } this.mo && this.mo.disconnect(); clearTimeout(this.raf); clearInterval(this.safety); }
-  go(screen, extra = {}) { this.setState({ screen, ...extra }); try { window.scrollTo(0, 0); } catch (e) {} }
-  showToast(message, action, onAction) {
-    clearTimeout(this.tt);
-    this.setState({ toast: { message, action, onAction } });
-    this.tt = setTimeout(() => this.setState({ toast: null }), 4500);
-  }
-  add(p, qty = 1) {
-    this.setState((s) => {
-      const has = s.cart.find((l) => l.id === p.id);
-      const cart = has ? s.cart.map((l) => l.id === p.id ? { ...l, qty: Math.min(10, l.qty + qty) } : l) : [...s.cart, { id: p.id, qty }];
-      return { cart };
-    });
-    this.showToast('Added to your cart.', 'View cart', () => { this.setState({ toast: null }); this.go('cart'); });
-  }
-  toggleWish(p) {
-    const on = !this.state.wish[p.id];
-    this.setState((s) => ({ wish: { ...s.wish, [p.id]: on } }));
-    this.showToast(on ? 'Saved to your wishlist.' : 'Removed from your wishlist.');
-  }
-  card(p) {
-    return {
-      ...p, category: (CATS.find((c) => c.id === p.cat) || {}).label + ' · ' + p.sub,
-      tag: p.was ? '−' + Math.round((1 - p.price / p.was) * 100) + '%' : undefined,
-      wished: !!this.state.wish[p.id],
-      noImg: !p.img,
-      saveLine: p.was ? 'You save ' + fmt(p.was - p.price) : '',
-      onWish: () => this.toggleWish(p),
-      onWishStop: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.toggleWish(p); },
-      onAdd: () => this.add(p),
-      onOpen: () => this.go('product', { pid: p.id, qty: 1, tab: 'details', thumb: 0 }),
-    };
-  }
-  renderVals() {
-    const s = this.state;
-    const threshold = this.props.freeDeliveryOver ?? 499;
-    const goCat = (id) => () => this.go('category', { cat: id, query: '' });
-    const q = s.query.trim().toLowerCase();
+/* ============================================================ */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const fmt = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const ic = (id, cls = 'i') => `<svg class="${cls}"><use href="#${id}"/></svg>`;
+const byId = (id) => P.find((p) => p.id === id);
+const catOf = (p) => CATS.find((c) => c.id === p.cat) || CATS[0];
+const off = (p) => (p.was ? Math.round((1 - p.price / p.was) * 100) : 0);
+const dateIn = (d) => { const t = new Date(); t.setDate(t.getDate() + d); return t.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' }); };
 
-    const navItems = [{ id: 'deals', label: "Today's deals" }, ...CATS].map((c) => {
-      const on = s.screen === 'category' && s.cat === c.id && !q;
-      return { label: c.label, go: goCat(c.id), weight: on || c.id === 'deals' ? 700 : 500, color: c.id === 'deals' ? 'var(--burgundy-500)' : on ? 'var(--black)' : 'var(--ink-2)', border: on ? 'var(--burgundy-500)' : 'transparent' };
-    });
+const store = (() => {
+  let s = { cart: [], wish: [], promo: false };
+  try { s = Object.assign(s, JSON.parse(localStorage.getItem('shopeiz') || '{}')); } catch (e) {}
+  s.cart = (s.cart || []).filter((l) => byId(l.id));
+  s.wish = (s.wish || []).filter((id) => byId(id));
+  return s;
+})();
+const save = () => { try { localStorage.setItem('shopeiz', JSON.stringify(store)); } catch (e) {} updateCounts(); };
 
-    // category / search
-    let list = q ? P.filter((p) => (p.title + ' ' + p.cat + ' ' + p.sub).toLowerCase().includes(q))
-      : s.cat === 'deals' ? P.filter((p) => p.was) : P.filter((p) => p.cat === s.cat);
-    if (s.fFast) list = list.filter((p) => /today|tomorrow/i.test(p.delivery));
-    if (s.fFree) list = list.filter((p) => /free delivery/i.test(p.delivery) || p.price >= threshold);
-    if (s.fDeal) list = list.filter((p) => p.was);
-    if (s.sort === 'low') list = [...list].sort((a, b) => a.price - b.price);
-    if (s.sort === 'high') list = [...list].sort((a, b) => b.price - a.price);
-    if (s.sort === 'rated') list = [...list].sort((a, b) => b.rating - a.rating);
-    const catObj = CATS.find((c) => c.id === s.cat);
-    const catTitle = q ? 'Results for “' + s.query.trim() + '”' : s.cat === 'deals' ? "Today's deals." : catObj.label + '.';
-
-    // product
-    const cp = findP(s.pid);
-    const cur = this.card(cp);
-    cur.tagLabel = cur.tag ? cur.tag + ' today' : '';
-    cur.hasRating = !!cp.rating;
-    cur.rating = cp.rating ? cp.rating + ' · ' + cp.reviews + ' reviews' : '';
-    cur.mrpLine = cp.was ? 'MRP ' + fmt(cp.was) + ' · You save ' + fmt(cp.was - cp.price) + ' (' + Math.round((1 - cp.price / cp.was) * 100) + '%)' : '';
-    cur.vatLine = 'Includes GST. Or 3 no-cost EMIs of ' + fmt(Math.ceil(cp.price / 3)) + '.';
-    cur.arrives = cp.delivery.split(' · ')[0];
-    const related = P.filter((p) => p.cat === cp.cat && p.id !== cp.id).concat(P.filter((p) => p.cat !== cp.cat)).slice(0, 4).map((p) => this.card(p));
-    const catLabel = (CATS.find((c) => c.id === cp.cat) || {}).label;
-
-    // cart
-    const lines = s.cart.map((l) => {
-      const p = findP(l.id);
-      return {
-        ...this.card(p), imgEl: imgEl(p.img, ''), qty: l.qty, total: p.price * l.qty, totalLabel: fmt(p.price * l.qty), summary: l.qty + ' × ' + p.title,
-        setQty: (v) => this.setState((st) => ({ cart: st.cart.map((x) => x.id === l.id ? { ...x, qty: v } : x) })),
-        open: () => this.go('product', { pid: p.id, qty: 1, tab: 'details', thumb: 0 }),
-        remove: () => {
-          const prev = this.state.cart;
-          this.setState((st) => ({ cart: st.cart.filter((x) => x.id !== l.id) }));
-          this.showToast('Removed from your cart.', 'Undo', () => this.setState({ cart: prev, toast: null }));
-        },
-        save: () => {
-          this.setState((st) => ({ cart: st.cart.filter((x) => x.id !== l.id), wish: { ...st.wish, [l.id]: true } }));
-          this.showToast('Moved to your wishlist.');
-        },
-      };
-    });
-    const count = s.cart.reduce((a, l) => a + l.qty, 0);
-    const sub = lines.reduce((a, l) => a + l.total, 0);
-    const express = s.ship === 'exp';
-    const deliv = (sub >= threshold ? 0 : 40) + (express ? 99 : 0);
-    const disc = s.promoOk ? Math.round(sub * 0.1) : 0;
-    const total = sub + deliv - disc;
-    const codFee = s.pay === 'cod';
-    const payTotal = total + (codFee ? 49 : 0);
-    const arrivesLine = express ? 'Arrives tomorrow' : 'Arrives Thursday';
-
-    const order = s.order;
-    const heroP = findP(HERO_IDS[s.heroIdx]);
-    const heroStack = React.createElement('div', { style: { position: 'absolute', inset: 0 } }, HERO_IDS.map((id, i) => {
-      const p = findP(id); const on = i === s.heroIdx;
-      return React.createElement('img', { key: id, src: p.img, alt: p.title, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', padding: '48px 32px 16px', boxSizing: 'border-box', opacity: on ? 1 : 0, transform: on ? 'scale(1)' : 'scale(1.06)', transition: 'opacity 900ms ' + EASE + ', transform 1400ms ' + EASE } });
-    }));
-    const heroDots = HERO_IDS.map((id, i) => ({
-      label: findP(id).title,
-      pick: () => this.setState({ heroIdx: i }),
-      bar: React.createElement('span', { style: { display: 'block', width: '100%', height: 2, background: 'var(--burgundy-200)', position: 'relative', overflow: 'hidden' } },
-        React.createElement('span', { key: i === s.heroIdx ? 'on' + s.heroIdx : 'off', style: { position: 'absolute', inset: 0, background: 'var(--burgundy-500)', transformOrigin: 'left', transform: i < s.heroIdx ? 'scaleX(1)' : 'scaleX(0)', animation: i === s.heroIdx && !this.reduce ? 'szProgress 5500ms linear forwards' : 'none' } })),
-    }));
-    return {
-      mainRef: this.mainRef, headerRef: this.headerRef, cartRef: this.cartRef, toastRef: this.toastRef, heroCapRef: this.heroCapRef,
-      heroStack, heroDots,
-      hero: { title: heroP.title, price: heroP.price, was: heroP.was, eyebrow: 'Drone shop', badge: heroP.was ? 'Save ' + fmt(heroP.was - heroP.price) : 'Top pick' },
-      heroOpen: () => this.go('product', { pid: heroP.id, qty: 1, tab: 'details', thumb: 0 }),
-      promiseLine: 'Free delivery over ' + fmt(threshold) + '. Free returns for 30 days.',
-      query: s.query,
-      onQuery: (e) => { const v = e.target.value; this.setState({ query: v, screen: v.trim() ? 'category' : s.screen === 'category' && s.cat ? 'category' : s.screen }); },
-      cartCount: count || undefined,
-      wishCount: Object.values(s.wish).filter(Boolean).length || undefined,
-      isCartArea: s.screen === 'cart' || s.screen === 'checkout',
-      goHome: () => this.go('home', { query: '' }),
-      goCart: () => this.go('cart'),
-      goDeals: goCat('deals'),
-      goDrones: goCat('drones'),
-      droneItems: P.filter((p) => p.cat === 'drones').map((p) => this.card(p)),
-      navItems,
-      footCats: CATS.map((c) => ({ label: c.label, go: goCat(c.id) })),
-
-      isHome: s.screen === 'home',
-      dealItems: P.filter((p) => p.was).slice(0, 4).map((p) => this.card(p)),
-      newItems: ['p11', 'p10', 'p13', 'p7'].map((id) => this.card(findP(id))),
-      catTiles: CATS.map((c) => ({ ...c, go: goCat(c.id), countLabel: (P.filter((p) => p.cat === c.id).length * 1250).toLocaleString('en-US') + ' items' })),
-
-      isCat: s.screen === 'category',
-      catCrumbs: ['Home', q ? 'Search' : s.cat === 'deals' ? "Today's deals" : catObj.label],
-      catTitle,
-      catCountLabel: list.length === 1 ? '1 product' : list.length + ' products',
-      catItems: list.map((p) => this.card(p)),
-      catEmpty: list.length === 0,
-      sideCats: [{ id: 'deals', label: "Today's deals" }, ...CATS].map((c) => {
-        const on = !q && s.cat === c.id;
-        return { label: c.label, go: goCat(c.id), weight: on ? 700 : 400, color: on ? 'var(--black)' : 'var(--ink-2)' };
-      }),
-      fFast: s.fFast, fFree: s.fFree, fDeal: s.fDeal,
-      toggleFast: (v) => this.setState({ fFast: typeof v === 'boolean' ? v : !s.fFast }),
-      toggleFree: (v) => this.setState({ fFree: typeof v === 'boolean' ? v : !s.fFree }),
-      toggleDeal: (v) => this.setState({ fDeal: typeof v === 'boolean' ? v : !s.fDeal }),
-      clearFilters: () => this.setState({ fFast: false, fFree: false, fDeal: false }),
-      sortItems: [{ value: 'popular', label: 'Most popular' }, { value: 'rated', label: 'Top rated' }, { value: 'low', label: 'Price, low to high' }, { value: 'high', label: 'Price, high to low' }],
-      sort: s.sort, onSort: (v) => this.setState({ sort: v }),
-
-      isProduct: s.screen === 'product',
-      cur,
-      curImgEl: imgEl(cp.img, cp.title),
-      pCrumbs: ['Home', catLabel, cp.sub, cp.title],
-      crumbNav: (i) => i === 0 ? this.go('home') : this.go('category', { cat: cp.cat, query: '' }),
-      thumbs: [0, 1, 2, 3].map((i) => ({ pick: () => this.setState({ thumb: i }), bg: i === s.thumb ? '#FBEEE4' : '#FBF5EF', outline: i === s.thumb ? '2px solid var(--black)' : 'none', color: i === s.thumb ? 'var(--black)' : 'var(--gray-400)', opacity: i === s.thumb ? 1 : 0.5, imgEl: imgEl(cp.img, '', i === s.thumb ? 1 : 0.5) })),
-      ship: s.ship, onShip: (v) => this.setState({ ship: v }),
-      shipOptions: [{ value: 'std', label: 'Standard', description: sub >= threshold ? 'Arrives Thursday · Free' : 'Arrives Thursday · Free over ' + fmt(threshold) }, { value: 'exp', label: 'Express', description: 'Arrives tomorrow · INR 99' }],
-      qty: s.qty, onQty: (v) => this.setState({ qty: v }),
-      addCur: () => this.add(cp, s.qty),
-      tabItems: [{ value: 'details', label: 'Details' }, { value: 'specs', label: 'Specs' }, { value: 'reviews', label: 'Reviews', count: cp.reviews || undefined }],
-      tab: s.tab, onTab: (v) => this.setState({ tab: v }),
-      tabText: s.tab === 'details' ? cp.desc : s.tab === 'specs' ? cp.specs : (cp.rating ? cp.rating + ' out of 5 from ' + cp.reviews + ' verified buyers.' : 'No reviews yet. Buy it and be the first to review.'),
-      related,
-
-      isCartEmpty: s.screen === 'cart' && !lines.length,
-      isCart: s.screen === 'cart' && lines.length > 0,
-      lines,
-      subLabel: count === 1 ? '1 item' : count + ' items',
-      subValue: fmt(sub),
-      delivValue: deliv ? fmt(deliv) : 'Free',
-      freeHint: sub >= threshold ? 'Your order qualifies for free delivery.' : 'Add ' + fmt(threshold - sub) + ' more for free delivery.',
-      promo: s.promo, promoErr: s.promoErr || undefined, promoApplied: s.promoOk, discValue: '−' + fmt(disc),
-      onPromo: (e) => this.setState({ promo: e.target.value, promoErr: '' }),
-      applyPromo: () => {
-        if (s.promo.trim().toUpperCase() === 'SZWELCOME') { this.setState({ promoOk: true, promoErr: '' }); this.showToast('Promo applied. 10% off your order.'); }
-        else this.setState({ promoOk: false, promoErr: "We don't recognise that code. Check the spelling?" });
-      },
-      total,
-      goCheckout: () => this.go('checkout'),
-
-      isCheckout: s.screen === 'checkout' && lines.length > 0,
-      pay: s.pay, onPay: (v) => this.setState({ pay: v, cvvErr: '' }),
-      payOptions: [{ value: 'upi', label: 'UPI', description: 'ananya@okhdfc' }, { value: 'card', label: 'Card', description: 'Visa ending 4242' }, { value: 'cod', label: 'Cash on delivery', description: 'INR 49 fee' }],
-      isCard: s.pay === 'card',
-      cvv: s.cvv, cvvErr: s.cvvErr || undefined,
-      onCvv: (e) => this.setState({ cvv: e.target.value.replace(/\D/g, '').slice(0, 3), cvvErr: '' }),
-      codFee, payTotal, arrivesLine,
-      payLabel: s.pay === 'cod' ? 'Place order' : 'Pay ' + fmt(payTotal),
-      placeOrder: () => {
-        if (s.pay === 'card' && s.cvv.length < 3) { this.setState({ cvvErr: 'Enter the 3 digits on the back of your card.' }); return; }
-        this.go('done', { order: { id: 'SZ-' + (40000 + Math.floor(Math.random() * 9999)), lines: lines.map((l) => ({ summary: l.summary, totalLabel: l.totalLabel })), total: payTotal, arrives: arrivesLine + '.' }, cart: [], cvv: '', promo: '', promoOk: false });
-      },
-
-      isDone: s.screen === 'done' || (s.screen === 'checkout' && !lines.length && !!order),
-      orderLabel: order ? 'Order ' + order.id : 'Order SZ-40218',
-      orderArrives: order ? order.arrives : 'Arrives Thursday.',
-      orderLines: order ? order.lines : [],
-      orderTotal: order ? fmt(order.total) : '',
-
-      toast: s.toast,
-      closeToast: () => this.setState({ toast: null }),
-    };
-  }
+function totals(opts = {}) {
+  const lines = store.cart.map((l) => ({ ...l, p: byId(l.id), total: byId(l.id).price * l.qty }));
+  const count = lines.reduce((a, l) => a + l.qty, 0);
+  const sub = lines.reduce((a, l) => a + l.total, 0);
+  const mrp = lines.reduce((a, l) => a + (l.p.was || l.p.price) * l.qty, 0);
+  const express = opts.ship === 'exp';
+  const ship = (sub >= FREE_OVER || !sub ? 0 : STD_FEE) + (express ? EXP_FEE : 0);
+  const disc = store.promo ? Math.round(sub * PROMO.pct / 100) : 0;
+  const cod = opts.pay === 'cod' ? COD_FEE : 0;
+  return { lines, count, sub, mrp, ship, disc, cod, total: sub + ship - disc + cod, saved: mrp - sub + disc };
 }
+
+/* ---------- Pieces ---------- */
+function media(p, cls = '') {
+  if (p.img) return `<img src="${p.img}" alt="${esc(p.title)}" loading="lazy" decoding="async">`;
+  const c = catOf(p);
+  return `<div class="ph ${cls}" style="background:${c.tone};color:${c.ink}">${ic(p.icon || c.icon)}<em>${esc(p.sub)}</em></div>`;
+}
+function stars(p) {
+  if (!p.rating) return '';
+  const full = Math.round(p.rating);
+  return `<div class="stars"><i>${Array.from({ length: 5 }, (_, k) => `<svg style="opacity:${k < full ? 1 : .25}"><use href="#i-star"/></svg>`).join('')}</i>${p.rating} (${p.reviews})</div>`;
+}
+function priceHtml(p) {
+  return `<div class="price"><b>${fmt(p.price)}</b>${p.was ? `<s>${fmt(p.was)}</s><span class="off">${off(p)}% off</span>` : ''}</div>`;
+}
+function card(p) {
+  const w = store.wish.includes(p.id);
+  const badge = p.was ? `<span class="badge">−${off(p)}%</span>` : p.tag ? `<span class="badge light">${esc(p.tag)}</span>` : '';
+  return `<article class="card reveal">
+    <div style="position:relative">
+      <a class="media" href="#/p/${p.id}" aria-label="${esc(p.title)}">${media(p)}${badge}</a>
+      <button class="wish ${w ? 'on' : ''}" data-act="wish" data-id="${p.id}" aria-label="${w ? 'Remove from' : 'Save to'} wishlist" aria-pressed="${w}">${ic('i-heart')}</button>
+      <button class="quick only-d" data-act="add" data-id="${p.id}">Add to bag</button>
+    </div>
+    <div class="card-body">
+      <p class="card-sub">${esc(p.sub)}</p>
+      <h3><a href="#/p/${p.id}">${esc(p.title)}</a></h3>
+      ${stars(p)}${priceHtml(p)}
+    </div>
+    <button class="quick only-m" data-act="add" data-id="${p.id}">Add to bag</button>
+  </article>`;
+}
+const gridOf = (list) => `<div class="grid">${list.map(card).join('')}</div>`;
+
+/* ---------- Views ---------- */
+function vHome() {
+  const best = ['p1', 'd3', 'p9', 'p12', 'p10', 'd1', 'p7', 'p6'].map(byId);
+  const t7 = byId('d4');
+  return `
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow">The Drone Edit · New season</span>
+      <h1>Everything worth having, <em>beautifully</em> delivered.</h1>
+      <p class="lead">Camera drones, everyday tech and home essentials — chosen with care, priced fairly and at your door in days.</p>
+      <div class="ctas">
+        <a class="btn btn-dark" href="#/c/drones">Shop the Drone Edit ${ic('i-arrow')}</a>
+        <a class="btn btn-line" href="#/c/all">Explore all</a>
+      </div>
+      <div class="hero-perks">
+        <span>${ic('i-truck')} Free delivery over ${fmt(FREE_OVER)}</span>
+        <span>${ic('i-return')} 30-day free returns</span>
+        <span>${ic('i-cash')} Cash on delivery</span>
+      </div>
+    </div>
+    <div class="hero-visual" id="heroVis">
+      ${HERO.map((id, k) => `<div class="slide ${k ? '' : 'on'}" data-slide="${k}"><img src="${byId(id).img}" alt="${esc(byId(id).title)}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}></div>`).join('')}
+      <a class="hero-tag" id="heroTag" href="#/p/${HERO[0]}"></a>
+      <div class="dots">${HERO.map((_, k) => `<button class="${k ? '' : 'on'}" data-act="slide" data-k="${k}" aria-label="Show slide ${k + 1}"></button>`).join('')}</div>
+    </div>
+  </section>
+
+  <div class="trust">
+    <div>${ic('i-truck')}<p style="margin:0"><b>Free delivery</b><span>On orders over ${fmt(FREE_OVER)}</span></p></div>
+    <div>${ic('i-return')}<p style="margin:0"><b>30-day returns</b><span>Free and easy, no questions</span></p></div>
+    <div>${ic('i-shield')}<p style="margin:0"><b>Secure checkout</b><span>UPI, cards and net banking</span></p></div>
+    <div>${ic('i-cash')}<p style="margin:0"><b>Cash on delivery</b><span>Pay when it arrives</span></p></div>
+  </div>
+
+  <section class="block"><div class="wrap">
+    <div class="sec-head reveal"><div><span class="eyebrow">Shop by category</span><h2>Find your next favourite</h2></div><a class="link" href="#/c/all">View everything ${ic('i-arrow')}</a></div>
+    <div class="cat-grid">${CATS.map((c) => `<a class="cat-tile reveal" href="#/c/${c.id}" style="color:${c.ink}">
+      <div class="bg" style="background:${c.tone}">${c.img ? `<img src="${c.img}" alt="" loading="lazy">` : ic(c.icon)}</div>
+      <h3>${c.label}</h3><span>${P.filter((p) => p.cat === c.id).length} pieces ${ic('i-arrow')}</span></a>`).join('')}</div>
+  </div></section>
+
+  <section class="feature">
+    <div class="pic reveal"><img src="${t7.img}" alt="${esc(t7.title)} in its box" loading="lazy"></div>
+    <div class="copy">
+      <span class="eyebrow">Flagship · ${esc(t7.sub)}</span>
+      <h2>The T7 Pro. <em>See it all</em> from above.</h2>
+      <p>${esc(t7.desc)} Foldable, beginner-friendly and ready to fly the day it arrives.</p>
+      <ul>
+        <li>${ic('i-check')} Remote with a built-in screen — no phone needed</li>
+        <li>${ic('i-check')} Choose orange or black</li>
+        <li>${ic('i-check')} Delivered by ${dateIn(t7.days)} · free returns</li>
+      </ul>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-light" data-act="add" data-id="${t7.id}">Add to bag · ${fmt(t7.price)}</button>
+        <a class="link" style="color:var(--ivory)" href="#/p/${t7.id}">Details ${ic('i-arrow')}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block"><div class="wrap">
+    <div class="sec-head reveal"><div><span class="eyebrow">Most loved</span><h2>Bestsellers</h2></div><a class="link" href="#/c/deals">Shop all offers ${ic('i-arrow')}</a></div>
+    ${gridOf(best)}
+  </div></section>
+
+  <section class="offer reveal">
+    <span class="eyebrow">Welcome offer</span>
+    <h2>Take ${PROMO.pct}% off your first order.</h2>
+    <p>Use the code at checkout. Applies to everything in your bag — drones included.</p>
+    <div class="code"><b>${PROMO.code}</b><button class="btn btn-dark" style="height:44px" data-act="copy">Copy code</button></div>
+  </section>
+
+  <section class="block"><div class="wrap">
+    <div class="sec-head reveal"><div><span class="eyebrow">The Shopeiz promise</span><h2>Shopping, done properly</h2></div></div>
+    <div class="promise">
+      <div class="reveal"><span class="n">i.</span><h3>Chosen, not churned</h3><p>A small, considered range. Every product is picked for how well it works and how long it lasts.</p></div>
+      <div class="reveal"><span class="n">ii.</span><h3>Honest prices</h3><p>MRP shown on every item, GST included and no surprise fees at checkout.</p></div>
+      <div class="reveal"><span class="n">iii.</span><h3>Easy to change your mind</h3><p>Return anything within 30 days for free. Pay by UPI, card or cash on delivery.</p></div>
+    </div>
+  </div></section>
+
+  <section class="news"><div class="wrap">
+    <div><span class="eyebrow" style="color:var(--gold-2)">The list</span><h2>New arrivals and private offers, first.</h2></div>
+    <div><form data-form="news"><label class="sr" for="em">Email address</label><input id="em" type="email" required placeholder="Your email address"><button>Join</button></form><small>One thoughtful email a fortnight. Unsubscribe anytime.</small></div>
+  </div></section>`;
+}
+
+const listState = { sub: 'all', sort: 'pop' };
+function vList(cat, q) {
+  let list, title, blurb, crumbs;
+  if (q !== undefined) {
+    const t = q.trim().toLowerCase();
+    list = P.filter((p) => (p.title + ' ' + p.sub + ' ' + catOf(p).label).toLowerCase().includes(t));
+    title = `“${esc(q)}”`; blurb = `${list.length} result${list.length === 1 ? '' : 's'}`; crumbs = 'Search';
+  } else if (cat === 'deals') {
+    list = P.filter((p) => p.was); title = 'Offers'; blurb = 'The best prices in the store, on things worth owning.'; crumbs = 'Offers';
+  } else if (cat === 'all' || !CATS.find((c) => c.id === cat)) {
+    list = P.slice(); title = 'Shop all'; blurb = 'Every piece in the Shopeiz collection.'; crumbs = 'Shop all';
+  } else {
+    const c = CATS.find((x) => x.id === cat); list = P.filter((p) => p.cat === cat); title = c.label; blurb = c.blurb; crumbs = c.label;
+  }
+  const subs = [...new Set(list.map((p) => p.sub))];
+  if (listState.sub !== 'all' && !subs.includes(listState.sub)) listState.sub = 'all';
+  let shown = listState.sub === 'all' ? list : list.filter((p) => p.sub === listState.sub);
+  const s = listState.sort;
+  shown = shown.slice().sort((a, b) => s === 'lo' ? a.price - b.price : s === 'hi' ? b.price - a.price : s === 'off' ? off(b) - off(a) : 0);
+  return `<div class="wrap">
+    <div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><span>${crumbs}</span></div><h1>${title}</h1><p>${blurb}</p></div>
+    <div class="toolbar">
+      <div class="chips">${subs.length > 1 ? ['all', ...subs].map((x) => `<button class="chip ${listState.sub === x ? 'on' : ''}" data-act="sub" data-v="${esc(x)}">${x === 'all' ? 'All' : esc(x)}</button>`).join('') : ''}</div>
+      <label class="sort">Sort by <select data-act="sort">
+        ${[['pop', 'Featured'], ['lo', 'Price: low to high'], ['hi', 'Price: high to low'], ['off', 'Biggest saving']].map(([v, l]) => `<option value="${v}" ${s === v ? 'selected' : ''}>${l}</option>`).join('')}
+      </select></label>
+    </div>
+    ${shown.length ? gridOf(shown) : `<div class="empty"><h2>Nothing here yet</h2><p>Try another search, or <a class="link" href="#/c/all">browse everything</a></p></div>`}
+    <div style="height:110px"></div>
+  </div>`;
+}
+
+let pdpQty = 1;
+function vProduct(id) {
+  const p = byId(id);
+  if (!p) return vList('all');
+  const c = catOf(p);
+  const w = store.wish.includes(p.id);
+  const specs = p.specs.includes(':') ? `<dl class="specs">${p.specs.split('·').map((x) => { const [k, ...v] = x.split(':'); return `<div><dt>${esc(k.trim())}</dt><dd>${esc(v.join(':').trim())}</dd></div>`; }).join('')}</dl>` : `<p style="margin:0">${esc(p.specs)}</p>`;
+  const related = P.filter((x) => x.cat === p.cat && x.id !== p.id).concat(P.filter((x) => x.cat !== p.cat && x.was)).slice(0, 4);
+  return `<div class="wrap">
+    <div class="crumbs" style="padding-top:28px"><a href="#/">Home</a><span>/</span><a href="#/c/${c.id}">${c.label}</a><span>/</span><span>${esc(p.title)}</span></div>
+    <div class="pdp">
+      <div class="gallery"><div class="media">${media(p)}${p.was ? `<span class="badge">Save ${fmt(p.was - p.price)}</span>` : p.tag ? `<span class="badge light">${esc(p.tag)}</span>` : ''}</div></div>
+      <div>
+        <span class="eyebrow">${c.label} · ${esc(p.sub)}</span>
+        <h1>${esc(p.title)}</h1>
+        ${stars(p)}
+        ${priceHtml(p)}
+        <p class="tax">Inclusive of all taxes${p.price >= 3000 ? ` · or 3 no-cost EMIs of ${fmt(Math.ceil(p.price / 3))}` : ''}</p>
+        <p class="desc">${esc(p.desc)}</p>
+        <div class="buy">
+          <div class="qty"><button data-act="pq" data-d="-1" aria-label="Decrease quantity">${ic('i-minus')}</button><span id="pq">${pdpQty}</span><button data-act="pq" data-d="1" aria-label="Increase quantity">${ic('i-plus')}</button></div>
+          <button class="btn btn-dark" id="pdpAdd" data-act="add" data-id="${p.id}" data-qty="1">Add to bag — ${fmt(p.price)}</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:12px">
+          <button class="btn btn-wine" data-act="buynow" data-id="${p.id}">Buy it now</button>
+          <button class="btn btn-line wish-big ${w ? 'on' : ''}" data-act="wish" data-id="${p.id}" aria-label="Save to wishlist" style="padding:0 18px">${ic('i-heart')}</button>
+        </div>
+        <div class="perks">
+          <div>${ic('i-truck')}<p style="margin:0"><b>Get it by ${dateIn(p.days)}</b><span>${p.price >= FREE_OVER ? 'Free standard delivery' : `Free delivery on orders over ${fmt(FREE_OVER)}`} · Express available</span></p></div>
+          <div>${ic('i-return')}<p style="margin:0"><b>30-day free returns</b><span>Changed your mind? Send it back, on us.</span></p></div>
+          <div>${ic('i-cash')}<p style="margin:0"><b>Cash on delivery available</b><span>Or pay securely by UPI, card or net banking.</span></p></div>
+        </div>
+        <details class="acc" open><summary>Details ${ic('i-down')}</summary><div class="in">${esc(p.desc)}</div></details>
+        <details class="acc"><summary>Specifications ${ic('i-down')}</summary><div class="in">${specs}</div></details>
+        <details class="acc"><summary>Delivery &amp; returns ${ic('i-down')}</summary><div class="in">Standard delivery is free on orders over ${fmt(FREE_OVER)} (otherwise ${fmt(STD_FEE)}). Express delivery is ${fmt(EXP_FEE)}. Returns are free within 30 days of delivery.</div></details>
+      </div>
+    </div>
+  </div>
+  <section class="block" style="padding-top:0"><div class="wrap">
+    <div class="sec-head"><div><span class="eyebrow">You may also like</span><h2>Pairs well with</h2></div></div>
+    ${gridOf(related)}
+  </div></section>`;
+}
+
+function lineHtml(l, compact) {
+  return `<div class="line">
+    <a class="media" href="#/p/${l.p.id}">${media(l.p)}</a>
+    <div><h4><a href="#/p/${l.p.id}">${esc(l.p.title)}</a></h4><div class="meta">${esc(l.p.sub)} · ${fmt(l.p.price)}</div>
+      <div class="qty sm"><button data-act="q" data-id="${l.id}" data-d="-1" aria-label="Decrease">${ic('i-minus')}</button><span>${l.qty}</span><button data-act="q" data-id="${l.id}" data-d="1" aria-label="Increase">${ic('i-plus')}</button></div></div>
+    <div class="right"><b>${fmt(l.total)}</b><div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">${compact ? '' : `<button class="rm" data-act="save" data-id="${l.id}">Save for later</button>`}<button class="rm" data-act="rm" data-id="${l.id}">Remove</button></div></div>
+  </div>`;
+}
+function shipBar(sub) {
+  const left = FREE_OVER - sub;
+  return `<div class="ship-bar">${left > 0 ? `You're <b>${fmt(left)}</b> away from free delivery` : `${ic('i-check')} <b>You've unlocked free delivery</b>`}<div class="track"><i style="width:${Math.min(100, sub / FREE_OVER * 100)}%"></i></div></div>`;
+}
+function promoHtml() {
+  return store.promo
+    ? `<p class="msg ok" style="margin:16px 0 4px">${ic('i-check')} ${PROMO.code} applied — ${PROMO.pct}% off. <button class="rm" data-act="unpromo">Remove</button></p>`
+    : `<div class="promo"><label class="sr" for="pc">Promo code</label><input id="pc" placeholder="Promo code" autocomplete="off" data-promo><button type="button" data-act="promo">Apply</button></div><p class="msg err" id="promoMsg"></p>`;
+}
+function summaryRows(t) {
+  return `<div class="sum-row"><span>Subtotal (${t.count} item${t.count === 1 ? '' : 's'})</span><span>${fmt(t.sub)}</span></div>
+    ${t.disc ? `<div class="sum-row"><span>Promo ${PROMO.code}</span><span class="ok">−${fmt(t.disc)}</span></div>` : ''}
+    <div class="sum-row"><span>Delivery</span><span>${t.ship ? fmt(t.ship) : '<span class="ok">Free</span>'}</span></div>
+    ${t.cod ? `<div class="sum-row"><span>Cash on delivery fee</span><span>${fmt(t.cod)}</span></div>` : ''}
+    <div class="sum-row total"><span>Total <small style="font-weight:400;color:var(--muted)">incl. GST</small></span><span>${fmt(t.total)}</span></div>
+    ${t.saved > 0 ? `<p class="msg ok" style="margin:-8px 0 16px">You're saving ${fmt(t.saved)} on this order</p>` : ''}`;
+}
+
+function vCart() {
+  const t = totals();
+  if (!t.count) return `<div class="wrap"><div class="empty" style="padding:120px 0"><h2>Your bag is empty</h2><p style="margin-bottom:28px">Let's find something you'll love.</p><a class="btn btn-dark" href="#/c/all">Start shopping</a></div></div>`;
+  return `<div class="wrap">
+    <div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><span>Bag</span></div><h1>Your bag</h1></div>
+    <div class="two">
+      <div>${shipBar(t.sub)}${t.lines.map((l) => lineHtml(l)).join('')}</div>
+      <div class="panel sticky"><h3>Order summary</h3>${promoHtml()}<div style="height:12px"></div>${summaryRows(t)}
+        <a class="btn btn-dark btn-block" href="#/checkout">Checkout securely ${ic('i-lock')}</a>
+        <p class="note">${ic('i-return')} Free 30-day returns · Cash on delivery available</p></div>
+    </div>
+  </div>`;
+}
+
+const co = { ship: 'std', pay: 'upi', f: {} };
+function vCheckout() {
+  const t = totals(co);
+  if (!t.count) return vCart();
+  const field = (id, label, type = 'text', full = false, extra = '') => `<div class="field ${full ? 'full' : ''}"><label for="f-${id}">${label}</label><input id="f-${id}" name="${id}" type="${type}" value="${esc(co.f[id] || '')}" ${extra}><p class="msg err">Please fill this in.</p></div>`;
+  const opt = (grp, v, title, sub, amt) => `<label class="opt ${co[grp] === v ? 'on' : ''}"><input type="radio" name="${grp}" value="${v}" ${co[grp] === v ? 'checked' : ''} data-act="opt"><span class="grow"><b>${title}</b><span>${sub}</span></span><span class="amt">${amt}</span></label>`;
+  return `<div class="wrap">
+    <div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><a href="#/cart">Bag</a><span>/</span><span>Checkout</span></div><h1>Checkout</h1>
+      <div class="steps"><b>Details</b><span>—</span><b>Delivery</b><span>—</span><b>Payment</b></div></div>
+    <form class="two" data-form="checkout" novalidate>
+      <div>
+        <fieldset><legend><span>01</span>Contact</legend><div class="fields">
+          ${field('name', 'Full name', 'text', false, 'autocomplete="name" required')}
+          ${field('phone', 'Mobile number', 'tel', false, 'autocomplete="tel" inputmode="numeric" required pattern="[0-9 +]{10,14}"')}
+          ${field('email', 'Email (for your receipt)', 'email', true, 'autocomplete="email"')}
+        </div></fieldset>
+        <fieldset><legend><span>02</span>Delivery address</legend><div class="fields">
+          ${field('addr', 'Flat, house no., street', 'text', true, 'autocomplete="street-address" required')}
+          ${field('city', 'City', 'text', false, 'autocomplete="address-level2" required')}
+          ${field('pin', 'PIN code', 'text', false, 'autocomplete="postal-code" inputmode="numeric" required pattern="[0-9]{6}"')}
+        </div></fieldset>
+        <fieldset><legend><span>03</span>Delivery speed</legend><div class="opts">
+          ${opt('ship', 'std', 'Standard', `Arrives by ${dateIn(3)}`, t.sub >= FREE_OVER ? 'Free' : fmt(STD_FEE))}
+          ${opt('ship', 'exp', 'Express', `Arrives by ${dateIn(1)}`, '+' + fmt(EXP_FEE))}
+        </div></fieldset>
+        <fieldset><legend><span>04</span>Payment</legend><div class="opts">
+          ${opt('pay', 'upi', 'UPI', 'GPay, PhonePe, Paytm or any UPI app', '')}
+          ${opt('pay', 'card', 'Credit or debit card', 'Visa, Mastercard, RuPay', '')}
+          ${opt('pay', 'cod', 'Cash on delivery', 'Pay in cash or UPI when it arrives', '+' + fmt(COD_FEE))}
+        </div></fieldset>
+      </div>
+      <div class="panel sticky"><h3>Your order</h3>
+        ${t.lines.map((l) => `<div class="mini"><div class="media">${media(l.p)}<span class="q">${l.qty}</span></div><div><h4>${esc(l.p.title)}</h4><small>${esc(l.p.sub)}</small></div><b style="font-size:14px">${fmt(l.total)}</b></div>`).join('')}
+        ${promoHtml()}<div style="height:12px"></div>${summaryRows(t)}
+        <button class="btn btn-wine btn-block" type="submit">${co.pay === 'cod' ? 'Place order' : 'Pay ' + fmt(t.total)} ${ic('i-lock')}</button>
+        <p class="note">${ic('i-shield')} Your details are encrypted and kept private</p>
+      </div>
+    </form>
+  </div>`;
+}
+
+let lastOrder = null;
+function vDone() {
+  const o = lastOrder;
+  if (!o) return vHome();
+  return `<div class="wrap"><div class="done">
+    <div class="tick">${ic('i-check')}</div>
+    <span class="eyebrow">Order ${o.id}</span>
+    <h1>Thank you, ${esc(o.name.split(' ')[0])}.</h1>
+    <p style="color:var(--ink-2);font-size:16px">Your order is confirmed and will arrive by <b>${o.arrives}</b>. We'll send updates to ${esc(o.phone)}.</p>
+    <div class="panel" style="text-align:left;margin:36px 0">${o.lines.map((l) => `<div class="sum-row"><span>${esc(l.t)} × ${l.q}</span><span>${fmt(l.v)}</span></div>`).join('')}<div class="sum-row total" style="margin-bottom:0"><span>${o.cod ? 'To pay on delivery' : 'Paid'}</span><span>${fmt(o.total)}</span></div></div>
+    <a class="btn btn-dark" href="#/">Continue shopping</a>
+  </div></div>`;
+}
+
+function vWish() {
+  const list = store.wish.map(byId);
+  return `<div class="wrap"><div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><span>Wishlist</span></div><h1>Wishlist</h1><p>${list.length ? 'Saved for later. Prices update automatically.' : ''}</p></div>
+    <div style="padding:36px 0 110px">${list.length ? gridOf(list) : `<div class="empty"><h2>Nothing saved yet</h2><p style="margin-bottom:26px">Tap the heart on anything you like to keep it here.</p><a class="btn btn-dark" href="#/c/all">Browse the collection</a></div>`}</div></div>`;
+}
+
+const HELP = {
+  delivery: ['Delivery', `Standard delivery takes 1–5 working days depending on the product and is free on orders over ${fmt(FREE_OVER)}; below that it costs ${fmt(STD_FEE)}. Express delivery (next day in most cities) is ${fmt(EXP_FEE)}. You'll see the expected date on every product page and at checkout.`],
+  returns: ['Returns & refunds', 'Return anything within 30 days of delivery for free. Items should be unused and in their original packaging. Refunds go back to your original payment method; cash-on-delivery orders are refunded by UPI or bank transfer.'],
+  payment: ['Payment options', `Pay by UPI, credit or debit card (Visa, Mastercard, RuPay) or cash on delivery (${fmt(COD_FEE)} fee). All prices include GST.`],
+  about: ['About Shopeiz', 'Shopeiz is a small, carefully chosen store for drones, tech, fashion, home and beauty. We would rather sell fewer, better things — at honest prices, delivered quickly across India.'],
+  contact: ['Contact', 'Questions about an order or a product? Reach us via the contact details on your order confirmation and we will get back to you within one working day.'],
+};
+function vHelp(k) {
+  const h = HELP[k] || HELP.about;
+  return `<div class="wrap"><div class="page-head"><div class="crumbs"><a href="#/">Home</a><span>/</span><span>${h[0]}</span></div><h1>${h[0]}</h1></div><p style="max-width:680px;font-size:17px;color:var(--ink-2);padding:36px 0 120px;margin:0">${h[1]}</p></div>`;
+}
+
+/* ---------- Chrome ---------- */
+function renderNav(route) {
+  const items = [['all', 'Shop all'], ...CATS.map((c) => [c.id, c.label]), ['deals', 'Offers']];
+  $('#nav').innerHTML = items.map(([id, l]) => `<a href="#/c/${id}" class="${route.cat === id ? 'on' : ''} ${id === 'deals' ? 'sale' : ''}">${l}</a>`).join('');
+  $('#fcats').innerHTML = CATS.map((c) => `<li><a href="#/c/${c.id}">${c.label}</a></li>`).join('');
+}
+function updateCounts() {
+  const t = totals();
+  $$('[data-count="bag"]').forEach((e) => (e.textContent = t.count || ''));
+  $$('[data-count="wish"]').forEach((e) => (e.textContent = store.wish.length || ''));
+}
+function renderBag() {
+  const t = totals();
+  $('#bag').innerHTML = `<div class="dhead"><h3>Your bag ${t.count ? `<small style="font-family:var(--sans);font-size:13px;color:var(--muted)">(${t.count})</small>` : ''}</h3><button class="icon-btn" data-act="close" aria-label="Close">${ic('i-x')}</button></div>
+    ${t.count ? shipBar(t.sub) : ''}
+    <div class="dbody">${t.count ? t.lines.map((l) => lineHtml(l, true)).join('') : `<div class="empty" style="padding:70px 0"><h2 style="font-size:30px">Your bag is empty</h2><p style="margin-bottom:24px">Your next favourite thing is waiting.</p><a class="btn btn-dark" href="#/c/all" data-act="close">Start shopping</a></div>`}</div>
+    ${t.count ? `<div class="dfoot"><div class="sum-row" style="font-size:16px;font-weight:600;margin:0 0 4px"><span>Subtotal</span><span>${fmt(t.sub)}</span></div><p style="font-size:12px;color:var(--muted);margin:0 0 16px">GST included. Delivery and promo codes applied at checkout.</p>
+      <a class="btn btn-dark btn-block" href="#/checkout" data-act="close">Checkout ${ic('i-lock')}</a>
+      <a class="btn btn-block" href="#/cart" data-act="close" style="height:44px;margin-top:6px">View bag</a></div>` : ''}`;
+}
+function renderMenu() {
+  $('#menu').innerHTML = `<div class="dhead"><span class="logo" style="font-size:22px">Shopeiz</span><button class="icon-btn" data-act="close" aria-label="Close">${ic('i-x')}</button></div>
+    <div class="dbody mnav">
+      <form class="search" data-form="search" role="search">${ic('i-search')}<input name="q" placeholder="Search the store" autocomplete="off" aria-label="Search"></form>
+      <a href="#/c/all" data-act="close">Shop all ${ic('i-arrow')}</a>
+      ${CATS.map((c) => `<a href="#/c/${c.id}" data-act="close">${c.label} ${ic('i-arrow')}</a>`).join('')}
+      <a href="#/c/deals" data-act="close" style="color:var(--wine)">Offers ${ic('i-arrow')}</a>
+      <a href="#/wishlist" data-act="close">Wishlist <span style="font-family:var(--sans);font-size:14px;color:var(--muted)">${store.wish.length || ''}</span></a>
+    </div>`;
+}
+function openDrawer(id) {
+  if (id === 'bag') renderBag(); else renderMenu();
+  $('#' + id).classList.add('on'); $('#' + id).setAttribute('aria-hidden', 'false');
+  $('#scrim').classList.add('on'); document.body.style.overflow = 'hidden';
+  if (id === 'menu') setTimeout(() => $('#menu input')?.focus(), 350);
+}
+function closeDrawers() {
+  $$('.drawer').forEach((d) => { d.classList.remove('on'); d.setAttribute('aria-hidden', 'true'); });
+  $('#scrim').classList.remove('on'); document.body.style.overflow = '';
+}
+let toastT;
+function toast(msg, action) {
+  const el = $('#toast');
+  el.innerHTML = `<span>${msg}</span>${action || ''}`;
+  el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 3200);
+}
+
+/* ---------- Actions ---------- */
+function addToCart(id, qty = 1, open = true) {
+  const l = store.cart.find((x) => x.id === id);
+  if (l) l.qty = Math.min(10, l.qty + qty); else store.cart.push({ id, qty });
+  save();
+  if (open) openDrawer('bag');
+}
+function refreshView() { const y = window.scrollY; render(false); window.scrollTo(0, y); }
+
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-act]');
+  if (!el) return;
+  const a = el.dataset.act, id = el.dataset.id;
+  if (a === 'opt' || a === 'sort') return;
+  if (a === 'close') { closeDrawers(); return; }
+  if (a === 'menu') { e.preventDefault(); openDrawer('menu'); return; }
+  if (a === 'bag') { openDrawer('bag'); return; }
+  if (a === 'add') { e.preventDefault(); addToCart(id, Number(el.dataset.qty ? pdpQty : 1)); return; }
+  if (a === 'buynow') { addToCart(id, pdpQty, false); location.hash = '#/checkout'; return; }
+  if (a === 'pq') { pdpQty = Math.max(1, Math.min(10, pdpQty + Number(el.dataset.d))); $('#pq').textContent = pdpQty; const p = byId(route().id); $('#pdpAdd').textContent = `Add to bag — ${fmt(p.price * pdpQty)}`; return; }
+  if (a === 'wish') {
+    const i = store.wish.indexOf(id);
+    if (i > -1) { store.wish.splice(i, 1); toast('Removed from your wishlist'); }
+    else { store.wish.push(id); toast('Saved to your wishlist', '<a href="#/wishlist">View</a>'); }
+    save(); $$(`[data-act="wish"][data-id="${id}"]`).forEach((b) => { b.classList.toggle('on', i === -1); b.setAttribute('aria-pressed', i === -1); });
+    if (route().v === 'wish') refreshView();
+    return;
+  }
+  if (a === 'q' || a === 'rm' || a === 'save') {
+    const l = store.cart.find((x) => x.id === id);
+    if (a === 'q' && l) { l.qty += Number(el.dataset.d); if (l.qty < 1) store.cart = store.cart.filter((x) => x !== l); if (l.qty > 10) l.qty = 10; }
+    if (a === 'rm') store.cart = store.cart.filter((x) => x.id !== id);
+    if (a === 'save') { store.cart = store.cart.filter((x) => x.id !== id); if (!store.wish.includes(id)) store.wish.push(id); toast('Moved to your wishlist'); }
+    save();
+    if ($('#bag').classList.contains('on')) renderBag();
+    if (['cart', 'checkout'].includes(route().v)) refreshView();
+    return;
+  }
+  if (a === 'promo') { applyPromo(); return; }
+  if (a === 'unpromo') { store.promo = false; save(); refreshView(); return; }
+  if (a === 'sub') { listState.sub = el.dataset.v; refreshView(); return; }
+  if (a === 'slide') { heroGo(Number(el.dataset.k)); return; }
+  if (a === 'copy') { try { navigator.clipboard.writeText(PROMO.code); } catch (err) {} toast(`Code ${PROMO.code} copied`); return; }
+});
+document.addEventListener('change', (e) => {
+  const el = e.target;
+  if (el.dataset.act === 'sort') { listState.sort = el.value; refreshView(); }
+  if (el.dataset.act === 'opt') { saveFields(); co[el.name] = el.value; refreshView(); }
+});
+function saveFields() { $$('[data-form="checkout"] input:not([type="radio"])').forEach((i) => { if (i.id.startsWith('f-')) co.f[i.name] = i.value; }); }
+document.addEventListener('input', (e) => { if (e.target.closest('[data-form="checkout"]') && e.target.type !== 'radio') { co.f[e.target.name] = e.target.value; e.target.closest('.field')?.classList.remove('bad'); } });
+document.addEventListener('submit', (e) => {
+  const f = e.target, kind = f.dataset.form;
+  if (!kind) return;
+  e.preventDefault();
+  if (kind === 'search') { const q = f.q.value.trim(); if (q) { closeDrawers(); location.hash = '#/search/' + encodeURIComponent(q); f.q.blur(); } return; }
+  if (kind === 'news') { f.innerHTML = `<p style="margin:0;padding:16px 0;color:var(--gold-2)">${ic('i-check')} Thank you — you're on the list.</p>`; return; }
+  if (kind === 'checkout') {
+    saveFields();
+    let first = null;
+    $$('input[required]', f).forEach((i) => { const bad = !i.checkValidity() || !i.value.trim(); i.closest('.field').classList.toggle('bad', bad); if (bad && !first) first = i; });
+    if (first) { first.focus(); first.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+    const t = totals(co);
+    lastOrder = { id: 'SZ-' + (40000 + Math.floor(Math.random() * 9999)), name: co.f.name, phone: co.f.phone, total: t.total, cod: co.pay === 'cod', arrives: dateIn(co.ship === 'exp' ? 1 : 3), lines: t.lines.map((l) => ({ t: l.p.title, q: l.qty, v: l.total })) };
+    store.cart = []; store.promo = false; save();
+    location.hash = '#/done';
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeDrawers();
+  if (e.key === 'Enter' && e.target.matches('[data-promo]')) { e.preventDefault(); applyPromo(); }
+});
+function applyPromo() {
+  if (($('#pc')?.value || '').trim().toUpperCase() === PROMO.code) { saveFields(); store.promo = true; save(); toast(`Promo applied — ${PROMO.pct}% off`); refreshView(); }
+  else $('#promoMsg').textContent = "We don't recognise that code. Check the spelling?";
+}
+
+/* ---------- Hero slider ---------- */
+let heroK = 0, heroTimer;
+function heroGo(k) {
+  heroK = k;
+  $$('.slide').forEach((s, i) => s.classList.toggle('on', i === k));
+  $$('.dots button').forEach((s, i) => s.classList.toggle('on', i === k));
+  const p = byId(HERO[k]), tag = $('#heroTag');
+  if (tag) { tag.href = '#/p/' + p.id; tag.innerHTML = `<div><div class="t">${esc(p.title)}</div><div class="p">${fmt(p.price)}${p.was ? `<s>${fmt(p.was)}</s>` : ''}</div></div><span class="go">${ic('i-arrow')}</span>`; }
+}
+function heroStart() { clearInterval(heroTimer); if (!$('#heroVis')) return; heroGo(0); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) heroTimer = setInterval(() => heroGo((heroK + 1) % HERO.length), 5500); }
+
+/* ---------- Router ---------- */
+function route() {
+  const h = decodeURIComponent(location.hash.replace(/^#\/?/, '')).split('/');
+  if (h[0] === 'c') return { v: 'list', cat: h[1] || 'all' };
+  if (h[0] === 'search') return { v: 'search', q: h.slice(1).join('/') };
+  if (h[0] === 'p') return { v: 'product', id: h[1] };
+  if (h[0] === 'cart') return { v: 'cart' };
+  if (h[0] === 'checkout') return { v: 'checkout' };
+  if (h[0] === 'done') return { v: 'done' };
+  if (h[0] === 'wishlist') return { v: 'wish' };
+  if (h[0] === 'help') return { v: 'help', k: h[1] };
+  return { v: 'home' };
+}
+let lastKey = '';
+function render(top = true) {
+  const r = route();
+  const key = r.v + (r.cat || '') + (r.id || '') + (r.q || '');
+  if (key !== lastKey && r.v === 'list') listState.sub = 'all';
+  if (key !== lastKey && r.v === 'product') pdpQty = 1;
+  lastKey = key;
+  const app = $('#app');
+  app.innerHTML = r.v === 'list' ? vList(r.cat) : r.v === 'search' ? vList(null, r.q) : r.v === 'product' ? vProduct(r.id) : r.v === 'cart' ? vCart() : r.v === 'checkout' ? vCheckout() : r.v === 'done' ? vDone() : r.v === 'wish' ? vWish() : r.v === 'help' ? vHelp(r.k) : vHome();
+  renderNav(r);
+  updateCounts();
+  const sb = $('#stickyBuy');
+  if (r.v === 'product' && byId(r.id)) { const p = byId(r.id); sb.innerHTML = `<div class="p">${esc(p.title)}<b>${fmt(p.price)}</b></div><button class="btn btn-dark" data-act="add" data-id="${p.id}" data-qty="1">Add to bag</button>`; } else { sb.innerHTML = ''; sb.classList.remove('on'); }
+  const titles = { home: 'Shopeiz — Considered essentials, delivered across India', cart: 'Your bag — Shopeiz', checkout: 'Checkout — Shopeiz', done: 'Order confirmed — Shopeiz', wish: 'Wishlist — Shopeiz' };
+  document.title = r.v === 'product' && byId(r.id) ? `${byId(r.id).title} — Shopeiz` : r.v === 'list' ? `${(CATS.find((c) => c.id === r.cat) || { label: r.cat === 'deals' ? 'Offers' : 'Shop all' }).label} — Shopeiz` : titles[r.v] || 'Shopeiz';
+  if (top) window.scrollTo(0, 0);
+  heroStart();
+  observe();
+}
+let io;
+function observe() {
+  if (!('IntersectionObserver' in window)) { $$('.reveal').forEach((e) => e.classList.add('in')); return; }
+  io = io || new IntersectionObserver((es) => es.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { rootMargin: '0px 0px -8% 0px' });
+  $$('.reveal:not(.in)').forEach((e) => io.observe(e));
+}
+window.addEventListener('scroll', () => {
+  $('#hdr').classList.toggle('scrolled', window.scrollY > 8);
+  const sb = $('#stickyBuy'); if (sb.innerHTML) sb.classList.toggle('on', window.scrollY > 560);
+}, { passive: true });
+window.addEventListener('hashchange', () => { closeDrawers(); render(); });
+
+$('#announce').innerHTML = `Free delivery over ${fmt(FREE_OVER)} &nbsp;·&nbsp; 30-day free returns &nbsp;·&nbsp; <b>${PROMO.pct}% OFF</b> your first order with <b>${PROMO.code}</b>`;
+$('#yr').textContent = new Date().getFullYear();
+render();
 </script>
 </body>
 </html>
