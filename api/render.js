@@ -11,7 +11,7 @@ const { SITE, CATS, P, NAV_CATS, POLICY } = C;
 const { esc, url, fmt, bySlug, catOf, ic } = V;
 
 const SHELL = fs.readFileSync(path.join(__dirname, '..', 'templates', 'shell.html'), 'utf8');
-const VERSION = '13';
+const VERSION = '14';
 const DEFAULT_DESC = 'The art of having everything. Anything you need, in one place, at your door: kitchen, home, electronics, beauty, fashion, toys and drones. Free delivery over ₹499, cash on delivery, 7-day replacement.';
 
 function headHtml(h) {
@@ -118,7 +118,7 @@ function productLd(p) {
 /* ---------- Routes ---------- */
 async function route(pathname, query) {
   const parts = pathname.replace(/\/+$/, '').split('/').filter(Boolean);
-  const home = { head: { canonical: '/', ld: [ORG, WEBSITE, webPage('WebPage', '/', 'Shopeiz | The art of having everything', DEFAULT_DESC, { about: { '@id': ORG_ID }, mainEntity: null })] }, main: V.vHome({ placesHtml: L.homePlaces() }), view: 'home' };
+  const home = { head: { canonical: '/', ld: [ORG, WEBSITE, webPage('WebPage', '/', 'Shopeiz | The art of having everything', DEFAULT_DESC, { about: { '@id': ORG_ID }, mainEntity: null })] }, main: V.vHome({}), view: 'home' };
   home.head.ld[2].mainEntity = itemList(C.BEST.map((id) => P.find((p) => p.id === id)).filter(Boolean), 'Bestsellers');
   if (!parts.length) return home;
 

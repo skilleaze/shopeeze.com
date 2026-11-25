@@ -72,13 +72,25 @@
 
   /* ---------- Home ---------- */
   function vHome(ctx = {}) {
+    const counts = {}; P.forEach((p) => (counts[p.cat] = (counts[p.cat] || 0) + 1));
+    // Bestsellers: one product from each category, so the row shows the range of the store
     let best = BEST.map(byId).filter(Boolean);
-    if (best.length < 8) best = best.concat(P.filter((p) => !BEST.includes(p.id) && p.img).slice(0, 8 - best.length));
+    const seenCats = new Set(best.map((p) => p.cat));
+    const byCount = Object.keys(counts || {}).sort((a, b) => counts[b] - counts[a]);
+    for (const cid of byCount) {
+      if (best.length >= 8) break;
+      if (seenCats.has(cid)) continue;
+      const pick = P.find((p) => p.cat === cid && p.img && !/pelvic|stimulator|massager|intimate|lingerie/i.test(p.title));
+      if (pick) { best.push(pick); seenCats.add(cid); }
+    }
     const hero = HERO.map(byId).filter(Boolean);
     const fl = byId('d1');
-    const counts = {}; P.forEach((p) => (counts[p.cat] = (counts[p.cat] || 0) + 1));
-    const cover = (c) => c.img || (P.find((p) => p.cat === c.id && p.img) || {}).img;
-    const cats = CATS.filter((c) => counts[c.id]);
+    // Category cover: the best-ranked clean product shot (fashion uses model photos)
+    const SKIP = /pelvic|stimulator|massager|intimate|condom|lingerie|bra\b|panty/i;
+    const pref = (c) => (c.id === 'fashion' ? /^(sw|bs)\d/ : /^(dp|dd|s\d|d\d)/);
+    const coverP = (c) => P.find((p) => p.cat === c.id && p.img && pref(c).test(p.id) && !SKIP.test(p.title)) || P.find((p) => p.cat === c.id && p.img && !SKIP.test(p.title));
+    const cover = (c) => c.img || (coverP(c) || {}).img;
+    const cats = CATS.filter((c) => counts[c.id]).sort((a, b) => counts[b.id] - counts[a.id]).slice(0, 12);
     const count = P.length;
     const heroCats = cats.slice(0, 8);
     const slides = (C.SLIDES || []).filter((sl) => counts[sl.cat] || sl.cat === 'home');
@@ -119,9 +131,9 @@
 
   <section class="block"><div class="wrap">
     <div class="sec-head reveal"><div><span class="eyebrow">Shop by category</span><h2>Anything you need, in one place</h2></div><a class="link" href="${url.shop}">View everything ${ic('i-arrow')}</a></div>
-    <div class="cat-grid">${cats.map((c) => `<a class="cat-tile reveal" href="${url.cat(c.id)}" style="color:${c.ink}">
-      <div class="bg" style="background:${c.tone}">${cover(c) ? `<img src="${imgUrl(cover(c), 500)}" alt="" loading="lazy">` : ic(c.icon)}</div>
-      <h3>${c.label}</h3><span>${counts[c.id].toLocaleString('en-IN')} ${counts[c.id] === 1 ? 'piece' : 'pieces'} ${ic('i-arrow')}</span></a>`).join('')}</div>
+    <div class="cat-grid">${cats.map((c) => `<a class="cat-tile reveal" href="${url.cat(c.id)}">
+      <div class="ct-img">${cover(c) ? `<img src="${imgUrl(cover(c), 500)}" alt="${esc(c.label)}" loading="lazy">` : ic(c.icon)}</div>
+      <h3>${c.label}</h3><span>${counts[c.id].toLocaleString('en-IN')} ${counts[c.id] === 1 ? 'product' : 'products'}</span></a>`).join('')}</div>
   </div></section>
 
   ${fl ? `<section class="feature">
@@ -143,7 +155,7 @@
   </section>` : ''}
 
   <section class="block"><div class="wrap">
-    <div class="sec-head reveal"><div><span class="eyebrow">Most loved</span><h2>What everyone's buying</h2></div><a class="link" href="${url.deals}">Shop all deals ${ic('i-arrow')}</a></div>
+    <div class="sec-head reveal"><div><span class="eyebrow">Most loved</span><h2>What everyone's buying</h2><p>One favourite from each corner of the store.</p></div><a class="link" href="${url.shop}">Shop all products ${ic('i-arrow')}</a></div>
     ${gridOf(best, ctx)}
   </div></section>
 

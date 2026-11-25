@@ -49,21 +49,22 @@ export function textOf(html) { return String(html || '').replace(/<[^>]+>/g, ' '
 /* ---------- Categories from words ---------- */
 const RULES = [
   ['drones', /\bdrone|quadcopter\b/i],
-  ['electronics', /\b(earphone|earbud|headphone|headset|speaker|bluetooth|charger|charging|cable|usb|power ?bank|mobile|smart ?watch|phone|tripod|selfie|ring light|led strip|remote|adapter|mic\b|microphone|keyboard|mouse|camera|projector|gadget|electronic|tws|neckband|smart)\b/i],
-  ['kids', /\b(toy|toys|kids?|baby|child|children|infant|puzzle|doll|game|rc car|building blocks|school bag|teether|feeding bottle)\b/i],
-  ['auto', /\b(car|bike|motorcycle|scooter|helmet|automotive|vehicle|dashboard|tyre|tire)\b/i],
-  ['fashion', /\b(shrug|shrugs|wear|ethnic|palazzo|skirt|jacket|hoodie|sweatshirt|tunic|nightwear|co-?ord|jumpsuit|trousers?|pants|shorts|saree|sari|kurti|kurta|lehenga|dupatta|blouse|dress|shirt|t-?shirt|jeans|legging|top|gown|footwear|sandal|slipper|shoe|chappal|jewell?ery|earring|necklace|bangle|bracelet|ring|watch|wallet|handbag|bag|purse|backpack|belt|sunglass|cap|socks|scarf|stole|suit)\b/i],
-  ['beauty', /\b(beauty|makeup|make-up|lipstick|nail|hair|comb|brush|trimmer|shaver|massager|skin|face|facial|cosmetic|perfume|soap|shampoo|bath|personal care|health|wax|mirror|grooming|dental|tooth)\b/i],
-  ['office', /\b(pen|pencil|notebook|diary|stationery|office|desk|file|folder|stapler|marker|calculator|sticky|craft|art|paint|colou?r)\b/i],
-  ['sports', /\b(gym|yoga|fitness|exercise|sport|sports|cricket|football|badminton|cycle|cycling|camping|travel|bottle|garden|plant|outdoor|water bottle|skipping|dumbbell)\b/i],
-  ['tools', /\b(tool|tools|drill|screwdriver|plier|spanner|wrench|hammer|tape|glue|sealant|measuring|multimeter|lock|padlock|security|hardware|repair)\b/i],
-  ['festive', /\b(pooja|puja|diya|rangoli|festival|festive|diwali|christmas|holi|rakhi|gift|idol|god|toran|decoration light|lantern)\b/i],
-  ['kitchen', /\b(kitchen|cook|cooking|chopper|knife|peeler|grater|slicer|cutter|spoon|ladle|pan|tawa|kadai|pot|container|lunch ?box|tiffin|bottle|jar|plate|bowl|cup|mug|glass|tray|strainer|whisk|spatula|mixer|blender|gas|stove|dining|spice|masala|roti|oil dispenser|kettle|flask)\b/i],
-  ['cleaning', /\b(clean|cleaning|mop|broom|duster|dustbin|wiper|scrub|sponge|brush holder|storage|organi[sz]er|rack|shelf|hanger|hook|basket|box|drawer|closet|wardrobe|laundry|bathroom|toilet|sink|drain)\b/i],
-  ['home', /\b(home|decor|curtain|bedsheet|pillow|cushion|carpet|mat|rug|lamp|light|clock|wall|sticker|frame|furniture|chair|table|sofa|bed|door|window|vase|plant|fan|heater)\b/i],
+  ['electronics', /\b(earphone|earbud|headphone|headset|speaker|bluetooth|charger|charging|cable|usb|power ?bank|mobile|smart ?watch|phone|tripod|selfie|ring light|led strip|remote|adapter|mic\b|microphone|keyboard|mouse|camera|projector|gadget|electronic|tws|neckband|smart)(?:s|es)?\b/i],
+  ['fashion', /\b(trackpants?|joggers?|jewels?|jewllery|jhumkas?|shrug|shrugs|wear|ethnic|palazzo|skirt|jacket|hoodie|sweatshirt|tunic|nightwear|co-?ord|jumpsuit|trousers?|pants|shorts|saree|sari|kurti|kurta|lehenga|dupatta|blouse|dress|shirt|t-?shirt|jeans|legging|top|gown|footwear|sandal|slipper|shoe|chappal|jewell?ery|earring|necklace|bangle|bracelet|ring|watch|wallet|handbag|bag|purse|backpack|belt|sunglass|cap|socks|scarf|stole|suit)(?:s|es)?\b/i],
+  ['kids', /\b(toy|toys|kids?|baby|child|children|infant|puzzle|doll|game|rc car|building blocks|school bag|teether|feeding bottle)(?:s|es)?\b/i],
+  ['auto', /\b(car|bike|motorcycle|scooter|helmet|automotive|vehicle|dashboard|tyre|tire)(?:s|es)?\b/i],
+  ['beauty', /\b(beauty|makeup|make-up|lipstick|nail|hair|comb|brush|trimmer|shaver|massager|skin|face|facial|cosmetic|perfume|soap|shampoo|bath|personal care|health|wax|mirror|grooming|dental|tooth)(?:s|es)?\b/i],
+  ['office', /\b(pen|pencil|notebook|diary|stationery|office|desk|file|folder|stapler|marker|calculator|sticky|craft|art|paint|colou?r)(?:s|es)?\b/i],
+  ['sports', /\b(gym|yoga|fitness|exercise|sport|sports|cricket|football|badminton|cycle|cycling|camping|travel|bottle|garden|plant|outdoor|water bottle|skipping|dumbbell)(?:s|es)?\b/i],
+  ['tools', /\b(tool|tools|drill|screwdriver|plier|spanner|wrench|hammer|tape|glue|sealant|measuring|multimeter|lock|padlock|security|hardware|repair)(?:s|es)?\b/i],
+  ['festive', /\b(pooja|puja|diya|rangoli|festival|festive|diwali|christmas|holi|rakhi|gift|idol|god|toran|decoration light|lantern)(?:s|es)?\b/i],
+  ['kitchen', /\b(kitchen|cook|cooking|chopper|knife|peeler|grater|slicer|cutter|spoon|ladle|pan|tawa|kadai|pot|container|lunch ?box|tiffin|bottle|jar|plate|bowl|cup|mug|glass|tray|strainer|whisk|spatula|mixer|blender|gas|stove|dining|spice|masala|roti|oil dispenser|kettle|flask)(?:s|es)?\b/i],
+  ['cleaning', /\b(clean|cleaning|mop|broom|duster|dustbin|wiper|scrub|sponge|brush holder|storage|organi[sz]er|rack|shelf|hanger|hook|basket|box|drawer|closet|wardrobe|laundry|bathroom|toilet|sink|drain)(?:s|es)?\b/i],
+  ['home', /\b(home|decor|curtain|bedsheet|pillow|cushion|carpet|mat|rug|lamp|light|clock|wall|sticker|frame|furniture|chair|table|sofa|bed|door|window|vase|plant|fan|heater)(?:s|es)?\b/i],
 ];
 export function guessCat(title, type, tags) {
-  const t = `${type || ''} ${title || ''}`;
+  // colour names like "baby pink" are not baby products
+  const t = `${type || ''} ${title || ''}`.replace(/\bbaby (pink|blue|yellow|green)\b/gi, '$1');
   for (const [cat, re] of RULES) if (re.test(t)) return cat;
   const tg = (tags || []).join(' ');
   for (const [cat, re] of RULES) if (re.test(tg)) return cat;
