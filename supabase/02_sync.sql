@@ -49,12 +49,20 @@ language sql security definer set search_path = public as $fn$
   select count(*)::int from u
 $fn$;
 
--- Finish a run: categories from collections, hide duplicates, mark products that left the feed
+-- Matching keys for "the same product" across suppliers
+create or replace function dup_key_sku(v jsonb) returns text language sql immutable set search_path = public as $fn$
+  select nullif(lower(regexp_replace(coalesce(v->0->>'sku', ''), '[^a-zA-Z0-9]+', '', 'g')), '')
+$fn$;
+create or replace function dup_key_name(n text) returns text language sql immutable set search_path = public as $fn$
+  select lower(regexp_replace(regexp_replace(regexp_replace(coalesce(n, ''), '\([^)]*\)', '', 'g'), '\m(\d+\s*(pc|pcs|piece|pieces|set|pack))\M', '', 'gi'), '[^a-zA-Z0-9]+', '', 'g'))
+$fn$;
+
+-- Finish a run: categories from collections, mark products that left the feed,
+-- and where several suppliers sell the same item show only the best deal (in stock, lowest price)
 create or replace function sync_finish(p_supplier text, p_run bigint) returns jsonb
 language plpgsql security definer set search_path = public as $fn$
-declare v_gone int; v_hidden int;
+declare v_gone int; v_hidden int := 0; n int;
 begin
-  -- category from the highest-priority mapped collection
   update products p set cat = m.cat
   from (
     select distinct on (p2.id) p2.id, cm.cat
@@ -68,25 +76,38 @@ begin
   where p.supplier = p_supplier and p.last_seen_run = p_run
     and exists (select 1 from collection_map cm where cm.supplier = p.supplier and cm.cat = '__hide' and cm.handle = any(p.collections));
 
-  -- the same item from several suppliers: keep the cheapest available one
-  with ranked as (
-    select id, row_number() over (partition by lower(regexp_replace(name, '[^a-zA-Z0-9]+', '', 'g'))
-      order by available desc, price nulls last, supplier) rn
-    from products where supplier <> 'own' and hidden_reason is null
-  )
-  update products p set hidden_reason = 'duplicate' from ranked r where p.id = r.id and r.rn > 1;
-  get diagnostics v_hidden = row_count;
-
   update products set available = false
   where supplier = p_supplier and (last_seen_run is distinct from p_run) and available;
   get diagnostics v_gone = row_count;
+
+  update products set hidden_reason = null where hidden_reason = 'duplicate';
+
+  with k as (
+    select id, supplier, available, price, dup_key_sku(variants) sk from products where supplier <> 'own' and hidden_reason is null
+  ), multi as (
+    select sk from k where length(sk) >= 5 group by sk having count(distinct supplier) > 1
+  ), ranked as (
+    select k.id, row_number() over (partition by k.sk order by k.available desc, k.price nulls last, k.supplier) rn from k join multi using (sk)
+  )
+  update products p set hidden_reason = 'duplicate' from ranked r where p.id = r.id and r.rn > 1;
+  get diagnostics n = row_count; v_hidden := v_hidden + n;
+
+  with ranked as (
+    select id, row_number() over (partition by dup_key_name(name) order by available desc, price nulls last, supplier) rn
+    from products where supplier <> 'own' and hidden_reason is null and length(dup_key_name(name)) >= 8
+  )
+  update products p set hidden_reason = 'duplicate' from ranked r where p.id = r.id and r.rn > 1;
+  get diagnostics n = row_count; v_hidden := v_hidden + n;
 
   update sync_runs set finished_at = now(), gone = v_gone where id = p_run;
   return jsonb_build_object('gone', v_gone, 'duplicates_hidden', v_hidden);
 end $fn$;
 
-revoke all on function sync_mark_collection(text, text, text[]) from public, anon, authenticated;
-revoke all on function sync_finish(text, bigint) from public, anon, authenticated;
+revoke execute on function sync_mark_collection(text, text, text[]) from public, anon, authenticated;
+revoke execute on function sync_finish(text, bigint) from public, anon, authenticated;
+
+-- Baapstore and DeoDap switched on (25 Nov 2026)
+update suppliers set enabled = true where id in ('baapstore', 'deodap');
 
 -- Admin "Sync now": make a supplier due immediately
 create or replace function sync_now(p_supplier text) returns void language plpgsql security definer set search_path = public as $fn$
