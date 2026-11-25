@@ -51,7 +51,7 @@
   const priceHtml = (p) => `<div class="price"><b>${fmt(p.price)}</b>${p.was ? `<s>${fmt(p.was)}</s><span class="off">${off(p)}% off</span>` : ''}</div>`;
   function card(p, ctx = {}) {
     const w = (ctx.wish || []).includes(p.id);
-    const badge = p.was ? `<span class="badge">Save ${off(p)}%</span>` : p.tag ? `<span class="badge">${esc(p.tag)}</span>` : '';
+    const badge = p.tag ? `<span class="badge">${esc(p.tag)}</span>` : '';
     const add = p.available === false ? '' : `data-act="add" data-id="${p.id}" data-snap="${snap(p)}"`;
     return `<article class="card reveal">
     <div class="card-media">
@@ -62,7 +62,7 @@
       <h3><a href="${url.product(p)}">${esc(p.title)}</a></h3>
       ${stars(p)}
       <div class="card-row">
-        <div class="cprice">${p.was ? `<b class="sale">${fmt(p.price)}</b><s>${fmt(p.was)}</s>` : `<b>${fmt(p.price)}</b>`}</div>
+        <div class="cprice">${p.was ? `<b class="sale">${fmt(p.price)}</b><s>${fmt(p.was)}</s><span class="pct">${off(p)}% off</span>` : `<b>${fmt(p.price)}</b>`}</div>
         ${add ? `<button class="qa" ${add} aria-label="Add ${esc(p.title)} to bag">${ic('i-bag')}<span>Quick add</span></button>` : '<span class="soldout">Sold out</span>'}
       </div>
     </div>
@@ -225,12 +225,19 @@
   // Applies sub-filter, sort and page. Returns everything a listing page needs.
   function listView(kind, key, opts = {}) {
     const d = listData(kind, key);
-    const subCount = {};
-    d.list.forEach((p) => { if (p.sub) subCount[p.sub] = (subCount[p.sub] || 0) + 1; });
-    const subs = Object.keys(subCount).filter((x) => subCount[x] >= 3).sort((a, b) => subCount[b] - subCount[a]).slice(0, 14);
+    // Group sub-categories that differ only in spelling ("Mixer-Juicer-Grinder" = "Mixer Juicer Grinder"), skip vague ones
+    const skey = (x) => String(x || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '').replace(/s$/, '');
+    const vague = new Set(['homeandkitchen', 'homeimprovement', 'kitchenware', 'otherproduct', 'allproduct', 'trending', 'bestseller', 'newarrival', 'goods', 'general', 'kid', 'women', 'men']);
+    const groups = {};
+    d.list.forEach((p) => { const k = skey(p.sub); if (!k || vague.has(k)) return; (groups[k] = groups[k] || { n: 0, names: {} }).n++; groups[k].names[p.sub] = (groups[k].names[p.sub] || 0) + 1; });
+    const label = (k) => Object.entries(groups[k].names).sort((a, b) => b[1] - a[1])[0][0].replace(/-/g, ' ');
+    const subKeys = Object.keys(groups).filter((k) => groups[k].n >= 3).sort((a, b) => groups[b].n - groups[a].n).slice(0, 12);
+    const subs = subKeys.map(label);
+    const subOf = {}; subKeys.forEach((k, i) => (subOf[k] = subs[i]));
+    const subCount = {}; subKeys.forEach((k, i) => (subCount[subs[i]] = groups[k].n));
     const sub = subs.includes(opts.sub) ? opts.sub : 'all';
     const sort = ['pop', 'lo', 'hi', 'off', 'new'].includes(opts.sort) ? opts.sort : 'pop';
-    let shown = sub === 'all' ? d.list : d.list.filter((p) => p.sub === sub);
+    let shown = sub === 'all' ? d.list : d.list.filter((p) => subOf[skey(p.sub)] === sub);
     if (sort !== 'pop') shown = shown.slice().sort((a, b) => sort === 'lo' ? a.price - b.price : sort === 'hi' ? b.price - a.price : off(b) - off(a));
     const pages = Math.max(1, Math.ceil(shown.length / PAGE_SIZE));
     const page = Math.min(pages, Math.max(1, parseInt(opts.page, 10) || 1));
