@@ -23,7 +23,9 @@
   const minDaysOf = (p) => (daysOf(p) <= POLICY.ownMax ? 2 : POLICY.minDays);
   const deliveryText = (p) => `${minDaysOf(p)} to ${daysOf(p)} working days`;
   // Resize photos served by Shopify's image CDN
-  const imgUrl = (src, w) => (src && /cdn\.shopify\.com/.test(src) ? src.split('?')[0] + '?width=' + w : src);
+  const imgUrl = (src, w) => (!src ? src : /cdn\.shopify\.com/.test(src) ? src.split('?')[0] + '?width=' + w : /\/render\/image\//.test(src) ? src + (src.includes('?') ? '&' : '?') + 'width=' + w + '&height=' + w * 2 + '&resize=contain' : src);
+  // Responsive srcset for our own resizable brand photos
+  const srcset = (src, ws) => (/\/render\/image\//.test(src) ? ws.map((w) => imgUrl(src, w) + ' ' + w + 'w').join(', ') : '');
   const PAGE_SIZE = 48;
   // What the bag needs to know about a product, kept on the Add button
   const snap = (p, v) => esc(JSON.stringify({ id: p.id, t: p.title, p: p.price, w: p.was || 0, i: p.img || '', s: p.slug, u: p.sub || '', v: v || '', ...(p.cod === false ? { np: 1 } : {}) }));
@@ -90,7 +92,7 @@
     const SKIP = /pelvic|stimulator|massager|intimate|condom|lingerie|bra\b|panty/i;
     const pref = (c) => (c.id === 'fashion' ? /^(sw|bs)\d/ : /^(dp|dd|s\d|d\d)/);
     const coverP = (c) => P.find((p) => p.cat === c.id && p.img && pref(c).test(p.id) && !SKIP.test(p.title)) || P.find((p) => p.cat === c.id && p.img && !SKIP.test(p.title));
-    const cover = (c) => c.img || (coverP(c) || {}).img;
+    const cover = (c) => c.cover || c.img || (coverP(c) || {}).img;
     const cats = CATS.filter((c) => counts[c.id]).sort((a, b) => counts[b.id] - counts[a.id]).slice(0, 12);
     const count = P.length;
     const heroCats = cats.slice(0, 8);
@@ -100,7 +102,7 @@
     ${slides.map((sl, k) => `<div class="slide ${k ? '' : 'on'}" data-slide="${k}" ${k ? 'aria-hidden="true"' : ''}>
       <picture>
         <source media="(max-width:760px)" srcset="${sl.img}&w=900&h=1300">
-        <img src="${sl.img}&w=2000" alt="${esc(sl.alt)}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}>
+        <img src="${imgUrl(sl.img, 1800)}" srcset="${srcset(sl.img, [800, 1200, 1800, 2400])}" sizes="100vw" alt="${esc(sl.alt)}" style="object-position:${sl.pos || 'center'}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}>
       </picture>
       <div class="veil"></div>
       <div class="hero-text">
@@ -133,7 +135,7 @@
   <section class="block"><div class="wrap">
     <div class="sec-head reveal"><div><span class="eyebrow">Shop by category</span><h2>Anything you need, in one place</h2></div><a class="link" href="${url.shop}">View everything ${ic('i-arrow')}</a></div>
     <div class="cat-grid">${cats.map((c) => `<a class="cat-tile reveal" href="${url.cat(c.id)}">
-      <div class="ct-img">${cover(c) ? `<img src="${imgUrl(cover(c), 500)}" alt="${esc(c.label)}" loading="lazy">` : ic(c.icon)}</div>
+      <div class="ct-img">${cover(c) ? `<img src="${imgUrl(cover(c), 600)}" srcset="${srcset(cover(c), [400, 600, 900])}" sizes="(max-width:700px) 50vw, 25vw" alt="${esc(c.label)}" loading="lazy">` : ic(c.icon)}</div>
       <h3>${c.label}</h3><span>${counts[c.id].toLocaleString('en-IN')} ${counts[c.id] === 1 ? 'product' : 'products'}</span></a>`).join('')}</div>
   </div></section>
 

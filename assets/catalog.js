@@ -70,11 +70,14 @@
   const P = OWN.filter((p) => p.available);
   const HERO = ['d1', 'd4', 'd3', 'd2'];
   // Home page hero: full-width editorial photos (Unsplash licence, free for commercial use)
-  const U = (id) => `https://images.unsplash.com/${id}?auto=format&fit=crop&q=80`;
+  // Brand photography (licensed Freepik stock), served from Supabase Storage with on-the-fly resizing
+  const B = (name) => `https://scgklhbkoezjecumzkgz.supabase.co/storage/v1/render/image/public/brand/${name}?quality=72`;
+  // Category covers: one consistent, warm editorial photo per category
+  CATS.forEach((c) => { c.cover = B('cat-' + c.id + '.jpg'); });
   const SLIDES = [
-    { cat: 'home', img: U('photo-1631679706909-1844bbd07221'), alt: 'A calm, warm living room with soft furniture', kicker: 'The Shopeiz edit', title: 'The art of having everything.', text: 'Anything you need, in one place, at your door.', cta: 'Shop Home & Decor' },
-    { cat: 'kitchen', img: U('photo-1628797279405-8cd6ffdbeb6c'), alt: 'A sunlit kitchen with wooden table and hanging pans', kicker: 'Kitchen', title: 'A kitchen, quietly upgraded.', text: 'Clever tools, storage and serveware for every day.', cta: 'Shop Kitchen' },
-    { cat: 'fashion', img: U('photo-1663229145211-94d321567f97'), alt: 'A person holding a structured beige handbag', kicker: 'Fashion', title: 'Pieces you will reach for.', text: 'Bags, sarees and wardrobe staples, fairly priced.', cta: 'Shop Fashion' },
+    { cat: 'home', img: B('hero-home.jpg'), pos: 'center 60%', alt: 'A calm, light living room with a soft cream sofa and arched windows', kicker: 'The Shopeiz edit', title: 'The art of having everything.', text: 'Anything you need, in one place, at your door.', cta: 'Shop Home & Decor' },
+    { cat: 'kitchen', img: B('hero-kitchen.jpg'), pos: 'center 55%', alt: 'A warm wooden kitchen with a marble counter in soft sunlight', kicker: 'Kitchen', title: 'A kitchen, quietly upgraded.', text: 'Clever tools, storage and serveware for every day.', cta: 'Shop Kitchen' },
+    { cat: 'fashion', img: B('hero-fashion.jpg'), pos: '62% 30%', alt: 'A woman in a cream suit with a beige handbag in a bright stone hallway', kicker: 'Fashion', title: 'Pieces you will reach for.', text: 'Bags, sarees and wardrobe staples, fairly priced.', cta: 'Shop Fashion' },
   ];
   const BEST = ['d1'];
   const FREE_OVER = 499, STD_FEE = 40, EXP_FEE = 0, COD_FEE = 49;
