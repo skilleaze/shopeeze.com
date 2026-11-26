@@ -108,6 +108,7 @@
       <div class="steps"><b>Details</b><span>›</span><b>Address</b><span>›</span><b>Payment</b></div></div>
     <form class="two" data-form="checkout" novalidate>
       <div>
+        ${window.SZAUTH ? (window.SZAUTH.user() ? `<p class="co-acct">${ic('i-user')} Ordering as <b>${esc(window.SZAUTH.user().email || '')}</b>. This order will appear in <a href="/account">your orders</a>.</p>` : `<p class="co-acct">${ic('i-user')} Have an account? <a href="/login?next=/checkout">Log in</a> for faster checkout and order tracking, or continue as a guest.</p>`) : ''}
         <fieldset><legend><span>01</span>Contact</legend><div class="fields">
           ${field('name', 'Full name', 'text', false, 'autocomplete="name" required')}
           ${field('phone', 'Mobile number', 'tel', false, 'autocomplete="tel" inputmode="numeric" required pattern="[0-9 +]{10,14}"')}
@@ -146,7 +147,11 @@
     <p style="color:var(--ink-2);font-size:16px">Your order is placed and should arrive by <b>${esc(o.arrives)}</b>. We'll send updates and tracking to ${esc(o.phone)}.</p>
     ${o.cod ? '' : `<div class="pay-note">${ic('i-shield')} <b>Next step:</b> we'll send a UPI payment link to ${esc(o.phone)} shortly. Your order ships once payment is received.</div>`}
     <div class="panel" style="text-align:left;margin:36px 0">${o.lines.map((l) => `<div class="sum-row"><span>${esc(l.t)} × ${l.q}</span><span>${fmt(l.v)}</span></div>`).join('')}<div class="sum-row total" style="margin-bottom:0"><span>${o.cod ? 'To pay on delivery' : 'To pay by UPI'}</span><span>${fmt(o.total)}</span></div></div>
-    <a class="btn btn-dark" href="/">Continue shopping</a>
+    <div class="done-act">
+      <a class="pdx-cta" href="${window.SZAUTH && window.SZAUTH.user() ? '/account/orders/' + encodeURIComponent(o.id) : '/track?code=' + encodeURIComponent(o.id) + '&phone=' + encodeURIComponent(o.phone)}">${ic('i-truck')} Track this order</a>
+      <a class="pdx-cta line" href="/">Continue shopping</a>
+    </div>
+    ${window.SZAUTH && !window.SZAUTH.user() ? `<p class="note" style="margin-top:16px"><a href="/login?m=up" style="color:var(--brand);font-weight:700">Create an account</a> to see all your orders and their delivery status in one place.</p>` : ''}
   </div></div>`;
   }
   function vWish() {
@@ -165,7 +170,9 @@
 
   /* ---------- Keep bag prices current ---------- */
   async function api(fn, args) {
-    const r = await fetch(`${CFG.url}/rest/v1/rpc/${fn}`, { method: 'POST', headers: { apikey: CFG.key, Authorization: `Bearer ${CFG.key}`, 'Content-Type': 'application/json' }, body: JSON.stringify(args) });
+    // Signed-in customers send their own token, so their orders are saved to their account
+    const tok = fn === 'place_order' && window.SZAUTH ? await window.SZAUTH.token() : null;
+    const r = await fetch(`${CFG.url}/rest/v1/rpc/${fn}`, { method: 'POST', headers: { apikey: CFG.key, Authorization: `Bearer ${tok || CFG.key}`, 'Content-Type': 'application/json' }, body: JSON.stringify(args) });
     const j = await r.json().catch(() => null);
     if (!r.ok) throw new Error((j && (j.message || j.hint)) || 'Something went wrong. Please try again.');
     return j;
@@ -360,6 +367,7 @@
         order = { id: 'SZ-' + (40000 + Math.floor(Math.random() * 9999)), name: co.f.name, phone: co.f.phone, total: t.total, cod: co.pay === 'cod', arrives: dateIn(maxDays), lines: t.lines.map((l) => ({ t: l.p.title, q: l.qty, v: l.total })) };
       }
       try { sessionStorage.setItem('shopeiz-order', JSON.stringify(order)); } catch (err) {}
+      if (live && window.SZAUTH) await window.SZAUTH.rememberAddress(co.f);
       store.cart = []; store.promo = false; save();
       location.href = '/order-confirmed';
     }
@@ -422,6 +430,10 @@
 
   renderClient();
   if (VIEW === 'cart' || VIEW === 'checkout') refreshPrices();
+  // Signed-in customers: fill the checkout form from their saved address
+  if (VIEW === 'checkout' && window.SZAUTH && window.SZAUTH.user() && !co.f.name && !co.f.addr) {
+    window.SZAUTH.prefill().then((d) => { if (d && !co.f.name && !co.f.addr) { Object.keys(d).forEach((k) => { if (d[k]) co.f[k] = d[k]; }); renderClient(); } });
+  }
   syncWish();
   updateCounts();
   observe();
@@ -512,7 +524,7 @@
 (function () {
   if (typeof document === 'undefined') return;
   const p = location.pathname;
-  const t = p === '/' ? 'home' : p.startsWith('/deals') ? 'deals' : p.startsWith('/wishlist') ? 'wishlist' : p.startsWith('/cart') || p.startsWith('/checkout') ? 'cart' : '';
+  const t = p === '/' ? 'home' : p.startsWith('/deals') ? 'deals' : p.startsWith('/account') || p.startsWith('/login') || p.startsWith('/wishlist') || p.startsWith('/track') ? 'account' : p.startsWith('/cart') || p.startsWith('/checkout') ? 'cart' : '';
   const go = () => { const el = document.querySelector('.tabbar [data-tab="' + t + '"]'); if (el) el.classList.add('on'); };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();

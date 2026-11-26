@@ -204,6 +204,12 @@
       </div>
       <div class="f" style="margin-top:12px"><label>Notes</label><textarea class="in" id="nt">${esc(o.notes || '')}</textarea></div>
       <div class="row" style="margin-top:10px"><button class="btn dark" id="sv">Save</button>${o.tracking_no ? `<button class="btn" id="sendtr">WhatsApp tracking to customer</button>` : ''}${o.status === 'delivered' ? `<button class="btn" id="askrv">Ask for a review</button>` : ''}</div></div>
+      <div class="sec"><h3>Delivery updates the customer sees</h3>
+        <p class="muted" style="font-size:12.5px;margin:0 0 8px">These appear on the customer's tracking page. "Out for delivery" also lights up that step.</p>
+        <div class="row" style="flex-wrap:wrap;gap:6px">${['Out for delivery', 'Reached the delivery hub in your city', 'In transit', 'Delivery attempted, we will try again', 'Delayed by the courier, sorry'].map((t) => `<button class="btn sm" data-up="${esc(t)}">${esc(t)}</button>`).join('')}</div>
+        <div class="row" style="margin-top:8px"><input class="in" id="upt" placeholder="Or write an update…" maxlength="200" style="flex:1"><button class="btn dark" id="upb">Post</button></div>
+        ${ev.filter((e) => e.kind === 'update').map((e) => `<div class="ev"><span class="muted">${dt(e.at)}</span> · ${esc(e.note)}</div>`).join('')}
+      </div>
       <div class="sec"><h3>History</h3>${ev.map((e) => `<div class="ev"><span class="muted">${dt(e.at)}</span> · ${esc(e.note || e.kind)}${e.by_email ? ` <span class="muted">by ${esc(e.by_email)}</span>` : ''}</div>`).join('')}</div>
       <div class="muted" style="font-size:12px">${o.utm && Object.keys(o.utm).length ? 'Came from: ' + esc(Object.entries(o.utm).map(([k, v]) => k + '=' + v).join(' ')) : ''}</div>
     </div>`);
@@ -226,8 +232,11 @@
         toast('Saved'); orderDetail(id); refresh();
       } catch (e) { fail(e); }
     };
+    const postUp = async (t) => { t = (t || '').trim(); if (!t) return; try { await q(sb.from('order_events').insert({ order_id: id, kind: 'update', note: t.slice(0, 200), by_email: me.email })); toast('Update posted'); orderDetail(id); } catch (e) { fail(e); } };
+    $$('[data-up]', d).forEach((b) => (b.onclick = () => postUp(b.dataset.up)));
+    $('#upb', d).onclick = () => postUp($('#upt', d).value);
     if ($('#askrv', d)) $('#askrv', d).onclick = () => window.open(`https://wa.me/91${o.phone}?text=${encodeURIComponent(`Hi ${o.name.split(' ')[0]}, thank you for shopping with Shopeiz! How do you like your order ${o.code}? We would love a quick review:\n${items.map((i) => `https://shopeiz.com/products/${i.slug}#reviews`).join('\n')}\nUse order number ${o.code} and this mobile number for a Verified buyer badge.`)}`, '_blank');
-    if ($('#sendtr', d)) $('#sendtr', d).onclick = () => window.open(`https://wa.me/91${o.phone}?text=${encodeURIComponent(`Hi ${o.name.split(' ')[0]}, your Shopeiz order ${o.code} has shipped${o.courier ? ' with ' + o.courier : ''}. Tracking number: ${o.tracking_no}${o.tracking_url ? '\nTrack it here: ' + o.tracking_url : ''}`)}`, '_blank');
+    if ($('#sendtr', d)) $('#sendtr', d).onclick = () => window.open(`https://wa.me/91${o.phone}?text=${encodeURIComponent(`Hi ${o.name.split(' ')[0]}, your Shopeiz order ${o.code} has shipped${o.courier ? ' with ' + o.courier : ''}. Tracking number: ${o.tracking_no}${o.tracking_url ? '\nCourier tracking: ' + o.tracking_url : ''}\nTrack your order: https://shopeiz.com/track?code=${o.code}&phone=${o.phone}`)}`, '_blank');
   }
   const refresh = () => { pollNew(); if (view === 'orders') orders().catch(fail); if (view === 'delivery') delivery().catch(fail); };
 
