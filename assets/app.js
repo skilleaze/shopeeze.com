@@ -561,12 +561,14 @@
       return { pin, city: '', state: '', remote: remote(pin), offline: true };
     }
   }
-  const label = (v) => (v ? (v.city ? v.city + ' ' + v.pin : v.pin) : 'All of India');
+  const label = (v) => (v ? (v.city ? v.city + ' ' + v.pin : v.pin) : 'Select location');
   const extra = (v) => (v && v.remote ? 3 : 0);
 
   function paint() {
     const v = get();
     $$('[data-pin-label]').forEach((el) => (el.textContent = label(v)));
+    $$('.nh-loc').forEach((el) => el.classList.toggle('empty', !v));
+    if (v) hideNudge();
     const row = $('[data-pinrow]');
     if (row) {
       const days = Number(row.dataset.days) || 10;
@@ -589,7 +591,7 @@
       <p class="sub">Enter your PIN code to see delivery dates and options for your area.</p>
       <form class="pin-f" data-pin-form><input name="pin" inputmode="numeric" maxlength="6" autocomplete="postal-code" placeholder="6-digit PIN code" aria-label="PIN code"><button type="submit">Apply</button></form>
       <div data-pin-res></div><div data-pin-saved></div>
-      <div class="pin-foot"><span></span><button type="button" data-pin="clear">Deliver to all of India</button></div>
+      <div class="pin-foot"><span></span><button type="button" data-pin="clear">Clear location</button></div>
     </div>`;
     document.body.appendChild(box);
     box.addEventListener('click', (e) => { if (e.target === box) close(); });
@@ -642,6 +644,28 @@
   document.addEventListener('submit', (e) => { if (e.target.matches('[data-pin-form]')) { e.preventDefault(); apply(e.target.pin.value); } });
   document.addEventListener('input', (e) => { if (e.target.closest('[data-pin-form]')) { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); if (e.target.value.length === 6) apply(e.target.value); } });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+  // First visit: a small prompt under "Deliver to" asks for the PIN code (once a week at most if dismissed)
+  let nudge;
+  function hideNudge() { if (nudge) { nudge.classList.remove('on'); setTimeout(() => nudge && nudge.remove(), 300); nudge = null; } }
+  function showNudge() {
+    if (get()) return;
+    let later = 0; try { later = Number(localStorage.getItem('shopeiz-pin-later') || 0); } catch (e) {}
+    if (Date.now() - later < 7 * 864e5) return;
+    const anchor = $('.nh-loc-w'); if (!anchor || !anchor.offsetParent) return;
+    if (['checkout', 'login', 'account', 'track'].includes(document.body.dataset.view)) return;
+    nudge = document.createElement('div');
+    nudge.className = 'pin-nudge'; nudge.setAttribute('role', 'dialog'); nudge.setAttribute('aria-label', 'Choose your delivery location');
+    nudge.innerHTML = '<b>Where should we deliver?</b><p>Enter your PIN code to see delivery dates and options for your area.</p><div><button class="go" data-pin="open">Enter PIN code</button><button class="later" data-pin="later">Later</button></div>';
+    anchor.appendChild(nudge);
+    requestAnimationFrame(() => requestAnimationFrame(() => nudge && nudge.classList.add('on')));
+  }
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-pin]');
+    if (el && el.dataset.pin === 'later') { try { localStorage.setItem('shopeiz-pin-later', String(Date.now())); } catch (err) {} hideNudge(); return; }
+    if (el && el.dataset.pin === 'open') hideNudge();
+  });
+  setTimeout(showNudge, 1800);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint); else paint();
   window.SZPIN = { get };
 })();

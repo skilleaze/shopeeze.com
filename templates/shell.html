@@ -1321,6 +1321,20 @@ button.nh-loc{background:none;border:0;padding:0;font:inherit;color:#fff;cursor:
 .pdx-pin .pin-t small{display:block;font-size:12.5px;color:var(--tx-m)}
 .pdx-pin button{background:none;border:0;padding:0;font:inherit;font-weight:700;font-size:14px;color:var(--brand);cursor:pointer;flex:none}
 @media (max-width:760px){.pinm{align-items:flex-end;padding:0}.pinm-c{border-radius:18px 18px 0 0;max-width:none;padding:20px 16px calc(22px + env(safe-area-inset-bottom));transform:translateY(30px)}.nh-loc b{max-width:120px}}
+
+.pin-nudge{position:absolute;z-index:70;top:calc(100% + 10px);left:0;width:300px;background:#fff;color:var(--tx);border-radius:14px;box-shadow:0 14px 40px rgba(16,22,40,.22);padding:16px;opacity:0;transform:translateY(-6px);transition:opacity .25s,transform .25s;pointer-events:none}
+.pin-nudge.on{opacity:1;transform:none;pointer-events:auto}
+.pin-nudge::before{content:"";position:absolute;top:-7px;left:34px;width:14px;height:14px;background:#fff;transform:rotate(45deg);border-radius:2px}
+.pin-nudge b{display:block;font-size:15.5px;color:var(--tx-h);margin:0 0 4px}
+.pin-nudge p{margin:0 0 12px;font-size:13.5px;color:var(--tx-m);line-height:1.4}
+.pin-nudge div{display:flex;gap:8px}
+.pin-nudge button{flex:1;height:40px;border-radius:10px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.pin-nudge .go{background:var(--brand);color:#fff;border:0}
+.pin-nudge .later{background:#fff;color:var(--tx-h);border:1px solid var(--bd)}
+.nh-loc-w{position:relative;display:flex}
+.nh-loc.empty b{text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.5)}
+@media (max-width:900px){.nh-loc-w{margin-left:auto}.pin-nudge{left:auto;right:0;width:min(300px,calc(100vw - 24px))}.pin-nudge::before{left:auto;right:30px}}
+@media (max-width:760px){.nh-loc-w.only-d{display:flex!important;margin-left:auto}.nh-loc-w .nh-loc{margin-left:0}}
 </style>
 </head>
 <body data-view="{{VIEW}}">
@@ -1328,7 +1342,7 @@ button.nh-loc{background:none;border:0;padding:0;font:inherit;color:#fff;cursor:
   <div class="nh-top"><div class="wrap2 nh-row">
     <button class="nh-ic only-m" data-act="menu" aria-label="Open menu"><svg class="i"><use href="#i-menu"/></svg></button>
     <a href="/" class="nh-logo" aria-label="Shopeiz home"><svg viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg><span>Shopeiz</span></a>
-    <button class="nh-loc only-d" data-pin="open" aria-label="Choose delivery PIN code"><svg class="i"><use href="#i-pin"/></svg><span><small>Deliver to</small><b data-pin-label>All of India</b></span><svg class="i dn"><use href="#i-down"/></svg></button>
+    <span class="nh-loc-w only-d"><button class="nh-loc empty" data-pin="open" aria-label="Choose delivery PIN code"><svg class="i"><use href="#i-pin"/></svg><span><small>Deliver to</small><b data-pin-label>Select location</b></span><svg class="i dn"><use href="#i-down"/></svg></button></span>
     <form class="search" action="/search" role="search">
       <svg class="i"><use href="#i-search"/></svg>
       <label class="sr" for="q">Search</label>
