@@ -84,7 +84,7 @@
   const SKIP = /pelvic|stimulator|massager|intimate|condom|lingerie|bra\b|panty|vibrat|adult/i;
   function vHome(ctx = {}) {
     const counts = {}; P.forEach((p) => { if (!p.alt) counts[p.cat] = (counts[p.cat] || 0) + 1; });
-    const ok = (p) => p.img && p.available !== false && !p.alt && !SKIP.test(p.title);
+    const ok = (p) => p.img && p.available !== false && !p.alt && !SKIP.test(p.title) && !(p.win < 0);
     // At most two products from the same sub-category in one row, so rows show variety
     const varied = (list, n) => { const seen = {}; return list.filter((p) => { const k = (p.sub || '').toLowerCase(); seen[k] = (seen[k] || 0) + 1; return seen[k] <= 2; }).slice(0, n); };
     const cats = CATS.filter((c) => counts[c.id]).sort((a, b) => counts[b.id] - counts[a.id]);
@@ -92,7 +92,7 @@
     const short = (l) => l.replace(' & Decor', '').replace(' & Care', '').replace(' & Storage', '').replace(' & Stationery', '').replace(' & Outdoors', '').replace(' & Hardware', '').replace(' & Gifts', '');
     // Deals spread across categories: the biggest saving from each category in turn
     const byCat = {}; P.filter((p) => ok(p) && p.was && off(p) >= 15 && off(p) <= 85 && p.price >= 199).forEach((p) => (byCat[p.cat] = byCat[p.cat] || []).push(p));
-    Object.values(byCat).forEach((l) => l.sort((a, b) => off(b) - off(a)));
+    Object.values(byCat).forEach((l) => l.sort((a, b) => ((b.win || 0) - (a.win || 0)) * 0.5 + (off(b) - off(a))));
     const deals = []; for (let r = 0; r < 4; r++) cats.forEach((c) => { const x = (byCat[c.id] || [])[r]; if (x && deals.length < 18) deals.push(x); });
     // Bestsellers: our own drone first, then the top product of each category
     const best = BEST.map(byId).filter(Boolean);
