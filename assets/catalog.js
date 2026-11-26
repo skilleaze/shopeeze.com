@@ -75,7 +75,7 @@
   // Category covers: one consistent, warm editorial photo per category
   CATS.forEach((c) => { c.cover = B('cat-' + c.id + '-v2.jpg'); });
   const SLIDES = [
-    { cat: 'home', img: B('hero-home-v2.jpg'), pos: 'center 55%', alt: 'A cream panelled living room with a wine-red sofa', kicker: 'The Shopeiz edit', title: 'The art of having everything.', text: 'Anything you need, in one place, at your door.', cta: 'Shop Home & Decor' },
+    { cat: 'home', img: B('hero-home-v2.jpg'), pos: 'center 88%', alt: 'A cream panelled living room with a wine-red sofa', kicker: 'The Shopeiz edit', title: 'The art of having everything.', text: 'Anything you need, in one place, at your door.', cta: 'Shop Home & Decor' },
     { cat: 'kitchen', img: B('hero-kitchen-v2.jpg'), pos: 'center 50%', alt: 'A kitchen with deep wine cabinets and a marble counter', kicker: 'Kitchen', title: 'A kitchen, quietly upgraded.', text: 'Clever tools, storage and serveware for every day.', cta: 'Shop Kitchen' },
     { cat: 'fashion', img: B('hero-fashion-v2.jpg'), pos: 'center 25%', alt: 'A woman in a wine-coloured suit and hat carrying a burgundy bag', kicker: 'Fashion', title: 'Pieces you will reach for.', text: 'Bags, sarees and wardrobe staples, fairly priced.', cta: 'Shop Fashion' },
   ];
