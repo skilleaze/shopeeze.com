@@ -15,7 +15,7 @@
       "destination": "/admin/index.html"
     },
     {
-      "source": "/((?!assets/|api/|admin/|robots\\.txt|favicon\\.ico).*)",
+      "source": "/((?!assets/|api/|admin/|robots\\.txt|favicon\\.ico|apple-touch-icon\\.png|site\\.webmanifest).*)",
       "destination": "/api/render"
     }
   ],
