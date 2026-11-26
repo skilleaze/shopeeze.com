@@ -430,6 +430,11 @@
 
   renderClient();
   if (VIEW === 'cart' || VIEW === 'checkout') refreshPrices();
+  // Delivery PIN chosen in the header fills the checkout address
+  if (VIEW === 'checkout') {
+    let pv = null; try { pv = JSON.parse(localStorage.getItem('shopeiz-pin') || 'null'); } catch (e) {}
+    if (pv && pv.pin && !co.f.pin) { co.f.pin = pv.pin; if (pv.city && !co.f.city) co.f.city = pv.city; if (pv.state && !co.f.state) co.f.state = pv.state; renderClient(); }
+  }
   // Signed-in customers: fill the checkout form from their saved address
   if (VIEW === 'checkout' && window.SZAUTH && window.SZAUTH.user() && !co.f.name && !co.f.addr) {
     window.SZAUTH.prefill().then((d) => { if (d && !co.f.name && !co.f.addr) { Object.keys(d).forEach((k) => { if (d[k]) co.f[k] = d[k]; }); renderClient(); } });
@@ -527,4 +532,116 @@
   const t = p === '/' ? 'home' : p.startsWith('/deals') ? 'deals' : p.startsWith('/account') || p.startsWith('/login') || p.startsWith('/wishlist') || p.startsWith('/track') ? 'account' : p.startsWith('/cart') || p.startsWith('/checkout') ? 'cart' : '';
   const go = () => { const el = document.querySelector('.tabbar [data-tab="' + t + '"]'); if (el) el.classList.add('on'); };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+
+/* Delivery PIN code: customers tell us where they are once; header, product pages and checkout use it */
+(function () {
+  if (typeof document === 'undefined') return;
+  const SZ = window.SZ || {};
+  const { ic, esc, dateIn } = SZ;
+  const KEY = 'shopeiz-pin';
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const get = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } };
+  const put = (v) => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} };
+  // Areas couriers take longer to reach: J&K and Ladakh, the North-East, Sikkim, Andaman and Lakshadweep
+  const remote = (pin) => /^(18|19|79|737|744|6825)/.test(pin);
+  const title = (t) => String(t || '').toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+  async function lookup(pin) {
+    try {
+      const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 6000);
+      const r = await fetch('https://api.postalpincode.in/pincode/' + pin, { signal: ctl.signal }); clearTimeout(to);
+      const j = await r.json(); const d = j && j[0];
+      if (!d || d.Status !== 'Success' || !d.PostOffice || !d.PostOffice.length) return { pin, bad: true };
+      const po = d.PostOffice[0];
+      const city = [po.Block, po.Division, po.District].find((x) => x && x !== 'NA') || po.District;
+      return { pin, city: title(city), district: title(po.District), state: title(po.State), remote: remote(pin) };
+    } catch (e) {
+      // Lookup service unavailable: accept any well-formed PIN, we deliver everywhere in India
+      return { pin, city: '', state: '', remote: remote(pin), offline: true };
+    }
+  }
+  const label = (v) => (v ? (v.city ? v.city + ' ' + v.pin : v.pin) : 'All of India');
+  const extra = (v) => (v && v.remote ? 3 : 0);
+
+  function paint() {
+    const v = get();
+    $$('[data-pin-label]').forEach((el) => (el.textContent = label(v)));
+    const row = $('[data-pinrow]');
+    if (row) {
+      const days = Number(row.dataset.days) || 10;
+      const t = row.querySelector('.pin-t'), b = row.querySelector('button');
+      if (v) {
+        t.innerHTML = `Delivering to <b>${esc(v.city ? v.city + ', ' : '')}${esc(v.pin)}</b><small>${v.remote ? 'Remote area: please allow 2 to 3 extra days.' : 'Delivery available · ' + (row.dataset.cod === '0' ? 'Prepaid by UPI' : 'Cash on delivery available')}</small>`;
+        b.textContent = 'Change';
+        const eta = $('[data-eta]'); if (eta) eta.textContent = dateIn(days + extra(v));
+      } else { t.textContent = 'Enter your PIN code to check delivery to your area'; b.textContent = 'Check'; }
+    }
+  }
+
+  let box;
+  function modal() {
+    if (box) return box;
+    box = document.createElement('div');
+    box.className = 'pinm'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'Delivery location');
+    box.innerHTML = `<div class="pinm-c">
+      <div class="pinm-h"><h3>Where should we deliver?</h3><button data-pin="close" aria-label="Close">${ic('i-x')}</button></div>
+      <p class="sub">Enter your PIN code to see delivery dates and options for your area.</p>
+      <form class="pin-f" data-pin-form><input name="pin" inputmode="numeric" maxlength="6" autocomplete="postal-code" placeholder="6-digit PIN code" aria-label="PIN code"><button type="submit">Apply</button></form>
+      <div data-pin-res></div><div data-pin-saved></div>
+      <div class="pin-foot"><span></span><button type="button" data-pin="clear">Deliver to all of India</button></div>
+    </div>`;
+    document.body.appendChild(box);
+    box.addEventListener('click', (e) => { if (e.target === box) close(); });
+    return box;
+  }
+  function open() {
+    const m = modal(); const v = get();
+    const inp = m.querySelector('input'); inp.value = v ? v.pin : '';
+    m.querySelector('[data-pin-res]').innerHTML = v ? result(v) : '';
+    m.classList.add('on');
+    setTimeout(() => inp.focus(), 60);
+    // Saved addresses for signed-in customers
+    const sv = m.querySelector('[data-pin-saved]');
+    if (window.SZAUTH && window.SZAUTH.user() && window.SZAUTH.addresses) {
+      window.SZAUTH.addresses().then((list) => {
+        if (!list || !list.length) return;
+        sv.innerHTML = `<div class="pin-saved"><small>Your addresses</small><div>${list.slice(0, 4).map((a) => `<button type="button" data-pin="use" data-p="${esc(a.pin)}" class="${v && v.pin === a.pin ? 'on' : ''}"><b>${esc(a.label || a.name)}</b>${esc(a.city)} ${esc(a.pin)}</button>`).join('')}</div></div>`;
+      });
+    }
+  }
+  function close() { if (box) box.classList.remove('on'); }
+  const result = (v) => v.bad
+    ? `<div class="pin-res bad">${ic('i-x')}<div><b>We couldn't find PIN code ${esc(v.pin)}</b><span>Please check the number and try again.</span></div></div>`
+    : `<div class="pin-res ok">${ic('i-check')}<div><b>Delivery available to ${esc(v.city ? v.city + ', ' : '')}${esc(v.state ? v.state + ' ' : '')}${esc(v.pin)}</b><span>${v.remote ? 'Remote area: usually 2 to 3 days longer than standard.' : `Usually ${(window.SZ_SET && window.SZ_SET.min) || 6} to ${(window.SZ_SET && window.SZ_SET.max) || 10} working days`} · Cash on delivery and UPI</span></div></div>`;
+
+  async function apply(pin) {
+    const m = modal(); const btn = m.querySelector('[data-pin-form] button'); const res = m.querySelector('[data-pin-res]');
+    pin = String(pin || '').replace(/\D/g, '');
+    if (!/^[1-9]\d{5}$/.test(pin)) { res.innerHTML = `<div class="pin-res bad">${ic('i-x')}<div><b>Please enter a valid 6-digit PIN code</b></div></div>`; return; }
+    btn.disabled = true; btn.textContent = 'Checking…';
+    const v = await lookup(pin);
+    btn.disabled = false; btn.textContent = 'Apply';
+    res.innerHTML = result(v);
+    if (v.bad) return;
+    v.at = Date.now(); put(v); paint();
+    if (window.SZAUTH && window.SZAUTH.user() && window.SZAUTH.savePin) window.SZAUTH.savePin(v);
+    document.dispatchEvent(new CustomEvent('sz:pin', { detail: v }));
+    setTimeout(close, 1100);
+  }
+
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-pin]');
+    if (!el) return;
+    const a = el.dataset.pin;
+    if (a === 'open') { e.preventDefault(); open(); }
+    if (a === 'close') close();
+    if (a === 'use') { modal().querySelector('input').value = el.dataset.p; apply(el.dataset.p); }
+    if (a === 'clear') { try { localStorage.removeItem(KEY); } catch (err) {} paint(); close(); }
+  });
+  document.addEventListener('submit', (e) => { if (e.target.matches('[data-pin-form]')) { e.preventDefault(); apply(e.target.pin.value); } });
+  document.addEventListener('input', (e) => { if (e.target.closest('[data-pin-form]')) { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); if (e.target.value.length === 6) apply(e.target.value); } });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint); else paint();
+  window.SZPIN = { get };
 })();

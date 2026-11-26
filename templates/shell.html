@@ -1282,6 +1282,45 @@ fieldset legend span{color:var(--brand)}
   .auth{padding:18px 12px 40px;background:#fff}
   .auth-card{border:0;box-shadow:none;padding:8px 6px}
 }
+
+/* ===== Delivery PIN code ===== */
+button.nh-loc{background:none;border:0;padding:0;font:inherit;color:#fff;cursor:pointer;text-align:left}
+.nh-loc b{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.pinm{position:fixed;inset:0;z-index:120;display:flex;align-items:flex-start;justify-content:center;padding:90px 16px 16px;background:rgba(10,10,20,.45);opacity:0;pointer-events:none;transition:opacity .2s}
+.pinm.on{opacity:1;pointer-events:auto}
+.pinm-c{width:100%;max-width:440px;background:#fff;border-radius:16px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.25);transform:translateY(-8px);transition:transform .25s}
+.pinm.on .pinm-c{transform:none}
+.pinm-h{display:flex;justify-content:space-between;align-items:center;margin:0 0 6px}
+.pinm-h h3{margin:0;font-size:19px;font-weight:700;color:var(--tx-h)}
+.pinm-h button{background:none;border:0;padding:4px;cursor:pointer}
+.pinm-h .i{width:22px;height:22px;stroke:var(--tx-h);stroke-width:2;fill:none}
+.pinm p.sub{margin:0 0 16px;font-size:14px;color:var(--tx-m)}
+.pin-f{display:flex;gap:8px}
+.pin-f input{flex:1;height:48px;border:1px solid var(--bd);border-radius:12px;padding:0 14px;font:inherit;font-size:17px;font-weight:600;letter-spacing:.12em;color:var(--tx-h);outline:0;min-width:0}
+.pin-f input:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-tint)}
+.pin-f button{height:48px;padding:0 20px;border:0;border-radius:12px;background:var(--brand);color:#fff;font:inherit;font-weight:700;font-size:15px;cursor:pointer;flex:none}
+.pin-f button:disabled{opacity:.6}
+.pin-res{margin:14px 0 0;border-radius:12px;padding:12px 14px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+.pin-res .i{width:20px;height:20px;flex:none;fill:none;stroke-width:2;margin-top:1px}
+.pin-res.ok{background:#ECFDF3;color:#05603A}.pin-res.ok .i{stroke:#067647}
+.pin-res.bad{background:#FEF3F2;color:#B42318}.pin-res.bad .i{stroke:#B42318}
+.pin-res b{display:block;font-size:15px}
+.pin-res span{display:block;margin-top:2px}
+.pin-saved{margin:16px 0 0}
+.pin-saved small{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--tx-m);margin:0 0 8px}
+.pin-saved div{display:flex;flex-wrap:wrap;gap:8px}
+.pin-saved button{border:1px solid var(--bd);background:#fff;border-radius:10px;padding:8px 12px;font:inherit;font-size:13.5px;color:var(--tx-h);cursor:pointer;text-align:left}
+.pin-saved button:hover,.pin-saved button.on{border-color:var(--brand);background:var(--brand-soft)}
+.pin-saved button b{display:block;font-size:14px}
+.pin-foot{display:flex;justify-content:space-between;margin:16px 0 0;font-size:13px}
+.pin-foot button{background:none;border:0;padding:0;font:inherit;font-weight:700;color:var(--brand);cursor:pointer}
+.pdx-pin{display:flex;align-items:center;gap:10px;border:1px dashed #D0B4BB;background:var(--brand-soft);border-radius:10px;padding:10px 12px;margin:0 0 10px;font-size:14px;color:var(--tx-h)}
+.pdx-pin>.i{width:20px;height:20px;stroke:var(--brand);stroke-width:1.8;fill:none;flex:none}
+.pdx-pin .pin-t{flex:1;min-width:0}
+.pdx-pin .pin-t b{font-weight:700}
+.pdx-pin .pin-t small{display:block;font-size:12.5px;color:var(--tx-m)}
+.pdx-pin button{background:none;border:0;padding:0;font:inherit;font-weight:700;font-size:14px;color:var(--brand);cursor:pointer;flex:none}
+@media (max-width:760px){.pinm{align-items:flex-end;padding:0}.pinm-c{border-radius:18px 18px 0 0;max-width:none;padding:20px 16px calc(22px + env(safe-area-inset-bottom));transform:translateY(30px)}.nh-loc b{max-width:120px}}
 </style>
 </head>
 <body data-view="{{VIEW}}">
@@ -1289,7 +1328,7 @@ fieldset legend span{color:var(--brand)}
   <div class="nh-top"><div class="wrap2 nh-row">
     <button class="nh-ic only-m" data-act="menu" aria-label="Open menu"><svg class="i"><use href="#i-menu"/></svg></button>
     <a href="/" class="nh-logo" aria-label="Shopeiz home"><svg viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg><span>Shopeiz</span></a>
-    <span class="nh-loc only-d"><svg class="i"><use href="#i-pin"/></svg><span><small>Deliver to</small><b>All of India</b></span><svg class="i dn"><use href="#i-down"/></svg></span>
+    <button class="nh-loc only-d" data-pin="open" aria-label="Choose delivery PIN code"><svg class="i"><use href="#i-pin"/></svg><span><small>Deliver to</small><b data-pin-label>All of India</b></span><svg class="i dn"><use href="#i-down"/></svg></button>
     <form class="search" action="/search" role="search">
       <svg class="i"><use href="#i-search"/></svg>
       <label class="sr" for="q">Search</label>

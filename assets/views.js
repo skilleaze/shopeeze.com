@@ -430,7 +430,8 @@
         <a class="pdx-explore" href="${url.cat(c.id)}">${ic('i-gift')}<span>Explore more bestsellers in <b>${esc(c.label)}</b></span>${ic('i-down', 'i rot')}</a>
         <div class="pdx-del">
           <h3>Delivery information</h3>
-          <div class="pdx-dbox"><span class="pdx-pill">${ic('i-truck')} Standard</span><span>Get it by <b>${dateIn(daysOf(p))}</b></span><small>${deliveryText(p)}</small></div>
+          <div class="pdx-pin" data-pinrow data-days="${daysOf(p)}" data-cod="${p.cod === false ? 0 : 1}">${ic('i-pin')}<span class="pin-t">Enter your PIN code to check delivery to your area</span><button data-pin="open">Check</button></div>
+          <div class="pdx-dbox"><span class="pdx-pill">${ic('i-truck')} Standard</span><span>Get it by <b data-eta>${dateIn(daysOf(p))}</b></span><small data-eta-range>${deliveryText(p)}</small></div>
           <div class="pdx-dbox"><span class="pdx-pill alt">${ic('i-cash')} ${p.cod === false ? 'Prepaid' : 'COD'}</span><span>${p.cod === false ? 'Pay securely by UPI' : 'Pay cash when it arrives, or by UPI'}</span></div>
         </div>
         ${hl.length ? `<div class="pdx-hl"><h3>Highlights</h3><ul>${hl.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}

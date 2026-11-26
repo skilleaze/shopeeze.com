@@ -393,6 +393,8 @@
   /* ---------- For checkout ---------- */
   window.SZAUTH = {
     user, token, paintHeader,
+    async addresses() { try { const c = await sb(); const { data } = await c.from('addresses').select('label,name,city,pin,is_default').order('is_default', { ascending: false }).order('id', { ascending: false }).limit(6); return data || []; } catch (e) { return []; } },
+    async savePin(v) { try { const c = await sb(); const u = user(); if (u) await c.from('profiles').upsert({ id: u.id, pin: v.pin, pin_city: v.city || null, pin_state: v.state || null, updated_at: new Date().toISOString() }); } catch (e) {} },
     // Default saved address (or profile) to fill the checkout form
     async prefill() {
       const u = user(); if (!u) return null;
