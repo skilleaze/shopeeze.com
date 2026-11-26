@@ -65,7 +65,7 @@
     </div>
     <div class="pc-body">
       <h3 class="pc-t"><a href="${url.product(p)}">${esc(p.title)}</a></h3>
-      ${n ? `<div class="pc-r"><span class="pc-rv">${ic('i-star')}<b>${Number(p.rating).toFixed(1)}</b></span><span class="pc-rc">(${n.toLocaleString('en-IN')})</span></div>` : ''}
+      ${n || p.alts ? `<div class="pc-r">${n ? `<span class="pc-rv">${ic('i-star')}<b>${Number(p.rating).toFixed(1)}</b></span><span class="pc-rc">(${n.toLocaleString('en-IN')})</span>` : ''}${p.alts ? `<span class="pc-more">+${p.alts} more option${p.alts === 1 ? '' : 's'}</span>` : ''}</div>` : ''}
       <div class="pc-p"><span class="pc-cur">₹</span><strong>${Math.round(p.price).toLocaleString('en-IN')}</strong>${p.was ? `<s>${Math.round(p.was).toLocaleString('en-IN')}</s><em>${off(p)}%</em>` : ''}</div>
       ${p.available === false ? '<div class="pc-out">Out of stock</div>' : `<div class="pc-del">${ic('i-truck')}<span>Get it by <b>${dateIn(daysOf(p))}</b></span></div>`}
     </div>
@@ -80,8 +80,10 @@
   /* ---------- Home ---------- */
   const SKIP = /pelvic|stimulator|massager|intimate|condom|lingerie|bra\b|panty|vibrat|adult/i;
   function vHome(ctx = {}) {
-    const counts = {}; P.forEach((p) => (counts[p.cat] = (counts[p.cat] || 0) + 1));
-    const ok = (p) => p.img && p.available !== false && !SKIP.test(p.title);
+    const counts = {}; P.forEach((p) => { if (!p.alt) counts[p.cat] = (counts[p.cat] || 0) + 1; });
+    const ok = (p) => p.img && p.available !== false && !p.alt && !SKIP.test(p.title);
+    // At most two products from the same sub-category in one row, so rows show variety
+    const varied = (list, n) => { const seen = {}; return list.filter((p) => { const k = (p.sub || '').toLowerCase(); seen[k] = (seen[k] || 0) + 1; return seen[k] <= 2; }).slice(0, n); };
     const cats = CATS.filter((c) => counts[c.id]).sort((a, b) => counts[b.id] - counts[a.id]);
     const cover = (c) => c.cover || c.img || ((P.find((p) => p.cat === c.id && ok(p)) || {}).img);
     const short = (l) => l.replace(' & Decor', '').replace(' & Care', '').replace(' & Storage', '').replace(' & Stationery', '').replace(' & Outdoors', '').replace(' & Hardware', '').replace(' & Gifts', '');
@@ -109,7 +111,7 @@
       </div>`;
     const focus = (c, line) => `<a class="fc-card" href="${url.cat(c.id)}"><img src="${imgUrl(cover(c), 700)}" alt="${esc(c.label)}" loading="lazy"><span class="fc-txt"><b>${esc(c.label)}</b><span>${line}</span><em>Shop now ${ic('i-arrow')}</em></span></a>`;
     const rows = cats.slice(0, 5).map((c) => {
-      const list = P.filter((p) => p.cat === c.id && ok(p)).slice(0, 14);
+      const list = varied(P.filter((p) => p.cat === c.id && ok(p)), 14);
       return list.length >= 4 ? `<section class="hsec"><div class="wrap2">${ribbon(c.label, url.cat(c.id))}${rail(list, ctx)}</div></section>` : '';
     }).join('');
     return `
@@ -202,7 +204,8 @@
     const named = CATS.filter((c) => c.label.toLowerCase().includes(s) || c.id.includes(s));
     const busy = CATS.filter((c) => byCat[c.id]).sort((a, b) => byCat[b.id] - byCat[a.id]);
     out.cats = [...new Set([...named, ...busy])].slice(0, 3).map((c) => ({ label: c.label, href: url.cat(c.id), n: byCat[c.id] || P.filter((p) => p.cat === c.id).length }));
-    out.items = list.slice(0, 6).map((p) => ({ t: p.title, href: url.product(p), img: imgUrl(p.img, 120) || '', p: fmt(p.price), w: p.was && p.was > p.price ? fmt(p.was) : '', r: p.rating || 0 }));
+    const seenG = new Set();
+    out.items = list.filter((p) => !p.gk || (!seenG.has(p.gk) && seenG.add(p.gk))).slice(0, 6).map((p) => ({ t: p.title, href: url.product(p), img: imgUrl(p.img, 120) || '', p: fmt(p.price), w: p.was && p.was > p.price ? fmt(p.was) : '', r: p.rating || 0 }));
     return out;
   }
   function listData(kind, key) {
@@ -220,6 +223,7 @@
   // Applies sub-filter, sort and page. Returns everything a listing page needs.
   function listView(kind, key, opts = {}) {
     const d = listData(kind, key);
+    if (kind !== 'search') d.list = d.list.filter((p) => !p.alt);
     // Group sub-categories that differ only in spelling ("Mixer-Juicer-Grinder" = "Mixer Juicer Grinder"), skip vague ones
     const skey = (x) => String(x || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '').replace(/s$/, '');
     const vague = new Set(['homeandkitchen', 'homeimprovement', 'kitchenware', 'otherproduct', 'allproduct', 'trending', 'bestseller', 'newarrival', 'goods', 'general', 'kid', 'women', 'men']);
@@ -260,13 +264,13 @@
   }
   function vList(kind, key, opts = {}, ctx = {}) {
     const v = listView(kind, key, opts);
-    const counts = {}; P.forEach((p) => (counts[p.cat] = (counts[p.cat] || 0) + 1));
+    const counts = {}; P.forEach((p) => { if (!p.alt) counts[p.cat] = (counts[p.cat] || 0) + 1; });
     const curCat = v.cat ? v.cat.id : kind === 'deals' ? 'deals' : kind === 'all' ? 'all' : '';
     const sorts = [['pop', 'Recommended'], ['lo', 'Price: Low to High'], ['hi', 'Price: High to Low'], ['off', 'Biggest Saving']];
     const label = kind === 'search' ? esc(key) : v.title;
     const side = `<aside class="lf" id="filters"><div class="lf-mh"><b>Filters</b><button class="lf-x" data-act="filters" aria-label="Close filters">${ic('i-x')}</button></div>
       <div class="lf-sec"><h3>Category</h3>
-        <a class="lf-cat ${curCat === 'all' ? 'on' : ''}" href="${url.shop}"><i></i>All products <small>${P.length.toLocaleString('en-IN')}</small></a>
+        <a class="lf-cat ${curCat === 'all' ? 'on' : ''}" href="${url.shop}"><i></i>All products <small>${P.filter((p) => !p.alt).length.toLocaleString('en-IN')}</small></a>
         ${CATS.filter((c) => counts[c.id]).map((c) => `<a class="lf-cat ${curCat === c.id ? 'on' : ''}" href="${url.cat(c.id)}"><i></i>${c.label} <small>${counts[c.id].toLocaleString('en-IN')}</small></a>
           ${curCat === c.id && v.subs.length > 1 ? `<div class="lf-subs">${v.subs.map((x) => `<a class="${v.sub === x ? 'on' : ''}" href="${v.link({ sub: v.sub === x ? 'all' : x, page: 1 })}"><i></i>${esc(x)} <small>${v.subCount[x]}</small></a>`).join('')}</div>` : ''}`).join('')}
         <a class="lf-cat ${curCat === 'deals' ? 'on' : ''}" href="${url.deals}"><i></i>Deals</a>
@@ -389,7 +393,7 @@
   }
   function vProduct(p, ctx = {}) {
     const c = catOf(p);
-    const near = P.filter((x) => x.cat === p.cat && x.id !== p.id);
+    const near = P.filter((x) => x.cat === p.cat && x.id !== p.id && !x.alt && (!p.gk || x.gk !== p.gk));
     const related = near.slice().sort((a, b) => Math.abs(a.price - p.price) - Math.abs(b.price - p.price)).slice(0, 8);
     if (related.length < 4) related.push(...P.filter((x) => x.cat !== p.cat && x.was).slice(0, 4 - related.length));
     const imgs = (p.images && p.images.length ? p.images : p.img ? [p.img] : []).slice(0, 10);
