@@ -1122,6 +1122,17 @@ fieldset legend span{color:var(--brand)}
 .panel{border-radius:12px;border-color:var(--bd)}
 .field input,.field select,.field textarea,.promo input{border-radius:10px;border-color:var(--bd)}
 .promo button,.btn{border-radius:10px}
+.lst-in>*,.trio-in>*,.pdx-in>*,.hb-grid>*,.ps-in>*,.lst-main{min-width:0}
+@media (max-width:900px){.lst-in{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){
+  .trio-in{grid-template-columns:minmax(0,1fr)}
+  .pdx-in{grid-template-columns:minmax(0,1fr)}
+  .lst-bar{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .srt select{min-width:0;width:100%;text-overflow:ellipsis}
+  .sticky-buy .p{display:flex;flex-direction:column;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;-webkit-line-clamp:unset}
+  .sticky-buy .p b{order:-1}
+  html,body{overflow-x:hidden}
+}
 </style>
 </head>
 <body data-view="{{VIEW}}">
