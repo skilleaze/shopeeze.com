@@ -11,7 +11,7 @@ const { SITE, CATS, P, NAV_CATS, POLICY } = C;
 const { esc, url, fmt, bySlug, catOf, ic } = V;
 
 const SHELL = fs.readFileSync(path.join(__dirname, '..', 'templates', 'shell.html'), 'utf8');
-const VERSION = '34';
+const VERSION = '35';
 const DEFAULT_DESC = 'The art of having everything. Anything you need, in one place, at your door: kitchen, home, electronics, beauty, fashion, toys and drones. Free delivery over ₹499, cash on delivery, 7-day replacement.';
 
 function headHtml(h) {
@@ -48,7 +48,8 @@ ${ld}`;
 function nav(active) {
   const counts = {}; P.forEach((p) => (counts[p.cat] = (counts[p.cat] || 0) + 1));
   const items = [...CATS.filter((c) => counts[c.id]).sort((a, b) => counts[b.id] - counts[a.id]).map((c) => [c.id, c.label]), ['deals', 'Deals']];
-  return items.map(([id, l]) => `<a href="${url.cat(id)}" class="${active === id ? 'on' : ''} ${id === 'deals' ? 'sale' : ''}">${l}</a>`).join('');
+  const SHORT = { home: 'Home', beauty: 'Beauty', kids: 'Toys & Kids', cleaning: 'Cleaning', office: 'Office', sports: 'Sports', tools: 'Tools', festive: 'Festive & Gifts' };
+  return items.map(([id, l]) => [id, SHORT[id] || l]).map(([id, l]) => `<a href="${url.cat(id)}" class="${active === id ? 'on' : ''} ${id === 'deals' ? 'sale' : ''}">${l}</a>`).join('');
 }
 
 function page({ head, main, view = '', active = '', sticky = '', q = '' }) {

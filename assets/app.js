@@ -679,3 +679,14 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint); else paint();
   window.SZPIN = { get };
 })();
+
+/* Category bar: arrows + fades only when the list overflows */
+(function () {
+  const w = document.querySelector('.nh-cw'); if (!w) return;
+  const l = w.querySelector('.nh-cl');
+  const upd = () => { const m = l.scrollWidth - l.clientWidth; w.classList.toggle('ml', l.scrollLeft > 4); w.classList.toggle('mr', m - l.scrollLeft > 4); };
+  w.addEventListener('click', (e) => { const b = e.target.closest('[data-navs]'); if (b) l.scrollBy({ left: +b.dataset.navs * l.clientWidth * 0.7 }); });
+  l.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd);
+  const on = l.querySelector('a.on'); if (on && on.offsetLeft + on.offsetWidth > l.clientWidth) l.scrollLeft = on.offsetLeft - 60;
+  upd(); if (document.fonts) document.fonts.ready.then(upd);
+})();
