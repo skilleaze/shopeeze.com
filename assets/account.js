@@ -102,7 +102,7 @@
       <section class="od-card"><h3>Items</h3>${o.items.map((i) => `<div class="od-item">
           <a class="od-img" href="${i.slug ? '/products/' + esc(i.slug) : '#'}">${i.img ? `<img src="${esc(imgUrl(i.img, 200))}" alt="" loading="lazy">` : ''}</a>
           <div><a href="${i.slug ? '/products/' + esc(i.slug) : '#'}"><b>${esc(i.title)}</b></a>${i.variant ? `<small>${esc(i.variant)}</small>` : ''}<span>Qty ${i.qty} · ${fmt(Number(i.price))}</span></div>
-          ${['delivered', 'replaced', 'cancelled'].includes(o.status) && i.slug ? `<button class="od-again" data-act="add" data-id="${esc(i.product_id)}" data-snap="${snapOf(i)}">Buy again</button>` : ''}
+          <div class="od-btns">${['delivered', 'replaced'].includes(o.status) && i.slug ? `<a class="od-again" href="/products/${esc(i.slug)}?review=${encodeURIComponent(o.code)}#reviews">${ic('i-star')} Rate &amp; review</a>` : ''}${['delivered', 'replaced', 'cancelled'].includes(o.status) && i.slug ? `<button class="od-again" data-act="add" data-id="${esc(i.product_id)}" data-snap="${snapOf(i)}">Buy again</button>` : ''}</div>
         </div>`).join('')}</section>
       <div class="od-two">
         <section class="od-card"><h3>Delivery address</h3><p class="od-addr"><b>${esc(o.name)}</b><br>${esc(o.addr)}<br>${esc(o.city)}${o.state ? ', ' + esc(o.state) : ''} ${esc(o.pin)}<br>${esc(o.phone)}</p></section>

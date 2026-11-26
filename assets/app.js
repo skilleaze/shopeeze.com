@@ -399,6 +399,16 @@
     if (e.target.name === 'rating' && e.target.closest('.rv-rate')) { const v = Number(e.target.value); $$('.rv-rate label').forEach((l, i) => l.classList.toggle('on', i < v)); }
   });
 
+  /* ---------- Review link from a delivered order: open the form with the order number ---------- */
+  (() => {
+    const code = new URLSearchParams(location.search).get('review');
+    const f = $('[data-form="review"]');
+    if (!code || !f) return;
+    f.hidden = false;
+    if (f.order_code) f.order_code.value = code;
+    setTimeout(() => f.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+  })();
+
   /* ---------- Hero slider ---------- */
   let heroK = 0, heroTimer;
   function heroGo(k) {

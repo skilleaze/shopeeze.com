@@ -67,10 +67,13 @@
       <h3 class="pc-t"><a href="${url.product(p)}">${esc(p.title)}</a></h3>
       ${n || p.alts ? `<div class="pc-r">${n ? `<span class="pc-rv">${ic('i-star')}<b>${Number(p.rating).toFixed(1)}</b></span><span class="pc-rc">(${n.toLocaleString('en-IN')})</span>` : ''}${p.alts ? `<span class="pc-more">+${p.alts} more option${p.alts === 1 ? '' : 's'}</span>` : ''}</div>` : ''}
       <div class="pc-p"><span class="pc-cur">₹</span><strong>${Math.round(p.price).toLocaleString('en-IN')}</strong>${p.was ? `<s>${Math.round(p.was).toLocaleString('en-IN')}</s><em>${off(p)}%</em>` : ''}</div>
+      ${p.available !== false && codePrice(p.price) ? `<div class="pc-code"><span>${ic('i-tag')}</span><b>₹${codePrice(p.price).toLocaleString('en-IN')}</b> with ${esc(PROMO.code)}</div>` : ''}
       ${p.available === false ? '<div class="pc-out">Out of stock</div>' : `<div class="pc-del">${ic('i-truck')}<span>Get it by <b>${dateIn(daysOf(p))}</b></span></div>`}
     </div>
   </article>`;
   }
+  // Real offer available on every product: the first-order code
+  const codePrice = (price) => (PROMO.code && PROMO.pct > 0 ? Math.round(price) - Math.round(price * PROMO.pct / 100) : 0);
   // Horizontal product rail with arrow buttons
   const rail = (list, ctx) => `<div class="rail"><button class="rail-b prev" data-act="rail" data-d="-1" aria-label="Scroll back">${ic('i-arrow', 'i flip')}</button><div class="rail-in">${list.map((p) => card(p, ctx)).join('')}</div><button class="rail-b next" data-act="rail" data-d="1" aria-label="Scroll forward">${ic('i-arrow')}</button></div>`;
   const ribbon = (title, href, more = 'View all') => `<div class="rb-head"><h2 class="ribbon">${esc(title)}</h2>${href ? `<a class="rb-more" href="${href}">${more} ${ic('i-arrow')}</a>` : ''}</div>`;
@@ -434,6 +437,10 @@
         <a class="pdx-rate" href="#reviews">${n ? `<b>${avg.toFixed(1)}</b>${starRow(avg)}<u>${n} Rating${n === 1 ? '' : 's'}</u>` : `${starRow(0)}<u>Be the first to rate</u>`}</a>
         <div id="pprice" class="pdx-price"><span class="pc-cur">₹</span><strong>${Math.round(price).toLocaleString('en-IN')}</strong>${p.was ? `<s>₹${Math.round(p.was).toLocaleString('en-IN')}</s><em>${off(vp)}% Off</em>` : ''}</div>
         <p class="pdx-tax">Inclusive of all taxes${soldOut ? '' : p.cod === false ? ' · Prepaid by UPI only' : ' · Cash on delivery available'}</p>
+        ${!soldOut && codePrice(price) ? `<div class="pdx-offers"><h3>${ic('i-tag')} Offers</h3>
+          <div class="pdx-off"><b>₹${codePrice(price).toLocaleString('en-IN')} on your first order</b><span>Use code <em>${esc(PROMO.code)}</em> at checkout for ${PROMO.pct}% off (once per mobile number).</span></div>
+          <div class="pdx-off"><b>${price >= C.FREE_OVER ? 'Free delivery on this item' : `Free delivery on orders over ${fmt(C.FREE_OVER)}`}</b><span>${price >= C.FREE_OVER ? 'No delivery charge, anywhere in India.' : `Add ${fmt(C.FREE_OVER - price)} more to your cart to skip the ${fmt(C.STD_FEE)} delivery fee.`}</span></div>
+        </div>` : ''}
         ${fam.length ? `<div class="fam"><span class="vl">Colour</span><div>${fam.map((f) => `<a href="/products/${esc(f.slug)}" title="${esc(f.title)}"><img src="${esc(imgUrl(f.img, 160))}" alt="${esc(f.title)}" loading="lazy"></a>`).join('')}</div></div>` : ''}
         ${vars.length > 1 ? `<div class="vars"><span class="vl">${sizeLike ? 'Size' : 'Option'}</span><div>${vars.map((v) => `<button class="${curV && v.id === curV.id ? 'on' : ''}" data-act="pvar" data-v="${esc(v.id)}" data-price="${v.price}" ${v.ok ? '' : 'disabled'}>${esc(v.title)}${v.ok ? '' : ' (sold out)'}</button>`).join('')}</div></div>` : ''}
         <a class="pdx-explore" href="${url.cat(c.id)}">${ic('i-gift')}<span>Explore more bestsellers in <b>${esc(c.label)}</b></span>${ic('i-down', 'i rot')}</a>
