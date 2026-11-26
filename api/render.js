@@ -11,7 +11,7 @@ const { SITE, CATS, P, NAV_CATS, POLICY } = C;
 const { esc, url, fmt, bySlug, catOf, ic } = V;
 
 const SHELL = fs.readFileSync(path.join(__dirname, '..', 'templates', 'shell.html'), 'utf8');
-const VERSION = '21';
+const VERSION = '22';
 const DEFAULT_DESC = 'The art of having everything. Anything you need, in one place, at your door: kitchen, home, electronics, beauty, fashion, toys and drones. Free delivery over ₹499, cash on delivery, 7-day replacement.';
 
 function headHtml(h) {
@@ -174,7 +174,7 @@ async function route(pathname, query) {
     if (b === 'about') ld.unshift(ORG);
     return { head: { title: `${h[0]} | Shopeiz`, description: h[1].slice(0, 300), canonical: url.help(b), ld }, main: V.vHelp(b) };
   }
-  const client = { cart: ['Your bag', 'cart'], checkout: ['Checkout', 'checkout'], wishlist: ['Wishlist', 'wishlist'], 'order-confirmed': ['Order confirmed', 'done'] };
+  const client = { cart: ['Cart', 'cart'], checkout: ['Checkout', 'checkout'], wishlist: ['Wishlist', 'wishlist'], 'order-confirmed': ['Order confirmed', 'done'] };
   if (client[a] && !b) return { head: { title: `${client[a][0]} | Shopeiz`, noindex: true, canonical: '/' + a }, main: '<div class="wrap" style="min-height:60vh"></div>', view: client[a][1] };
 
   if (a === 'online-shopping-india' && !b) return L.indiaPage();

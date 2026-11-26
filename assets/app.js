@@ -81,9 +81,9 @@
   }
   function vCart() {
     const t = totals();
-    if (!t.count) return `<div class="wrap"><div class="empty" style="padding:120px 0"><h2>Your bag is empty</h2><p style="margin-bottom:28px">Let's find something you'll love.</p><a class="btn btn-dark" href="${url.shop}">Start shopping</a></div></div>`;
+    if (!t.count) return `<div class="wrap"><div class="empty" style="padding:120px 0"><h2>Your cart is empty</h2><p style="margin-bottom:28px">Let's find something you'll love.</p><a class="btn btn-dark" href="${url.shop}">Start shopping</a></div></div>`;
     return `<div class="wrap">
-    <div class="page-head">${crumbs([['Home', '/'], ['Bag']])}<h1>Your bag</h1></div>
+    <div class="page-head">${crumbs([['Home', '/'], ['Cart']])}<h1>Cart</h1></div>
     <div class="two">
       <div>${shipBar(t.sub)}${t.lines.map((l) => lineHtml(l)).join('')}</div>
       <div class="panel sticky"><h3>Order summary</h3>${promoHtml()}<div style="height:12px"></div>${summaryRows(t)}
@@ -104,7 +104,7 @@
     const opt = (grp, v, title, sub, amt) => `<label class="opt ${co[grp] === v ? 'on' : ''}"><input type="radio" name="${grp}" value="${v}" ${co[grp] === v ? 'checked' : ''} data-act="opt"><span class="grow"><b>${title}</b><span>${sub}</span></span><span class="amt">${amt}</span></label>`;
     const maxDays = Math.max(...t.lines.map((l) => (l.id.length <= 4 ? 5 : MAXD)));
     return `<div class="wrap">
-    <div class="page-head">${crumbs([['Home', '/'], ['Bag', url.cart], ['Checkout']])}<h1>Checkout</h1>
+    <div class="page-head">${crumbs([['Home', '/'], ['Cart', url.cart], ['Checkout']])}<h1>Checkout</h1>
       <div class="steps"><b>Details</b><span>›</span><b>Address</b><span>›</span><b>Payment</b></div></div>
     <form class="two" data-form="checkout" novalidate>
       <div>
@@ -138,7 +138,7 @@
   function vDone() {
     let o = null;
     try { o = JSON.parse(sessionStorage.getItem('shopeiz-order') || 'null'); } catch (e) {}
-    if (!o) return `<div class="wrap"><div class="empty" style="padding:110px 0"><h2>No recent order</h2><p style="margin-bottom:26px">Your bag is waiting.</p><a class="btn btn-dark" href="${url.shop}">Shop all</a></div></div>`;
+    if (!o) return `<div class="wrap"><div class="empty" style="padding:110px 0"><h2>No recent order</h2><p style="margin-bottom:26px">Your cart is waiting.</p><a class="btn btn-dark" href="${url.shop}">Shop all</a></div></div>`;
     return `<div class="wrap"><div class="done">
     <svg class="mono" viewBox="0 0 206.04 235.47" width="58" style="margin:0 auto 26px" aria-hidden="true"><use href="#mono"/></svg>
     <span class="eyebrow">Order ${esc(o.id)}</span>
@@ -200,22 +200,29 @@
   }
   function renderBag() {
     const t = totals();
-    $('#bag').innerHTML = `<div class="dhead"><h3>Your bag ${t.count ? `<small style="font-family:var(--sans);font-size:13px;color:var(--muted)">(${t.count})</small>` : ''}</h3><button class="icon-btn" data-act="close" aria-label="Close">${ic('i-x')}</button></div>
+    $('#bag').innerHTML = `<div class="dhead"><h3>Cart ${t.count ? `<small style="font-family:var(--sans);font-size:13px;color:var(--muted)">(${t.count})</small>` : ''}</h3><button class="icon-btn" data-act="close" aria-label="Close">${ic('i-x')}</button></div>
     ${t.count ? shipBar(t.sub) : ''}
-    <div class="dbody">${t.count ? t.lines.map((l) => lineHtml(l, true)).join('') : `<div class="empty" style="padding:70px 0"><h2 style="font-size:30px">Your bag is empty</h2><p style="margin-bottom:24px">Your next favourite thing is waiting.</p><a class="btn btn-dark" href="${url.shop}">Start shopping</a></div>`}</div>
+    <div class="dbody">${t.count ? t.lines.map((l) => lineHtml(l, true)).join('') : `<div class="empty" style="padding:70px 0"><h2 style="font-size:30px">Your cart is empty</h2><p style="margin-bottom:24px">Your next favourite thing is waiting.</p><a class="btn btn-dark" href="${url.shop}">Start shopping</a></div>`}</div>
     ${t.count ? `<div class="dfoot"><div class="sum-row" style="font-size:16px;font-weight:600;margin:0 0 4px"><span>Subtotal</span><span>${fmt(t.sub)}</span></div><p style="font-size:12px;color:var(--muted);margin:0 0 16px">GST included. Delivery and promo codes applied at checkout.</p>
       <a class="btn btn-wine btn-block" href="${url.checkout}">Checkout ${ic('i-lock')}</a>
-      <a class="btn btn-block" href="${url.cart}" style="height:44px;margin-top:6px">View bag</a></div>` : ''}`;
+      <a class="btn btn-block" href="${url.cart}" style="height:44px;margin-top:6px">View cart</a></div>` : ''}`;
   }
   function renderMenu() {
-    $('#menu').innerHTML = `<div class="dhead"><span class="wm" style="font-size:24px">Shopeiz</span><button class="icon-btn" data-act="close" aria-label="Close">${ic('i-x')}</button></div>
-    <div class="dbody mnav">
-      <form class="search" action="/search" role="search">${ic('i-search')}<input name="q" type="search" enterkeyhint="search" placeholder="Search kitchen tools, earbuds, drones…" autocomplete="off" aria-label="Search"></form>
-      <a href="${url.shop}">Shop all ${ic('i-arrow')}</a>
-      ${SZ.CATS.map((c) => `<a href="${url.cat(c.id)}">${c.label} ${ic('i-arrow')}</a>`).join('')}
-      <a href="${url.deals}" style="color:var(--wine)">Deals ${ic('i-arrow')}</a>
-      <a href="${url.wishlist}">Wishlist <span style="font-family:var(--sans);font-size:14px;color:var(--muted)">${store.wish.length || ''}</span></a>
-      <a href="${url.india}">Delivery across India ${ic('i-arrow')}</a>
+    const cats = SZ.CATS;
+    $('#menu').innerHTML = `<div class="dhead mh"><a class="mh-logo" href="/" aria-label="Shopeiz home"><svg viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg><span>Shopeiz</span></a><button class="icon-btn" data-act="close" aria-label="Close">${ic('i-x')}</button></div>
+    <div class="dbody mn">
+      <h4>Shop by category</h4>
+      <div class="mn-grid">
+        <a href="${url.deals}" class="mn-deal"><span class="mn-img"><b>Deals</b></span><span>Deals</span></a>
+        ${cats.map((c) => `<a href="${url.cat(c.id)}"><span class="mn-img">${c.cover ? `<img src="${SZ.imgUrl(c.cover, 200)}" alt="" loading="lazy">` : ''}</span><span>${c.label}</span></a>`).join('')}
+      </div>
+      <div class="mn-links">
+        <a href="${url.shop}">Shop all products ${ic('i-arrow')}</a>
+        <a href="${url.wishlist}">Wishlist ${store.wish.length ? `<em>${store.wish.length}</em>` : ''} ${ic('i-arrow')}</a>
+        <a href="${url.help('delivery')}">Delivery ${ic('i-arrow')}</a>
+        <a href="${url.help('returns')}">Replacements &amp; refunds ${ic('i-arrow')}</a>
+        <a href="${url.help('contact')}">Help &amp; contact ${ic('i-arrow')}</a>
+      </div>
     </div>`;
   }
   function openDrawer(id) {
@@ -304,6 +311,7 @@
     }
     if (a === 'promo') { applyPromo(); return; }
     if (a === 'unpromo') { saveFields(); store.promo = false; save(); renderClient(); return; }
+    if (a === 'filters') { const f = $('#filters'); if (f) f.classList.toggle('open'); return; }
     if (a === 'rail') { const r = el.parentElement.querySelector('.rail-in'); r.scrollBy({ left: Number(el.dataset.d) * r.clientWidth * 0.9, behavior: 'smooth' }); return; }
     if (a === 'slide') { heroGo(Number(el.dataset.k)); if (heroTimer) heroStart(); return; }
     if (a === 'copy') { try { navigator.clipboard.writeText(PROMO.code); } catch (err) {} toast(`Code ${PROMO.code} copied`); return; }
@@ -499,4 +507,12 @@
     const a = e.target.closest('.sg a[data-q]'); if (a) recent.add(a.dataset.q);
     document.querySelectorAll('form.search.sg-on').forEach((f) => { if (!f.contains(e.target)) hide(f); });
   });
+})();
+/* Bottom tab bar: highlight the current section */
+(function () {
+  if (typeof document === 'undefined') return;
+  const p = location.pathname;
+  const t = p === '/' ? 'home' : p.startsWith('/deals') ? 'deals' : p.startsWith('/wishlist') ? 'wishlist' : p.startsWith('/cart') || p.startsWith('/checkout') ? 'cart' : '';
+  const go = () => { const el = document.querySelector('.tabbar [data-tab="' + t + '"]'); if (el) el.classList.add('on'); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();

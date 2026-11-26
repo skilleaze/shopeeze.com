@@ -264,7 +264,7 @@
     const curCat = v.cat ? v.cat.id : kind === 'deals' ? 'deals' : kind === 'all' ? 'all' : '';
     const sorts = [['pop', 'Recommended'], ['lo', 'Price: Low to High'], ['hi', 'Price: High to Low'], ['off', 'Biggest Saving']];
     const label = kind === 'search' ? esc(key) : v.title;
-    const side = `<aside class="lf">
+    const side = `<aside class="lf" id="filters"><div class="lf-mh"><b>Filters</b><button class="lf-x" data-act="filters" aria-label="Close filters">${ic('i-x')}</button></div>
       <div class="lf-sec"><h3>Category</h3>
         <a class="lf-cat ${curCat === 'all' ? 'on' : ''}" href="${url.shop}"><i></i>All products <small>${P.length.toLocaleString('en-IN')}</small></a>
         ${CATS.filter((c) => counts[c.id]).map((c) => `<a class="lf-cat ${curCat === c.id ? 'on' : ''}" href="${url.cat(c.id)}"><i></i>${c.label} <small>${counts[c.id].toLocaleString('en-IN')}</small></a>
@@ -281,6 +281,7 @@
       <div class="lst-main">
         <div class="lst-bar">
           <h1 class="lst-h">${v.shown.length.toLocaleString('en-IN')} Results for <b>“${label}”</b>${v.page > 1 ? ` <small>· Page ${v.page}</small>` : ''}</h1>
+          <button class="mfilter" data-act="filters">${ic('i-filter')} Filter</button>
           <label class="srt">${ic('i-down', 'i')}<span>Sort By:</span><select data-act="sort">${sorts.map(([val, l]) => `<option value="${val}" ${v.sort === val ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
         </div>
         ${v.subs.length > 1 ? `<div class="chipr">${['all', ...v.subs].map((x) => `<a class="chp ${v.sub === x ? 'on' : ''}" href="${v.link({ sub: x, page: 1 })}">${x === 'all' ? 'All' : esc(x)}</a>`).join('')}</div>` : ''}
