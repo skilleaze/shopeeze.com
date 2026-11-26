@@ -11,7 +11,7 @@ const { SITE, CATS, P, NAV_CATS, POLICY } = C;
 const { esc, url, fmt, bySlug, catOf, ic } = V;
 
 const SHELL = fs.readFileSync(path.join(__dirname, '..', 'templates', 'shell.html'), 'utf8');
-const VERSION = '18';
+const VERSION = '19';
 const DEFAULT_DESC = 'The art of having everything. Anything you need, in one place, at your door: kitchen, home, electronics, beauty, fashion, toys and drones. Free delivery over ₹499, cash on delivery, 7-day replacement.';
 
 function headHtml(h) {
@@ -47,7 +47,7 @@ ${ld}`;
 
 function nav(active) {
   const counts = {}; P.forEach((p) => (counts[p.cat] = (counts[p.cat] || 0) + 1));
-  const items = [['all', 'Shop all'], ...NAV_CATS.map((id) => CATS.find((c) => c.id === id)).filter((c) => c && counts[c.id]).map((c) => [c.id, c.label]), ['deals', 'Deals']];
+  const items = [...CATS.filter((c) => counts[c.id]).sort((a, b) => counts[b.id] - counts[a.id]).map((c) => [c.id, c.label]), ['deals', 'Deals']];
   return items.map(([id, l]) => `<a href="${url.cat(id)}" class="${active === id ? 'on' : ''} ${id === 'deals' ? 'sale' : ''}">${l}</a>`).join('');
 }
 
@@ -158,7 +158,7 @@ async function route(pathname, query) {
       return {
         head: { title: `${p.title}: Buy Online at ${fmt(p.price)} | Shopeiz`, description: desc.slice(0, 300), canonical: url.product(p), image: p.img ? abs(V.imgUrl(p.img, 1200)) : '', ogType: 'product', noindex: soldOut, ld: [webPage('ItemPage', url.product(p), p.title, V.overview(p), { mainEntity: { '@id': SITE + url.product(p) + '#product' } }), productLd(p), crumbLd([['Home', '/'], [c.label, url.cat(c.id)], [p.title]]), { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: V.faqs(p).map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }] },
         main: V.vProduct(p), active: c.id, view: 'product',
-        sticky: soldOut ? '' : `<div class="p">${esc(p.title)}<b>${fmt(p.price)}</b></div><button class="btn btn-dark" data-act="add" data-id="${p.id}" data-qty="1" data-snap="${V.snap(p, p.defaultVariant || '')}">Add to bag</button>`,
+        sticky: soldOut ? '' : `<div class="p">${esc(p.title)}<b>${fmt(p.price)}</b></div><button class="pdx-cta" data-act="add" data-id="${p.id}" data-qty="1" data-snap="${V.snap(p, p.defaultVariant || '')}">Add to cart</button>`,
       };
     }
   }

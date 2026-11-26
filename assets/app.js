@@ -264,7 +264,7 @@
     if (a === 'pq') {
       pdpQty = Math.max(1, Math.min(10, pdpQty + Number(el.dataset.d)));
       $('#pq').textContent = pdpQty;
-      const b = $('#pdpAdd'); b.textContent = `Add to bag · ${fmt(Number(b.dataset.price) * pdpQty)}`;
+      const b = $('#pdpAdd'); b.textContent = "Add to cart";
       return;
     }
     if (a === 'pimg') {
@@ -280,8 +280,8 @@
       const b = $('#pdpAdd'), sn = readSnap(b), price = Number(el.dataset.price);
       sn.v = el.dataset.v; sn.vt = el.textContent.trim(); sn.p = price;
       b.dataset.snap = JSON.stringify(sn); b.dataset.price = price;
-      b.textContent = `Add to bag · ${fmt(price * pdpQty)}`;
-      const pr = $('#pprice b'); if (pr) pr.textContent = fmt(price);
+      b.textContent = 'Add to cart';
+      const pr = $('#pprice strong'); if (pr) pr.textContent = Math.round(price).toLocaleString('en-IN');
       return;
     }
     if (a === 'wish') {
@@ -304,6 +304,7 @@
     }
     if (a === 'promo') { applyPromo(); return; }
     if (a === 'unpromo') { saveFields(); store.promo = false; save(); renderClient(); return; }
+    if (a === 'rail') { const r = el.parentElement.querySelector('.rail-in'); r.scrollBy({ left: Number(el.dataset.d) * r.clientWidth * 0.9, behavior: 'smooth' }); return; }
     if (a === 'slide') { heroGo(Number(el.dataset.k)); if (heroTimer) heroStart(); return; }
     if (a === 'copy') { try { navigator.clipboard.writeText(PROMO.code); } catch (err) {} toast(`Code ${PROMO.code} copied`); return; }
   });

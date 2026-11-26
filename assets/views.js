@@ -51,150 +51,104 @@
     return `<div class="stars">${starRow(p.rating)}<span>${Number(p.rating).toFixed(1)} (${p.reviews})</span></div>`;
   }
   const priceHtml = (p) => `<div class="price"><b>${fmt(p.price)}</b>${p.was ? `<s>${fmt(p.was)}</s><span class="off">${off(p)}% off</span>` : ''}</div>`;
+  // Product card, laid out like a marketplace tile: image with wishlist and quick add, then title, rating, price and delivery
   function card(p, ctx = {}) {
     const w = (ctx.wish || []).includes(p.id);
-    const badge = p.tag ? `<span class="badge">${esc(p.tag)}</span>` : '';
     const add = p.available === false ? '' : `data-act="add" data-id="${p.id}" data-snap="${snap(p)}"`;
-    return `<article class="card reveal">
-    <div class="card-media">
-      <a class="media" href="${url.product(p)}" aria-label="${esc(p.title)}">${media(p)}</a>${badge}
-      <button class="wish ${w ? 'on' : ''}" data-act="wish" data-id="${p.id}" data-snap="${snap(p)}" aria-label="Save ${esc(p.title)} to wishlist" aria-pressed="${w}">${ic('i-heart')}</button>
+    const n = Number(p.reviews || 0);
+    return `<article class="pc">
+    <div class="pc-img">
+      <a href="${url.product(p)}" aria-label="${esc(p.title)}">${media(p, '', 400)}</a>
+      ${p.tag ? `<span class="pc-tag">${esc(p.tag)}</span>` : ''}
+      <button class="pc-wish ${w ? 'on' : ''}" data-act="wish" data-id="${p.id}" data-snap="${snap(p)}" aria-label="Save ${esc(p.title)} to wishlist" aria-pressed="${w}">${ic('i-heart')}</button>
+      ${add ? `<button class="pc-add" ${add} aria-label="Add ${esc(p.title)} to cart">${ic('i-plus')}</button>` : ''}
     </div>
-    <div class="card-body">
-      <h3><a href="${url.product(p)}">${esc(p.title)}</a></h3>
-      ${stars(p)}
-      <div class="card-row">
-        <div class="cprice">${p.was ? `<b class="sale">${fmt(p.price)}</b><s>${fmt(p.was)}</s><span class="pct">${off(p)}% off</span>` : `<b>${fmt(p.price)}</b>`}</div>
-        ${add ? `<button class="qa" ${add} aria-label="Add ${esc(p.title)} to bag">${ic('i-bag')}<span>Quick add</span></button>` : '<span class="soldout">Sold out</span>'}
-      </div>
+    <div class="pc-body">
+      <h3 class="pc-t"><a href="${url.product(p)}">${esc(p.title)}</a></h3>
+      ${n ? `<div class="pc-r"><span class="pc-rv">${ic('i-star')}<b>${Number(p.rating).toFixed(1)}</b></span><span class="pc-rc">(${n.toLocaleString('en-IN')})</span></div>` : ''}
+      <div class="pc-p"><span class="pc-cur">₹</span><strong>${Math.round(p.price).toLocaleString('en-IN')}</strong>${p.was ? `<s>${Math.round(p.was).toLocaleString('en-IN')}</s><em>${off(p)}%</em>` : ''}</div>
+      ${p.available === false ? '<div class="pc-out">Out of stock</div>' : `<div class="pc-del">${ic('i-truck')}<span>Get it by <b>${dateIn(daysOf(p))}</b></span></div>`}
     </div>
   </article>`;
   }
-  const gridOf = (list, ctx, cls = '') => `<div class="grid ${cls}">${list.map((p) => card(p, ctx)).join('')}</div>`;
-  const crumbs = (items) => `<nav class="crumbs" aria-label="Breadcrumb">${items.map(([label, href], i) => (i ? '<span>/</span>' : '') + (href ? `<a href="${href}">${esc(label)}</a>` : `<span>${esc(label)}</span>`)).join('')}</nav>`;
+  // Horizontal product rail with arrow buttons
+  const rail = (list, ctx) => `<div class="rail"><button class="rail-b prev" data-act="rail" data-d="-1" aria-label="Scroll back">${ic('i-arrow', 'i flip')}</button><div class="rail-in">${list.map((p) => card(p, ctx)).join('')}</div><button class="rail-b next" data-act="rail" data-d="1" aria-label="Scroll forward">${ic('i-arrow')}</button></div>`;
+  const ribbon = (title, href, more = 'View all') => `<div class="rb-head"><h2 class="ribbon">${esc(title)}</h2>${href ? `<a class="rb-more" href="${href}">${more} ${ic('i-arrow')}</a>` : ''}</div>`;
+  const gridOf = (list, ctx, cls = '') => `<div class="pgrid ${cls}">${list.map((p) => card(p, ctx)).join('')}</div>`;
+  const crumbs = (items) => `<nav class="crumbs" aria-label="Breadcrumb">${items.map(([label, href], i) => (i ? `<span class="sep">${ic('i-down', 'i rot')}</span>` : '') + (href ? `<a href="${href}">${esc(label)}</a>` : `<span>${esc(label)}</span>`)).join('')}</nav>`;
 
   /* ---------- Home ---------- */
+  const SKIP = /pelvic|stimulator|massager|intimate|condom|lingerie|bra\b|panty|vibrat|adult/i;
   function vHome(ctx = {}) {
     const counts = {}; P.forEach((p) => (counts[p.cat] = (counts[p.cat] || 0) + 1));
-    // Bestsellers: one product from each category, so the row shows the range of the store
-    let best = BEST.map(byId).filter(Boolean);
-    const seenCats = new Set(best.map((p) => p.cat));
-    const byCount = Object.keys(counts || {}).sort((a, b) => counts[b] - counts[a]);
-    for (const cid of byCount) {
-      if (best.length >= 8) break;
-      if (seenCats.has(cid)) continue;
-      const pick = P.find((p) => p.cat === cid && p.img && !/pelvic|stimulator|massager|intimate|lingerie/i.test(p.title));
-      if (pick) { best.push(pick); seenCats.add(cid); }
-    }
-    const hero = HERO.map(byId).filter(Boolean);
-    const fl = byId('d1');
-    // Category cover: the best-ranked clean product shot (fashion uses model photos)
-    const SKIP = /pelvic|stimulator|massager|intimate|condom|lingerie|bra\b|panty/i;
-    const pref = (c) => (c.id === 'fashion' ? /^(sw|bs)\d/ : /^(dp|dd|s\d|d\d)/);
-    const coverP = (c) => P.find((p) => p.cat === c.id && p.img && pref(c).test(p.id) && !SKIP.test(p.title)) || P.find((p) => p.cat === c.id && p.img && !SKIP.test(p.title));
-    const cover = (c) => c.cover || c.img || (coverP(c) || {}).img;
-    const cats = CATS.filter((c) => counts[c.id]).sort((a, b) => counts[b.id] - counts[a.id]).slice(0, 12);
-    const count = P.length;
-    const heroCats = cats.slice(0, 8);
-    const slides = (C.SLIDES || []).filter((sl) => counts[sl.cat] || sl.cat === 'home');
+    const ok = (p) => p.img && p.available !== false && !SKIP.test(p.title);
+    const cats = CATS.filter((c) => counts[c.id]).sort((a, b) => counts[b.id] - counts[a.id]);
+    const cover = (c) => c.cover || c.img || ((P.find((p) => p.cat === c.id && ok(p)) || {}).img);
+    const short = (l) => l.replace(' & Decor', '').replace(' & Care', '').replace(' & Storage', '').replace(' & Stationery', '').replace(' & Outdoors', '').replace(' & Hardware', '').replace(' & Gifts', '');
+    // Deals spread across categories: the biggest saving from each category in turn
+    const byCat = {}; P.filter((p) => ok(p) && p.was && off(p) >= 15).forEach((p) => (byCat[p.cat] = byCat[p.cat] || []).push(p));
+    Object.values(byCat).forEach((l) => l.sort((a, b) => off(b) - off(a)));
+    const deals = []; for (let r = 0; r < 4; r++) cats.forEach((c) => { const x = (byCat[c.id] || [])[r]; if (x && deals.length < 18) deals.push(x); });
+    // Bestsellers: our own drone first, then the top product of each category
+    const best = BEST.map(byId).filter(Boolean);
+    cats.forEach((c) => { if (best.length < 14 && !best.some((x) => x.cat === c.id)) { const x = P.find((p) => p.cat === c.id && ok(p)); if (x) best.push(x); } });
+    const mega = deals.slice(0, 4);
+    const S = C.SLIDES || [];
+    const banner = (sl, k) => `<a class="hb-card" href="${url.cat(sl.cat)}">
+        <img src="${imgUrl(sl.img, 900)}" srcset="${srcset(sl.img, [600, 900, 1300])}" sizes="(max-width:760px) 80vw, 25vw" alt="${esc(sl.alt)}" style="object-position:${sl.pos || 'center'}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}>
+        <span class="hb-veil"></span>
+        <span class="hb-txt"><em>${esc(sl.kicker)}</em>${k ? `<b>${esc(sl.title)}</b>` : `<h1>${esc(sl.title)}</h1>`}<span class="hb-cta">${esc(sl.cta)} ${ic('i-arrow')}</span></span>
+      </a>`;
+    const tile = (href, img, t, sub) => `<a class="rs-tile" href="${href}"><span class="rs-img"><img src="${imgUrl(img, 500)}" alt="" loading="lazy"></span><b>${t}</b><span>${sub}</span></a>`;
+    const C2 = (id) => CATS.find((c) => c.id === id) || cats[0];
+    const mini = (p) => `<div class="mg-card"><span class="mg-lab">${esc(catOf(p).label)}</span>
+        <a class="mg-img" href="${url.product(p)}"><img src="${imgUrl(p.img, 300)}" alt="${esc(p.title)}" loading="lazy"></a>
+        <button class="pc-add" data-act="add" data-id="${p.id}" data-snap="${snap(p)}" aria-label="Add ${esc(p.title)} to cart">${ic('i-plus')}</button>
+        <a class="mg-t" href="${url.product(p)}">${esc(p.title)}</a>
+        <div class="pc-p"><span class="pc-cur">₹</span><strong>${Math.round(p.price).toLocaleString('en-IN')}</strong>${p.was ? `<s>${Math.round(p.was).toLocaleString('en-IN')}</s>` : ''}</div>
+      </div>`;
+    const focus = (c, line) => `<a class="fc-card" href="${url.cat(c.id)}"><img src="${imgUrl(cover(c), 700)}" alt="${esc(c.label)}" loading="lazy"><span class="fc-txt"><b>${esc(c.label)}</b><span>${line}</span><em>Shop now ${ic('i-arrow')}</em></span></a>`;
+    const rows = cats.slice(0, 5).map((c) => {
+      const list = P.filter((p) => p.cat === c.id && ok(p)).slice(0, 14);
+      return list.length >= 4 ? `<section class="hsec"><div class="wrap2">${ribbon(c.label, url.cat(c.id))}${rail(list, ctx)}</div></section>` : '';
+    }).join('');
     return `
-  <section class="hero" id="heroVis" aria-roledescription="carousel" aria-label="Featured collections">
-    ${slides.map((sl, k) => `<div class="slide ${k ? '' : 'on'}" data-slide="${k}" ${k ? 'aria-hidden="true"' : ''}>
-      <picture>
-        <source media="(max-width:760px)" srcset="${sl.img}&w=900&h=1300">
-        <img src="${imgUrl(sl.img, 1800)}" srcset="${srcset(sl.img, [800, 1200, 1800, 2400])}" sizes="100vw" alt="${esc(sl.alt)}" style="object-position:${sl.pos || 'center'}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}>
-      </picture>
-      <div class="veil"></div>
-      <div class="hero-text">
-        <span class="kicker">${esc(sl.kicker)}</span>
-        ${k ? `<h2>${esc(sl.title)}</h2>` : `<h1>${esc(sl.title)}</h1>`}
-        <p>${esc(sl.text)}</p>
-        <div class="ctas">
-          <a class="btn btn-light" href="${url.cat(sl.cat)}">${esc(sl.cta)}</a>
-          <a class="btn btn-ghost" href="${url.shop}">Shop everything</a>
-        </div>
-      </div>
-    </div>`).join('')}
-    ${slides.length > 1 ? `<div class="hero-nav">
-      <span class="num"><b id="heroNum">01</b> / ${String(slides.length).padStart(2, '0')}</span>
-      <div class="bars">${slides.map((_, k) => `<button class="${k ? '' : 'on'}" data-act="slide" data-k="${k}" aria-label="Show slide ${k + 1}"><i></i></button>`).join('')}</div>
-    </div>` : ''}
-  </section>
-  <section class="intro"><div class="wrap intro-in">
-    <p class="intro-lead">Shopeiz brings ${count >= 1000 ? Math.floor(count / 1000).toLocaleString('en-IN') + ',000+' : count} carefully priced pieces into one store, from the kitchen to the wardrobe, delivered to every PIN code in India.</p>
-    <ul class="hero-cats">${heroCats.map((c) => `<li><a href="${url.cat(c.id)}">${c.label}</a></li>`).join('')}</ul>
-  </div></section>
-
-  <div class="trust">
-    <div>${ic('i-truck')}<p style="margin:0"><b>Free delivery</b><span>On orders over ${fmt(C.FREE_OVER)}</span></p></div>
-    <div>${ic('i-return')}<p style="margin:0"><b>${POLICY.replaceDays}-day replacement</b><span>Damaged or wrong item? We replace it</span></p></div>
-    <div>${ic('i-shield')}<p style="margin:0"><b>Delivered across India</b><span>Tracked to your door in ${POLICY.minDays} to ${POLICY.maxDays} working days</span></p></div>
-    <div>${ic('i-cash')}<p style="margin:0"><b>Cash on delivery</b><span>Pay when it arrives</span></p></div>
-  </div>
-
-  <section class="block"><div class="wrap">
-    <div class="sec-head reveal"><div><span class="eyebrow">Shop by category</span><h2>Anything you need, in one place</h2></div><a class="link" href="${url.shop}">View everything ${ic('i-arrow')}</a></div>
-    <div class="cat-grid">${cats.map((c) => `<a class="cat-tile reveal" href="${url.cat(c.id)}">
-      <div class="ct-img">${cover(c) ? `<img src="${imgUrl(cover(c), 600)}" srcset="${srcset(cover(c), [400, 600, 900])}" sizes="(max-width:700px) 50vw, 25vw" alt="${esc(c.label)}" loading="lazy">` : ic(c.icon)}</div>
-      <h3>${c.label}</h3><span>${counts[c.id].toLocaleString('en-IN')} ${counts[c.id] === 1 ? 'product' : 'products'}</span></a>`).join('')}</div>
-  </div></section>
-
-  ${fl ? `<section class="feature">
-    <div class="pic reveal"><img src="${fl.img}" alt="${esc(fl.title)} with its remote" loading="lazy"></div>
-    <div class="copy">
-      <span class="eyebrow">Our drone · ${esc(fl.sub)}</span>
-      <h2>The E88 Pro. <em>The view from above.</em></h2>
-      <p>${esc(fl.desc)} Foldable, beginner-friendly and ready to fly the day it arrives.</p>
-      <ul>
-        <li>${ic('i-check')} Phone-holder remote for a live view while you fly</li>
-        <li>${ic('i-check')} Folds small enough to carry anywhere</li>
-        <li>${ic('i-check')} Delivered by ${dateIn(daysOf(fl))} · cash on delivery</li>
-      </ul>
-      <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
-        <button class="btn btn-light" data-act="add" data-id="${fl.id}" data-snap="${snap(fl)}">Add to bag · ${fmt(fl.price)}</button>
-        <a class="link" style="color:#fff" href="${url.product(fl)}">Details ${ic('i-arrow')}</a>
-      </div>
-    </div>
-  </section>` : ''}
-
-  <section class="block"><div class="wrap">
-    <div class="sec-head reveal"><div><span class="eyebrow">Most loved</span><h2>What everyone's buying</h2><p>One favourite from each corner of the store.</p></div><a class="link" href="${url.shop}">Shop all products ${ic('i-arrow')}</a></div>
-    ${gridOf(best, ctx)}
-  </div></section>
-
-  <section class="offer">
-    <svg class="bgmono" viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg>
-    <span class="eyebrow">Welcome offer</span>
-    <h2>${PROMO.pct}% off your first order.</h2>
-    <p>Use the code at checkout. It works on everything in your bag, once per mobile number.</p>
-    <div class="code"><b>${PROMO.code}</b><button class="btn btn-light" style="height:44px" data-act="copy">Copy code</button></div>
-  </section>
-
-  <section class="story"><div class="wrap story-in">
-    <div class="story-mark reveal"><svg class="mono" viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg></div>
-    <div class="reveal">
-      <span class="eyebrow">Our mark</span>
-      <h2>A price tag that carries <em>everything.</em></h2>
-      <p>Every product we sell carries one. The tag is our promise of a clear, fair price with nothing hidden. The three bars inside are our shelves: kitchen, home and gadgets, and everything in between. One mark, one standard, on everything we sell.</p>
-      <p class="sign">Everything, fairly priced.</p>
+  <section class="hb"><div class="wrap2 hb-grid">
+    ${S.map(banner).join('')}
+    <div class="hb-col">
+      <a class="hb-promo wine" href="${url.deals}"><em>Welcome offer</em><b>${PROMO.pct}% OFF</b><span>your first order with code <strong>${PROMO.code}</strong></span><span class="hb-pill">Shop deals ${ic('i-arrow')}</span></a>
+      <a class="hb-promo cream" href="${url.shop}"><em>Across India</em><b>Cash on delivery</b><span>Free delivery on orders over ${fmt(C.FREE_OVER)}, to every PIN code.</span><span class="hb-pill dark">Shop everything ${ic('i-arrow')}</span></a>
     </div>
   </div></section>
 
-  <section class="block"><div class="wrap">
-    <div class="sec-head reveal"><div><span class="eyebrow">The Shopeiz promise</span><h2>Four things we never compromise on</h2></div></div>
-    <div class="promise">
-      <div class="reveal"><span class="n">01</span><h3>Choice</h3><p>If people buy it, we sell it. One search covers every category.</p></div>
-      <div class="reveal"><span class="n">02</span><h3>Trust</h3><p>Checked suppliers, cash on delivery and a replacement if anything arrives damaged.</p></div>
-      <div class="reveal"><span class="n">03</span><h3>Speed</h3><p>Fast to find, fast to pay, fast to arrive. Every step is short.</p></div>
-      <div class="reveal"><span class="n">04</span><h3>Fair price</h3><p>Clear prices, no hidden fees, real deals instead of fake discounts.</p></div>
-    </div>
+  <section class="cstrip"><div class="wrap2"><div class="cs-in">
+    <a class="cs cs-deal" href="${url.deals}"><span class="cs-img"><span class="cs-sale">SALE</span><b>Deals</b><i>Up to ${Math.max(0, ...P.filter((p) => p.was).map(off)) >= 50 ? '70' : '40'}% off</i></span><span class="cs-l">Deals</span></a>
+    ${cats.map((c) => `<a class="cs" href="${url.cat(c.id)}"><span class="cs-img"><img src="${imgUrl(cover(c), 240)}" alt="" loading="lazy"></span><span class="cs-l">${short(c.label)}</span></a>`).join('')}
+  </div></div></section>
+
+  <section class="trio"><div class="wrap2 trio-in">
+    <div class="tri tri-a"><h2 class="ribbon">More reasons to shop</h2><div class="rs-grid">
+      ${tile(url.deals, cover(C2('festive')), 'Deals', 'Real prices against MRP')}
+      ${tile(url.shop, cover(C2('home')), 'Bestsellers', 'Our most-loved picks')}
+      ${tile(url.cat('drones'), cover(C2('drones')), 'Our drones', 'Ships fast from our stock')}
+      ${tile(url.cat('kitchen'), cover(C2('kitchen')), 'Kitchen', 'Clever tools for every day')}
+    </div></div>
+    ${mega.length === 4 ? `<div class="tri tri-b"><div class="mg-head"><h2 class="ribbon light">Mega deals</h2><a class="mg-all" href="${url.deals}">Shop deals</a></div><div class="mg-grid">${mega.map(mini).join('')}</div></div>` : ''}
+    <div class="tri tri-c"><h2 class="ribbon">In focus</h2><div class="fc-col">
+      ${focus(C2('beauty'), 'Care and grooming, for less')}
+      ${focus(C2('electronics'), 'Gadgets you will use every day')}
+    </div></div>
   </div></section>
 
-  ${ctx.placesHtml || ''}
+  ${deals.length >= 4 ? `<section class="hsec"><div class="wrap2">${ribbon('Best deals for you', url.deals)}${rail(deals, ctx)}</div></section>` : ''}
+  <section class="hsec"><div class="wrap2">${ribbon('Bestsellers', url.shop)}${rail(best, ctx)}</div></section>
+  ${rows}
 
-  <section class="news"><div class="wrap">
-    <div><span class="eyebrow" style="color:var(--gold-2)">Join the list</span><h2>New arrivals and real deals, first.</h2></div>
-    <div><form data-form="news"><label class="sr" for="em">Email address</label><input id="em" type="email" required placeholder="Your email address"><button>Join</button></form><small>One thoughtful email a fortnight. Unsubscribe anytime.</small></div>
+  <section class="perks-strip"><div class="wrap2 ps-in">
+    <div>${ic('i-cash')}<p><b>Cash on delivery</b><span>Pay when it arrives</span></p></div>
+    <div>${ic('i-truck')}<p><b>Free delivery over ${fmt(C.FREE_OVER)}</b><span>To every PIN code in India</span></p></div>
+    <div>${ic('i-return')}<p><b>${POLICY.replaceDays}-day replacement</b><span>Damaged or wrong item? We replace it</span></p></div>
+    <div>${ic('i-lock')}<p><b>Secure UPI payment</b><span>GPay, PhonePe, Paytm and more</span></p></div>
   </div></section>`;
   }
 
@@ -292,7 +246,7 @@
       if (pg > 1) q.push('page=' + pg);
       return d.base + (q.length ? join + q.join('&') : '');
     };
-    return { ...d, subs, sub, sort, shown, items, page, pages, link };
+    return { ...d, subs, subCount, sub, sort, shown, items, page, pages, link };
   }
   function pager(v) {
     if (v.pages < 2) return '';
@@ -306,19 +260,36 @@
   }
   function vList(kind, key, opts = {}, ctx = {}) {
     const v = listView(kind, key, opts);
-    const intro = v.cat && v.page === 1 ? `<p style="max-width:720px;color:var(--ink-2);margin:14px 0 0">${esc(v.cat.seo)}</p>` : '';
-    const more = kind === 'all' ? `<div class="cat-chips">${CATS.map((c) => `<a href="${url.cat(c.id)}">${c.label}</a>`).join('')}</div>` : '';
-    return `<div class="wrap">
-    <div class="page-head">${crumbs([['Home', '/'], [v.crumb]])}<h1>${v.title}${v.page > 1 ? ` <small class="pg">Page ${v.page}</small>` : ''}</h1><p>${v.blurb}${kind !== 'search' ? ` · ${v.shown.length.toLocaleString('en-IN')} products` : ''}</p>${intro}${more}</div>
-    <div class="toolbar">
-      <div class="chips">${v.subs.length > 1 ? ['all', ...v.subs].map((x) => `<a class="chip ${v.sub === x ? 'on' : ''}" href="${v.link({ sub: x, page: 1 })}">${x === 'all' ? 'All' : esc(x)}</a>`).join('') : ''}</div>
-      <label class="sort">Sort by <select data-act="sort">
-        ${[['pop', 'Featured'], ['lo', 'Price: low to high'], ['hi', 'Price: high to low'], ['off', 'Biggest saving']].map(([val, l]) => `<option value="${val}" ${v.sort === val ? 'selected' : ''}>${l}</option>`).join('')}
-      </select></label>
+    const counts = {}; P.forEach((p) => (counts[p.cat] = (counts[p.cat] || 0) + 1));
+    const curCat = v.cat ? v.cat.id : kind === 'deals' ? 'deals' : kind === 'all' ? 'all' : '';
+    const sorts = [['pop', 'Recommended'], ['lo', 'Price: Low to High'], ['hi', 'Price: High to Low'], ['off', 'Biggest Saving']];
+    const label = kind === 'search' ? esc(key) : v.title;
+    const side = `<aside class="lf">
+      <div class="lf-sec"><h3>Category</h3>
+        <a class="lf-cat ${curCat === 'all' ? 'on' : ''}" href="${url.shop}"><i></i>All products <small>${P.length.toLocaleString('en-IN')}</small></a>
+        ${CATS.filter((c) => counts[c.id]).map((c) => `<a class="lf-cat ${curCat === c.id ? 'on' : ''}" href="${url.cat(c.id)}"><i></i>${c.label} <small>${counts[c.id].toLocaleString('en-IN')}</small></a>
+          ${curCat === c.id && v.subs.length > 1 ? `<div class="lf-subs">${v.subs.map((x) => `<a class="${v.sub === x ? 'on' : ''}" href="${v.link({ sub: v.sub === x ? 'all' : x, page: 1 })}"><i></i>${esc(x)} <small>${v.subCount[x]}</small></a>`).join('')}</div>` : ''}`).join('')}
+        <a class="lf-cat ${curCat === 'deals' ? 'on' : ''}" href="${url.deals}"><i></i>Deals</a>
+      </div>
+      <div class="lf-sec"><h3>Delivery</h3><p class="lf-note">${ic('i-truck')} ${POLICY.minDays} to ${POLICY.maxDays} working days, anywhere in India. Free over ${fmt(C.FREE_OVER)}.</p></div>
+      <div class="lf-sec"><h3>Payment</h3><p class="lf-note">${ic('i-cash')} Cash on delivery or UPI</p></div>
+    </aside>`;
+    return `<div class="wrap2 lst">
+    ${crumbs([['Home', '/'], [v.crumb]])}
+    <div class="lst-in">
+      ${side}
+      <div class="lst-main">
+        <div class="lst-bar">
+          <h1 class="lst-h">${v.shown.length.toLocaleString('en-IN')} Results for <b>“${label}”</b>${v.page > 1 ? ` <small>· Page ${v.page}</small>` : ''}</h1>
+          <label class="srt">${ic('i-down', 'i')}<span>Sort By:</span><select data-act="sort">${sorts.map(([val, l]) => `<option value="${val}" ${v.sort === val ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+        </div>
+        ${v.subs.length > 1 ? `<div class="chipr">${['all', ...v.subs].map((x) => `<a class="chp ${v.sub === x ? 'on' : ''}" href="${v.link({ sub: x, page: 1 })}">${x === 'all' ? 'All' : esc(x)}</a>`).join('')}</div>` : ''}
+        ${v.items.length ? gridOf(v.items, ctx) : `<div class="empty"><h2>No results found</h2><p>Try a different word, or <a class="link" href="${url.shop}">browse everything</a>.</p></div>`}
+        ${pager(v)}
+        ${v.cat && v.page === 1 ? `<div class="lst-seo"><h2>${esc(v.cat.label)} online at Shopeiz</h2><p>${esc(v.cat.seo)}</p></div>` : ''}
+      </div>
     </div>
-    </div>
-    ${v.items.length ? gridOf(v.items, ctx, 'bleed') : `<div class="wrap"><div class="empty"><h2>Nothing here yet</h2><p>Try another search, or <a class="link" href="${url.shop}">browse everything</a></p></div></div>`}
-    <div class="wrap">${pager(v)}<div style="height:110px"></div></div>`;
+  </div>`;
   }
 
   /* ---------- Product ---------- */
@@ -387,7 +358,7 @@
       <div class="rv-by">${esc(x.name)}${x.city ? ', ' + esc(x.city) : ''} · ${new Date(x.at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
       ${x.reply ? `<div class="rv-reply"><b>Shopeiz replied:</b> ${esc(x.reply)}</div>` : ''}
     </article>`).join('');
-    return `<section class="pd-sec" id="reviews"><div class="wrap">
+    return `<section class="pd-sec" id="reviews"><div class="wrap2">
       <div class="pd-h"><h2>Ratings &amp; reviews</h2></div>
       <div class="rv-grid">
         <div class="rv-sum">
@@ -430,63 +401,72 @@
     const fam = (p.family || []).slice(0, 10);
     const desc = p.desc_html ? `<div class="rich">${p.desc_html}</div>` : `<p>${esc(p.desc || '')}</p>`;
     const n = Number((p.reviewData && p.reviewData.count) || p.reviews || 0), avg = Number((p.reviewData && p.reviewData.avg) || p.rating || 0);
-    return `<div class="wrap">
-    <div style="padding-top:24px">${crumbs([['Home', '/'], [c.label, url.cat(c.id)], [p.title]])}</div>
-    <div class="pdp">
-      <div class="gallery">
-        <div class="g-main" id="pmain">
-          ${imgs.length ? imgs.map((src, k) => `<button class="g-slide" data-act="zoom" data-k="${k}" aria-label="Enlarge photo ${k + 1}"><img src="${esc(imgUrl(src, 1000))}" alt="${esc(p.title)}${k ? ' photo ' + (k + 1) : ''}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}></button>`).join('') : `<div class="g-slide">${media(p)}</div>`}
-          ${p.was ? `<span class="badge">Save ${off(p)}%</span>` : p.tag ? `<span class="badge">${esc(p.tag)}</span>` : ''}
+    const sizeLike = vars.every((v) => /^(xxs|xs|s|m|l|xl|xxl|xxxl|[2-6]xl|free ?size|\d{1,2}(\.\d)?|uk ?\d+|\d+\s*(cm|in|inch|ml|l|kg|g))$/i.test(v.title.trim()));
+    return `<div class="wrap2 pdx">
+    ${crumbs([['Home', '/'], [c.label, url.cat(c.id)], ...(p.sub ? [[p.sub.replace(/-/g, ' ')]] : []), [p.title]])}
+    <div class="pdx-in">
+      <div class="pdx-gal">
+        ${imgs.length > 1 ? `<div class="thumbs">${imgs.map((src, k) => `<button class="${k ? '' : 'on'}" data-act="pimg" data-k="${k}" aria-label="Photo ${k + 1}"><img src="${esc(imgUrl(src, 160))}" alt="" loading="lazy"></button>`).join('')}</div>` : ''}
+        <div class="pdx-main">
+          <div class="g-main" id="pmain">
+            ${imgs.length ? imgs.map((src, k) => `<button class="g-slide" data-act="zoom" data-k="${k}" aria-label="Enlarge photo ${k + 1}"><img src="${esc(imgUrl(src, 1000))}" alt="${esc(p.title)}${k ? ' photo ' + (k + 1) : ''}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}></button>`).join('') : `<div class="g-slide">${media(p)}</div>`}
+          </div>
+          <button class="pc-wish pdx-wish" data-act="wish" data-id="${p.id}" data-snap="${snap(p)}" aria-label="Save to wishlist">${ic('i-heart')}</button>
+          ${p.tag ? `<span class="pc-tag">${esc(p.tag)}</span>` : ''}
           ${imgs.length > 1 ? `<span class="g-count" id="gcount">1 / ${imgs.length}</span>` : ''}
         </div>
-        ${imgs.length > 1 ? `<div class="thumbs">${imgs.map((src, k) => `<button class="${k ? '' : 'on'}" data-act="pimg" data-k="${k}" aria-label="Photo ${k + 1}"><img src="${esc(imgUrl(src, 160))}" alt="" loading="lazy"></button>`).join('')}</div>` : ''}
         <script type="application/json" id="gimgs">${JSON.stringify(imgs.map((x) => imgUrl(x, 1600))).replace(/</g, '\\u003c')}</script>
       </div>
-      <div class="pd-info">
-        <span class="eyebrow">${c.label}${p.sub ? ' · ' + esc(p.sub) : ''}</span>
+
+      <div class="pdx-info">
+        <a class="pdx-brand" href="${url.cat(c.id)}">${esc(c.label)} ${ic('i-down', 'i rot')}</a>
         <h1>${esc(p.title)}</h1>
-        <a class="pd-rating" href="#reviews">${starRow(avg)}<span>${n ? `${avg.toFixed(1)} · ${n} review${n === 1 ? '' : 's'}` : 'No reviews yet · Write the first'}</span></a>
-        <div id="pprice">${priceHtml(vp)}</div>
-        <p class="tax">Inclusive of all taxes${soldOut ? '' : p.cod === false ? ' · Prepaid by UPI only' : ' · Cash on delivery available'}</p>
-        ${fam.length ? `<div class="fam"><span class="vl">Also available in</span><div>${fam.map((f) => `<a href="/products/${esc(f.slug)}" title="${esc(f.title)}"><img src="${esc(imgUrl(f.img, 160))}" alt="${esc(f.title)}" loading="lazy"></a>`).join('')}</div></div>` : ''}
-        ${vars.length > 1 ? `<div class="vars"><span class="vl">${vars.every((v) => /^(xxs|xs|s|m|l|xl|xxl|xxxl|[2-6]xl|free ?size|\d{1,2}(\.\d)?|uk ?\d+|\d+\s*(cm|in|inch|ml|l|kg|g))$/i.test(v.title.trim())) ? 'Size' : 'Option'}</span><div>${vars.map((v) => `<button class="${curV && v.id === curV.id ? 'on' : ''}" data-act="pvar" data-v="${esc(v.id)}" data-price="${v.price}" ${v.ok ? '' : 'disabled'}>${esc(v.title)}${v.ok ? '' : ' (sold out)'}</button>`).join('')}</div></div>` : ''}
-        ${soldOut ? `<div class="stock-out"><b>Currently out of stock.</b> Save it to your wishlist and check back soon.</div>
-        <button class="btn btn-line wish-big" data-act="wish" data-id="${p.id}" data-snap="${snap(p)}" style="width:100%">${ic('i-heart')} Save to wishlist</button>` : `
-        <div class="buy">
-          <div class="qty"><button data-act="pq" data-d="-1" aria-label="Decrease quantity">${ic('i-minus')}</button><span id="pq">1</span><button data-act="pq" data-d="1" aria-label="Increase quantity">${ic('i-plus')}</button></div>
-          <button class="btn btn-dark" id="pdpAdd" data-act="add" data-id="${p.id}" data-qty="1" data-price="${price}" data-snap="${snap(vp, curV ? curV.id : '')}">Add to bag · ${fmt(price)}</button>
+        <a class="pdx-rate" href="#reviews">${n ? `<b>${avg.toFixed(1)}</b>${starRow(avg)}<u>${n} Rating${n === 1 ? '' : 's'}</u>` : `${starRow(0)}<u>Be the first to rate</u>`}</a>
+        <div id="pprice" class="pdx-price"><span class="pc-cur">₹</span><strong>${Math.round(price).toLocaleString('en-IN')}</strong>${p.was ? `<s>₹${Math.round(p.was).toLocaleString('en-IN')}</s><em>${off(vp)}% Off</em>` : ''}</div>
+        <p class="pdx-tax">Inclusive of all taxes${soldOut ? '' : p.cod === false ? ' · Prepaid by UPI only' : ' · Cash on delivery available'}</p>
+        ${fam.length ? `<div class="fam"><span class="vl">Colour</span><div>${fam.map((f) => `<a href="/products/${esc(f.slug)}" title="${esc(f.title)}"><img src="${esc(imgUrl(f.img, 160))}" alt="${esc(f.title)}" loading="lazy"></a>`).join('')}</div></div>` : ''}
+        ${vars.length > 1 ? `<div class="vars"><span class="vl">${sizeLike ? 'Size' : 'Option'}</span><div>${vars.map((v) => `<button class="${curV && v.id === curV.id ? 'on' : ''}" data-act="pvar" data-v="${esc(v.id)}" data-price="${v.price}" ${v.ok ? '' : 'disabled'}>${esc(v.title)}${v.ok ? '' : ' (sold out)'}</button>`).join('')}</div></div>` : ''}
+        <a class="pdx-explore" href="${url.cat(c.id)}">${ic('i-gift')}<span>Explore more bestsellers in <b>${esc(c.label)}</b></span>${ic('i-down', 'i rot')}</a>
+        <div class="pdx-del">
+          <h3>Delivery information</h3>
+          <div class="pdx-dbox"><span class="pdx-pill">${ic('i-truck')} Standard</span><span>Get it by <b>${dateIn(daysOf(p))}</b></span><small>${deliveryText(p)}</small></div>
+          <div class="pdx-dbox"><span class="pdx-pill alt">${ic('i-cash')} ${p.cod === false ? 'Prepaid' : 'COD'}</span><span>${p.cod === false ? 'Pay securely by UPI' : 'Pay cash when it arrives, or by UPI'}</span></div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr auto;gap:12px">
-          <button class="btn btn-wine" data-act="buynow" data-id="${p.id}">Buy it now</button>
-          <button class="btn btn-line wish-big" data-act="wish" data-id="${p.id}" data-snap="${snap(p)}" aria-label="Save to wishlist" style="padding:0 18px">${ic('i-heart')}</button>
-        </div>`}
-        ${hl.length ? `<ul class="hl">${hl.map((x) => `<li>${ic('i-check')}<span>${esc(x)}</span></li>`).join('')}</ul>` : ''}
-        <div class="perks">
-          <div>${ic('i-truck')}<p style="margin:0"><b>Get it by ${dateIn(daysOf(p))}</b><span>${deliveryText(p)} · ${price >= C.FREE_OVER ? 'Free delivery' : `Free delivery on orders over ${fmt(C.FREE_OVER)}`}</span></p></div>
-          <div>${ic('i-return')}<p style="margin:0"><b>${POLICY.replaceDays}-day replacement</b><span>Damaged, defective or wrong item? We replace it.</span></p></div>
-          <div>${ic('i-cash')}<p style="margin:0">${p.cod === false ? '<b>Prepaid by UPI only</b><span>Cash on delivery is not available for this item.</span>' : '<b>Cash on delivery available</b><span>Or pay by UPI with a secure link.</span>'}</p></div>
-        </div>
+        ${hl.length ? `<div class="pdx-hl"><h3>Highlights</h3><ul>${hl.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}
       </div>
+
+      <aside class="pdx-buy">
+        <div class="pdx-seller"><span class="pdx-logo"><svg viewBox="0 0 206.04 235.47" aria-hidden="true"><use href="#mono"/></svg></span><div><small>Sold by</small><b>Shopeiz</b><span>${ic('i-star')} Checked suppliers · Delivered across India</span></div></div>
+        <div class="pdx-hf"><h3>Hassle free <span>shopping</span></h3><p>Check what is covered with this item</p>
+          <div class="pdx-hfl">
+            <div>${ic('i-return')}<span>${POLICY.replaceDays}-day replacement for damaged or wrong items</span></div>
+            <div>${ic('i-shield')}<span>${p.cod === false ? 'Secure UPI payment' : 'Cash on delivery available'}</span></div>
+            <div>${ic('i-truck')}<span>${price >= C.FREE_OVER ? 'Free delivery on this item' : `Free delivery on orders over ${fmt(C.FREE_OVER)}`}</span></div>
+          </div>
+        </div>
+        ${soldOut ? `<div class="stock-out"><b>Currently out of stock.</b> Save it to your wishlist and check back soon.</div>
+        <button class="pdx-cta line" data-act="wish" data-id="${p.id}" data-snap="${snap(p)}">${ic('i-heart')} Save to wishlist</button>` : `
+        <div class="pdx-qty"><span>Quantity</span><div class="qty"><button data-act="pq" data-d="-1" aria-label="Decrease quantity">${ic('i-minus')}</button><span id="pq">1</span><button data-act="pq" data-d="1" aria-label="Increase quantity">${ic('i-plus')}</button></div></div>
+        <button class="pdx-cta" id="pdpAdd" data-act="add" data-id="${p.id}" data-qty="1" data-price="${price}" data-snap="${snap(vp, curV ? curV.id : '')}">Add to cart</button>
+        <button class="pdx-cta line" data-act="buynow" data-id="${p.id}">Buy now</button>`}
+      </aside>
     </div>
   </div>
-  <nav class="pd-tabs"><div class="wrap"><a href="#about">Description</a><a href="#specs">Specifications</a><a href="#reviews">Reviews${n ? ` (${n})` : ''}</a><a href="#faq">Delivery &amp; FAQ</a></div></nav>
-  <section class="pd-sec" id="about"><div class="wrap pd-two">
+  <nav class="pd-tabs"><div class="wrap2"><a href="#about">Description</a><a href="#specs">Specifications</a><a href="#reviews">Reviews${n ? ` (${n})` : ''}</a><a href="#faq">Delivery &amp; FAQ</a></div></nav>
+  <section class="pd-sec" id="about"><div class="wrap2 pd-two">
     <div class="pd-h"><h2>About this product</h2></div>
     <div><p class="pd-lead">${esc(overview(p))}</p>${desc}</div>
   </div></section>
-  <section class="pd-sec" id="specs"><div class="wrap pd-two">
+  <section class="pd-sec" id="specs"><div class="wrap2 pd-two">
     <div class="pd-h"><h2>Specifications</h2></div>
     <dl class="spec-t">${specRows(p).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
   </div></section>
   ${reviewsHtml(p)}
-  <section class="pd-sec" id="faq"><div class="wrap pd-two">
+  <section class="pd-sec" id="faq"><div class="wrap2 pd-two">
     <div class="pd-h"><h2>Delivery &amp; questions</h2></div>
     <div class="faq">${faqs(p).map(([q, a]) => `<details><summary>${esc(q)} ${ic('i-down')}</summary><div class="a">${esc(a)}</div></details>`).join('')}</div>
   </div></section>
-  <section class="block"><div class="wrap">
-    <div class="sec-head"><div><span class="eyebrow">You may also like</span><h2>More in ${esc(c.label)}</h2></div><a class="link" href="${url.cat(c.id)}">See all ${ic('i-arrow')}</a></div>
-    ${gridOf(related, ctx)}
-  </div></section>
+  <section class="hsec"><div class="wrap2">${ribbon('Similar products', url.cat(c.id))}${rail(related, ctx)}</div></section>
   <div class="lightbox" id="lb" hidden><button class="lb-x" data-act="lbclose" aria-label="Close">${ic('i-x')}</button><button class="lb-p" data-act="lbnav" data-d="-1" aria-label="Previous">${ic('i-arrow', 'i flip')}</button><img alt=""><button class="lb-n" data-act="lbnav" data-d="1" aria-label="Next">${ic('i-arrow')}</button></div>`;
   }
 
