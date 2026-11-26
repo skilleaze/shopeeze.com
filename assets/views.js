@@ -94,7 +94,12 @@
     // Bestsellers: our own drone first, then the top product of each category
     const best = BEST.map(byId).filter(Boolean);
     cats.forEach((c) => { if (best.length < 14 && !best.some((x) => x.cat === c.id)) { const x = P.find((p) => p.cat === c.id && ok(p)); if (x) best.push(x); } });
-    const mega = deals.slice(0, 4);
+    // Every product appears once on the home page
+    const used = new Set();
+    const take = (list) => list.filter((p) => !used.has(p.id) && !(p.gk && used.has(p.gk))).map((p) => { used.add(p.id); if (p.gk) used.add(p.gk); return p; });
+    const mega = take(deals.slice(0, 4));
+    const dealRail = take(deals.slice(4));
+    const bestRail = take(best);
     const S = C.SLIDES || [];
     const banner = (sl, k) => `<a class="hb-card" href="${url.cat(sl.cat)}">
         <img src="${imgUrl(sl.img, 900)}" srcset="${srcset(sl.img, [600, 900, 1300])}" sizes="(max-width:760px) 80vw, 25vw" alt="${esc(sl.alt)}" style="object-position:${sl.pos || 'center'}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}>
@@ -111,7 +116,7 @@
       </div>`;
     const focus = (c, line) => `<a class="fc-card" href="${url.cat(c.id)}"><img src="${imgUrl(cover(c), 700)}" alt="${esc(c.label)}" loading="lazy"><span class="fc-txt"><b>${esc(c.label)}</b><span>${line}</span><em>Shop now ${ic('i-arrow')}</em></span></a>`;
     const rows = cats.slice(0, 5).map((c) => {
-      const list = varied(P.filter((p) => p.cat === c.id && ok(p)), 14);
+      const list = take(varied(P.filter((p) => p.cat === c.id && ok(p) && !used.has(p.id) && !(p.gk && used.has(p.gk))), 14));
       return list.length >= 4 ? `<section class="hsec"><div class="wrap2">${ribbon(c.label, url.cat(c.id))}${rail(list, ctx)}</div></section>` : '';
     }).join('');
     return `
@@ -142,8 +147,8 @@
     </div></div>
   </div></section>
 
-  ${deals.length >= 4 ? `<section class="hsec"><div class="wrap2">${ribbon('Best deals for you', url.deals)}${rail(deals, ctx)}</div></section>` : ''}
-  <section class="hsec"><div class="wrap2">${ribbon('Bestsellers', url.shop)}${rail(best, ctx)}</div></section>
+  ${dealRail.length >= 4 ? `<section class="hsec"><div class="wrap2">${ribbon('Best deals for you', url.deals)}${rail(dealRail, ctx)}</div></section>` : ''}
+  <section class="hsec"><div class="wrap2">${ribbon('Bestsellers', url.shop)}${rail(bestRail, ctx)}</div></section>
   ${rows}
 
   <section class="perks-strip"><div class="wrap2 ps-in">
