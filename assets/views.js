@@ -86,7 +86,7 @@
     const cover = (c) => c.cover || c.img || ((P.find((p) => p.cat === c.id && ok(p)) || {}).img);
     const short = (l) => l.replace(' & Decor', '').replace(' & Care', '').replace(' & Storage', '').replace(' & Stationery', '').replace(' & Outdoors', '').replace(' & Hardware', '').replace(' & Gifts', '');
     // Deals spread across categories: the biggest saving from each category in turn
-    const byCat = {}; P.filter((p) => ok(p) && p.was && off(p) >= 15).forEach((p) => (byCat[p.cat] = byCat[p.cat] || []).push(p));
+    const byCat = {}; P.filter((p) => ok(p) && p.was && off(p) >= 15 && off(p) <= 85 && p.price >= 199).forEach((p) => (byCat[p.cat] = byCat[p.cat] || []).push(p));
     Object.values(byCat).forEach((l) => l.sort((a, b) => off(b) - off(a)));
     const deals = []; for (let r = 0; r < 4; r++) cats.forEach((c) => { const x = (byCat[c.id] || [])[r]; if (x && deals.length < 18) deals.push(x); });
     // Bestsellers: our own drone first, then the top product of each category
