@@ -11,7 +11,7 @@ const { SITE, CATS, P, NAV_CATS, POLICY } = C;
 const { esc, url, fmt, bySlug, catOf, ic } = V;
 
 const SHELL = fs.readFileSync(path.join(__dirname, '..', 'templates', 'shell.html'), 'utf8');
-const VERSION = '23';
+const VERSION = '24';
 const DEFAULT_DESC = 'The art of having everything. Anything you need, in one place, at your door: kitchen, home, electronics, beauty, fashion, toys and drones. Free delivery over ₹499, cash on delivery, 7-day replacement.';
 
 function headHtml(h) {
@@ -60,7 +60,6 @@ function page({ head, main, view = '', active = '', sticky = '', q = '' }) {
     .replace('{{MAIN}}', main)
     .replace('{{FCATS}}', CATS.map((c) => `<li><a href="${url.cat(c.id)}">${c.label}</a></li>`).join(''))
     .replace('</head>', `<script>window.SZ_SET=${JSON.stringify({ free_over: C.FREE_OVER, std_fee: C.STD_FEE, cod_fee: C.COD_FEE, promo_code: C.PROMO.code, promo_pct: C.PROMO.pct, min: POLICY.minDays, max: POLICY.maxDays, rep: POLICY.replaceDays })}</script>\n</head>`)
-    .replace('{{FPLACES}}', L.footerPlaces())
     .replace('{{YEAR}}', String(new Date().getFullYear()))
     .replace('{{STICKY}}', sticky)
     .split('{{V}}').join(VERSION);
