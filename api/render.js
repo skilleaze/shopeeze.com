@@ -11,7 +11,7 @@ const { SITE, CATS, P, NAV_CATS, POLICY } = C;
 const { esc, url, fmt, bySlug, catOf, ic } = V;
 
 const SHELL = fs.readFileSync(path.join(__dirname, '..', 'templates', 'shell.html'), 'utf8');
-const VERSION = '37';
+const VERSION = '38';
 const DEFAULT_DESC = 'The art of having everything. Anything you need, in one place, at your door: kitchen, home, electronics, beauty, fashion, toys and drones. Free delivery over ₹499, cash on delivery, 7-day replacement.';
 
 function headHtml(h) {
@@ -180,6 +180,7 @@ async function route(pathname, query) {
   const blank = '<div class="wrap2" style="min-height:70vh"><div class="acc-load"><span></span></div></div>';
   if (a === 'login' && !b) return { head: { title: 'Log in or sign up | Shopeiz', noindex: true, canonical: '/login' }, main: blank, view: 'login' };
   if (a === 'track' && !b) return { head: { title: 'Track your order | Shopeiz', description: 'Track your Shopeiz order with your order number and mobile number.', canonical: '/track' }, main: blank, view: 'track' };
+  if (a === 'review' && !b) return { head: { title: 'Rate your order | Shopeiz', noindex: true, canonical: '/review' }, main: blank, view: 'review' };
   if (a === 'account' && parts.length <= 3) return { head: { title: 'My account | Shopeiz', noindex: true, canonical: '/account' }, main: blank, view: 'account' };
 
   if (a === 'online-shopping-india' && !b) return L.indiaPage();

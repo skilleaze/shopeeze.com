@@ -361,6 +361,7 @@
       ['Is the price inclusive of GST?', `Yes. The price shown, ${fmt(p.price)}, includes GST. Delivery is free on orders over ${fmt(C.FREE_OVER)}.`],
     ];
   }
+  const rvImg = (u, w) => String(u).replace('/storage/v1/object/public/', '/storage/v1/render/image/public/') + `?width=${w}&height=${w}&resize=cover&quality=70`;
   function reviewsHtml(p) {
     const r = p.reviewData || { count: 0, items: [] };
     const n = Number(r.count || 0), avg = Number(r.avg || 0), dist = r.dist || {};
@@ -368,11 +369,14 @@
     const list = (r.items || []).map((x) => `<article class="rv">
       <div class="rv-top">${starRow(x.rating)}${x.verified ? '<span class="vb">Verified buyer</span>' : ''}</div>
       ${x.title ? `<h4>${esc(x.title)}</h4>` : ''}<p>${esc(x.body)}</p>
+      ${(x.photos || []).length ? `<div class="rv-pics">${x.photos.map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener"><img src="${esc(rvImg(u, 200))}" alt="Customer photo" loading="lazy"></a>`).join('')}</div>` : ''}
       <div class="rv-by">${esc(x.name)}${x.city ? ', ' + esc(x.city) : ''} · ${new Date(x.at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
       ${x.reply ? `<div class="rv-reply"><b>Shopeiz replied:</b> ${esc(x.reply)}</div>` : ''}
     </article>`).join('');
+    const pics = (r.photos || []).slice(0, 12);
     return `<section class="pd-sec" id="reviews"><div class="wrap2">
       <div class="pd-h"><h2>Ratings &amp; reviews</h2></div>
+      ${pics.length ? `<div class="rv-photos"><b>Customer photos</b><div>${pics.map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener"><img src="${esc(rvImg(u, 240))}" alt="Customer photo" loading="lazy"></a>`).join('')}</div></div>` : ''}
       <div class="rv-grid">
         <div class="rv-sum">
           ${n ? `<div class="big">${avg.toFixed(1)}</div>${starRow(avg, 'lg')}<p>Based on ${n} review${n === 1 ? '' : 's'}</p>${bars}` : `<div class="big">–</div>${starRow(0, 'lg')}<p>No reviews yet. Bought this? Be the first to share what you think.</p>`}

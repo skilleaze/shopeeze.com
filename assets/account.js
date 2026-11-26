@@ -102,7 +102,7 @@
       <section class="od-card"><h3>Items</h3>${o.items.map((i) => `<div class="od-item">
           <a class="od-img" href="${i.slug ? '/products/' + esc(i.slug) : '#'}">${i.img ? `<img src="${esc(imgUrl(i.img, 200))}" alt="" loading="lazy">` : ''}</a>
           <div><a href="${i.slug ? '/products/' + esc(i.slug) : '#'}"><b>${esc(i.title)}</b></a>${i.variant ? `<small>${esc(i.variant)}</small>` : ''}<span>Qty ${i.qty} · ${fmt(Number(i.price))}</span></div>
-          <div class="od-btns">${['delivered', 'replaced'].includes(o.status) && i.slug ? `<a class="od-again" href="/products/${esc(i.slug)}?review=${encodeURIComponent(o.code)}#reviews">${ic('i-star')} Rate &amp; review</a>` : ''}${['delivered', 'replaced', 'cancelled'].includes(o.status) && i.slug ? `<button class="od-again" data-act="add" data-id="${esc(i.product_id)}" data-snap="${snapOf(i)}">Buy again</button>` : ''}</div>
+          <div class="od-btns">${['delivered', 'replaced'].includes(o.status) && i.slug ? `<a class="od-again" href="${o.review_token ? '/review?t=' + o.review_token : '/products/' + esc(i.slug) + '?review=' + encodeURIComponent(o.code) + '#reviews'}">${ic('i-star')} Rate &amp; review</a>` : ''}${['delivered', 'replaced', 'cancelled'].includes(o.status) && i.slug ? `<button class="od-again" data-act="add" data-id="${esc(i.product_id)}" data-snap="${snapOf(i)}">Buy again</button>` : ''}</div>
         </div>`).join('')}</section>
       <div class="od-two">
         <section class="od-card"><h3>Delivery address</h3><p class="od-addr"><b>${esc(o.name)}</b><br>${esc(o.addr)}<br>${esc(o.city)}${o.state ? ', ' + esc(o.state) : ''} ${esc(o.pin)}<br>${esc(o.phone)}</p></section>
@@ -264,6 +264,80 @@
     } catch (e) { pageTrack(null, e.message); }
   }
 
+  /* ---------- Review a delivered order: one page, every item, with photos ---------- */
+  const STARS = (k) => `<div class="rv-rate" role="radiogroup" aria-label="Your rating">${[1, 2, 3, 4, 5].map((n) => `<label><input type="radio" name="rating" value="${n}" required><svg><use href="#i-star"/></svg><span class="sr">${n} star${n > 1 ? 's' : ''}</span></label>`).join('')}</div>`;
+  async function pageReview(t) {
+    app().innerHTML = `<div class="wrap2 rvp">${loading}</div>`;
+    let o = null;
+    if (/^[0-9a-f-]{36}$/.test(t)) { try { o = await rpc('review_order', { p_token: t }); } catch (e) {} }
+    const box = $('.rvp');
+    if (!o) { box.innerHTML = `<div class="acc-empty"><h2>This review link isn't valid</h2><p>Open the link from your delivery message again, or find your order on the <a href="/track">tracking page</a>.</p></div>`; return; }
+    if (!o.ready) { box.innerHTML = `<div class="acc-empty"><h2>Your order is on its way</h2><p>You can rate it once order ${esc(o.code)} is delivered.</p><a class="pdx-cta" style="max-width:260px" href="/track">Track it</a></div>`; return; }
+    box.innerHTML = `<div class="rvp-head"><h1>How was your order, ${esc(o.name || 'there')}?</h1><p class="acc-p">Order ${esc(o.code)} · Your honest review helps other shoppers, good or bad. Add photos of what you received if you like.</p></div>
+      ${o.items.map((i) => `<form class="od-card rvp-item" data-rvp="${esc(i.product_id)}">
+        <div class="rvp-p">${i.img ? `<img src="${esc(imgUrl(i.img, 160))}" alt="">` : '<span></span>'}<div><b>${esc(i.title)}</b>${i.variant && i.variant !== 'Default Title' ? `<span>${esc(i.variant)}</span>` : ''}</div></div>
+        ${i.done ? `<p class="rvp-done">${ic('i-check')} Thank you, you've reviewed this item.</p>` : `${STARS()}
+        <div class="fields">
+          <div class="field full"><label>Your review</label><textarea name="body" required minlength="10" maxlength="2000" rows="3" placeholder="What did you like or dislike? How is the quality?"></textarea></div>
+          <div class="field full"><label>Title (optional)</label><input name="title" maxlength="120"></div>
+        </div>
+        <div class="rvp-pics" data-pics></div>
+        <label class="rvp-add">${ic('i-plus')}<span>Add photos</span><input type="file" accept="image/jpeg,image/png,image/webp" multiple hidden data-rvfile></label>
+        <p class="auth-msg" data-rvmsg hidden></p>
+        <button class="pdx-cta" type="submit">Submit review</button>`}
+      </form>`).join('')}
+      <div class="od-card rvp-me"><div class="fields"><div class="field"><label>Name shown with your review</label><input data-rvname value="${esc(o.name || '')}" maxlength="60"></div><div class="field"><label>City (optional)</label><input data-rvcity value="${esc(o.city || '')}" maxlength="60"></div></div>
+      <p class="note">Reviews show a Verified buyer badge and appear after a quick check by our team.</p></div>`;
+    box.dataset.t = t;
+  }
+  // shrink big phone photos before upload (max 1600 px, JPEG)
+  function shrink(file) {
+    return new Promise((res) => {
+      if (!/^image\//.test(file.type)) return res(file);
+      const img = new Image(); const u = URL.createObjectURL(file);
+      img.onload = () => {
+        const k = Math.min(1, 1600 / Math.max(img.width, img.height));
+        if (k === 1 && file.size < 1.5e6) { URL.revokeObjectURL(u); return res(file); }
+        const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(u);
+        c.toBlob((b) => res(b ? new File([b], 'photo.jpg', { type: 'image/jpeg' }) : file), 'image/jpeg', 0.85);
+      };
+      img.onerror = () => { URL.revokeObjectURL(u); res(file); };
+      img.src = u;
+    });
+  }
+  document.addEventListener('change', async (e) => {
+    const inp = e.target.closest('[data-rvfile]'); if (!inp) return;
+    const f = inp.closest('form'), box = $('[data-pics]', f), msg = $('[data-rvmsg]', f), t = $('.rvp').dataset.t;
+    for (const file of [...inp.files]) {
+      if ($$('[data-url]', box).length >= 5) { msg.hidden = false; msg.textContent = 'You can add up to 5 photos per item.'; break; }
+      const tile = document.createElement('span'); tile.className = 'up'; box.appendChild(tile);
+      try {
+        const fd = new FormData(); fd.append('token', t); fd.append('file', await shrink(file));
+        const r = await fetch(`${CFG.url}/functions/v1/review-photo`, { method: 'POST', body: fd });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok || !j.url) throw new Error(j.error || 'Upload failed. Please try again.');
+        tile.className = ''; tile.dataset.url = j.url;
+        tile.innerHTML = `<img src="${esc(j.url.replace('/object/public/', '/render/image/public/') + '?width=160&height=160&resize=cover')}" alt=""><button type="button" aria-label="Remove photo" data-rvdel>×</button>`;
+      } catch (err) { tile.remove(); msg.hidden = false; msg.textContent = err.message; }
+    }
+    inp.value = '';
+  });
+  document.addEventListener('click', (e) => { const b = e.target.closest('[data-rvdel]'); if (b) b.parentElement.remove(); });
+  document.addEventListener('submit', async (e) => {
+    const f = e.target.closest('[data-rvp]'); if (!f) return;
+    e.preventDefault();
+    const msg = $('[data-rvmsg]', f), fd = new FormData(f);
+    msg.hidden = true;
+    if (!fd.get('rating')) { msg.hidden = false; msg.textContent = 'Please choose a star rating.'; return; }
+    const name = ($('[data-rvname]') || {}).value || '';
+    busy(f, true);
+    try {
+      await rpc('submit_review', { p: { product_id: f.dataset.rvp, token: $('.rvp').dataset.t, rating: fd.get('rating'), body: fd.get('body'), title: fd.get('title'), name: name.trim() || 'Shopeiz customer', city: ($('[data-rvcity]') || {}).value || '', photos: $$('[data-url]', f).map((x) => x.dataset.url) } });
+      f.innerHTML = $('.rvp-p', f).outerHTML + `<p class="rvp-done">${ic('i-check')} Thank you! Your review will appear after a quick check.</p>`;
+    } catch (err) { busy(f, false); msg.hidden = false; msg.textContent = err.message; }
+  });
+
   function route() {
     const p = location.pathname.replace(/\/+$/, '');
     const q = new URLSearchParams(location.search);
@@ -273,6 +347,7 @@
       return;
     }
     if (VIEW === 'track') return pageTrack(null);
+    if (VIEW === 'review') return pageReview(q.get('t') || '');
     if (VIEW !== 'account') return;
     // Arriving back from Google or an email link: let the library finish the sign-in first
     if (q.get('code') || /access_token|type=recovery/.test(location.hash)) {
@@ -417,7 +492,7 @@
     },
   };
 
-  if (['login', 'account', 'track'].includes(VIEW)) {
+  if (['login', 'account', 'track', 'review'].includes(VIEW)) {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', route); else route();
   }
 })();

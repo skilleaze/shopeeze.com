@@ -235,7 +235,7 @@
     const postUp = async (t) => { t = (t || '').trim(); if (!t) return; try { await q(sb.from('order_events').insert({ order_id: id, kind: 'update', note: t.slice(0, 200), by_email: me.email })); toast('Update posted'); orderDetail(id); } catch (e) { fail(e); } };
     $$('[data-up]', d).forEach((b) => (b.onclick = () => postUp(b.dataset.up)));
     $('#upb', d).onclick = () => postUp($('#upt', d).value);
-    if ($('#askrv', d)) $('#askrv', d).onclick = () => window.open(`https://wa.me/91${o.phone}?text=${encodeURIComponent(`Hi ${o.name.split(' ')[0]}, thank you for shopping with Shopeiz! How do you like your order ${o.code}? We would love a quick review:\n${items.map((i) => `https://shopeiz.com/products/${i.slug}#reviews`).join('\n')}\nUse order number ${o.code} and this mobile number for a Verified buyer badge.`)}`, '_blank');
+    if ($('#askrv', d)) $('#askrv', d).onclick = () => { askReview(o); };
     if ($('#sendtr', d)) $('#sendtr', d).onclick = () => window.open(`https://wa.me/91${o.phone}?text=${encodeURIComponent(`Hi ${o.name.split(' ')[0]}, your Shopeiz order ${o.code} has shipped${o.courier ? ' with ' + o.courier : ''}. Tracking number: ${o.tracking_no}${o.tracking_url ? '\nCourier tracking: ' + o.tracking_url : ''}\nTrack your order: https://shopeiz.com/track?code=${o.code}&phone=${o.phone}`)}`, '_blank');
   }
   const refresh = () => { pollNew(); if (view === 'orders') orders().catch(fail); if (view === 'delivery') delivery().catch(fail); };
@@ -344,22 +344,38 @@
     };
   }
 
+  /* ---------- review requests ---------- */
+  const reviewMsg = (o) => `Hi ${String(o.name || '').split(' ')[0]}, thank you for shopping with Shopeiz! Your order ${o.code} was delivered. How did you like it? Rate it in one tap (photos welcome):\nhttps://shopeiz.com/review?t=${o.review_token}`;
+  function askReview(o) {
+    window.open(`https://wa.me/91${o.phone}?text=${encodeURIComponent(reviewMsg(o))}`, '_blank');
+    sb.from('orders').update({ review_asked_at: new Date().toISOString() }).eq('id', o.id).then(() => {});
+  }
   /* ---------- reviews ---------- */
   let RF = 'pending';
   async function reviews() {
-    const { data } = await q(sb.from('reviews').select('*, products(display_title, slug, images)').eq('status', RF).order('created_at', { ascending: false }).limit(200));
-    $('#main').innerHTML = `<h1>Reviews</h1><p class="sub">Customer reviews appear on the product page only after you approve them. Verified buyer = order number and phone matched a delivered order.</p>
+    const [{ data }, { data: ask }] = await Promise.all([
+      q(sb.from('reviews').select('*, products(display_title, slug, images)').eq('status', RF).order('created_at', { ascending: false }).limit(200)),
+      q(sb.from('orders').select('id,code,name,phone,delivered_at,review_token,review_asked_at').in('status', ['delivered', 'replaced']).is('review_asked_at', null).lte('delivered_at', new Date(Date.now() - 2 * 864e5).toISOString()).order('delivered_at', { ascending: false }).limit(100)),
+    ]);
+    $('#main').innerHTML = `<h1>Reviews</h1><p class="sub">Customer reviews appear on the product page only after you approve them. Verified buyer = the review came from the order's review link, or the order number and phone matched a delivered order.</p>
+    <div class="card" style="margin-bottom:16px"><b>Ask for reviews</b> <span class="muted">· delivered 2+ days ago, not asked yet (${ask.length})</span>
+      <p class="muted" style="font-size:13px;margin:6px 0 10px">Each button opens WhatsApp with a ready message and the customer's private review link (rate every item, add photos). It is marked as asked once you open it.</p>
+      ${ask.map((o) => `<div class="row" style="justify-content:space-between;border-top:1px solid #eee;padding:8px 0"><span><b>${esc(o.code)}</b> · ${esc(o.name)} · delivered ${dt(o.delivered_at)}</span><span class="row"><button class="btn sm" data-copy="${o.id}">Copy link</button><button class="btn sm pri" data-ask="${o.id}">WhatsApp</button></span></div>`).join('') || '<div class="muted" style="font-size:13px">No one to ask right now.</div>'}
+    </div>
     <div class="tabs" id="rt">${[['pending', 'Waiting'], ['approved', 'Approved'], ['hidden', 'Hidden']].map(([k, l]) => `<button data-s="${k}" class="${RF === k ? 'on' : ''}">${l}</button>`).join('')}</div>
     ${data.map((r) => `<div class="card" style="margin-bottom:12px" data-id="${r.id}"><div class="row" style="flex-wrap:nowrap;align-items:flex-start">
       ${r.products && r.products.images && r.products.images[0] ? `<img class="thumb" src="${esc(r.products.images[0])}${/shopify/.test(r.products.images[0]) ? '?width=80' : ''}">` : ''}
       <div class="sp"><a href="/products/${esc(r.products ? r.products.slug : '')}" target="_blank"><b>${esc(r.products ? r.products.display_title : r.product_id)}</b></a>
         <div style="margin:4px 0">${'★'.repeat(r.rating)}<span class="muted">${'★'.repeat(5 - r.rating)}</span> ${r.verified ? '<span class="st delivered">Verified buyer</span>' : ''}</div>
         ${r.title ? `<b>${esc(r.title)}</b>` : ''}<p style="margin:4px 0">${esc(r.body)}</p>
+        ${(r.photos || []).length ? `<div class="row" style="gap:6px;margin:6px 0">${r.photos.map((u) => `<a href="${esc(u)}" target="_blank"><img src="${esc(u.replace('/object/public/', '/render/image/public/'))}?width=120&height=120&resize=cover" style="width:64px;height:64px;object-fit:cover;border-radius:6px"></a>`).join('')}</div>` : ''}
         <div class="muted" style="font-size:12px">${esc(r.name)}${r.city ? ', ' + esc(r.city) : ''} · ${dt(r.created_at)}${r.phone ? ' · ' + esc(r.phone) : ''}${r.order_code ? ' · ' + esc(r.order_code) : ''}</div>
         <div class="row" style="margin-top:10px"><input class="in sp" data-reply placeholder="Public reply (optional)" value="${esc(r.reply || '')}"></div>
       </div></div>
       <div class="row" style="margin-top:10px;justify-content:flex-end">${r.status !== 'approved' ? '<button class="btn sm pri" data-rs="approved">Approve</button>' : ''}${r.status !== 'hidden' ? '<button class="btn sm" data-rs="hidden">Hide</button>' : ''}<button class="btn sm" data-rs="save">Save reply</button></div></div>`).join('') || '<div class="empty">Nothing here.</div>'}`;
     $$('#rt button').forEach((b) => (b.onclick = () => { RF = b.dataset.s; reviews().catch(fail); }));
+    $$('[data-ask]').forEach((b) => (b.onclick = () => { askReview(ask.find((o) => String(o.id) === b.dataset.ask)); b.closest('.row').parentElement.remove(); }));
+    $$('[data-copy]').forEach((b) => (b.onclick = () => { const o = ask.find((x) => String(x.id) === b.dataset.copy); navigator.clipboard.writeText('https://shopeiz.com/review?t=' + o.review_token); toast('Review link copied'); }));
     $$('[data-rs]').forEach((b) => (b.onclick = async () => {
       const card = b.closest('[data-id]'); const id = card.dataset.id; const reply = $('[data-reply]', card).value.trim() || null;
       const patch = b.dataset.rs === 'save' ? { reply } : { status: b.dataset.rs, reply };

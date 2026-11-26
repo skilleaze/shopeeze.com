@@ -396,7 +396,7 @@
   document.addEventListener('keydown', (e) => { const lb = $('#lb'); if (!lb || lb.hidden) return; if (e.key === 'ArrowRight') lbOpen(lbK + 1); if (e.key === 'ArrowLeft') lbOpen(lbK - 1); if (e.key === 'Escape') { lb.hidden = true; document.body.style.overflow = ''; } });
   // Star picker
   document.addEventListener('change', (e) => {
-    if (e.target.name === 'rating' && e.target.closest('.rv-rate')) { const v = Number(e.target.value); $$('.rv-rate label').forEach((l, i) => l.classList.toggle('on', i < v)); }
+    if (e.target.name === 'rating' && e.target.closest('.rv-rate')) { const v = Number(e.target.value); [...e.target.closest('.rv-rate').querySelectorAll('label')].forEach((l, i) => l.classList.toggle('on', i < v)); }
   });
 
   /* ---------- Review link from a delivered order: open the form with the order number ---------- */
