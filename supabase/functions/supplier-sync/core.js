@@ -139,6 +139,18 @@ export async function getAdmin(url, token) {
   throw new Error('Bridge store is busy, will retry');
 }
 export const ADMIN_API = '2025-07';
+// Dev Dashboard apps get short-lived tokens with the client credentials grant; cache them in private_config
+export async function bridgeToken(D, sup) {
+  const cfg = Object.fromEntries((await D.get(`private_config?select=k,v&k=like.bridge_${sup.id}_*`)).map((r) => [r.k.replace(`bridge_${sup.id}_`, ''), r.v]));
+  if (cfg.token && Number(cfg.exp || 0) > Date.now() + 300e3) return cfg.token;
+  if (!cfg.client_id || !cfg.client_secret) throw new Error('Bridge store keys are not saved yet (admin > Suppliers)');
+  const r = await fetch(`${sup.base_url.replace(/\/+$/, '')}/admin/oauth/access_token`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ grant_type: 'client_credentials', client_id: cfg.client_id, client_secret: cfg.client_secret }) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || !j.access_token) throw new Error('Bridge store refused the keys: ' + r.status + ' ' + JSON.stringify(j).slice(0, 200));
+  await D.rpc('bridge_cache_token', { p_supplier: sup.id, p_token: j.access_token, p_exp: Date.now() + Number(j.expires_in || 86399) * 1000 });
+  return j.access_token;
+}
 
 /* ---------- Map one WooCommerce Store API product ---------- */
 export function mapWoo(supplier, wp, runId) {
@@ -230,10 +242,9 @@ export async function step(D, { force = false, pagesPerCall = 4, log = () => {} 
     while (pages < pagesPerCall && st.phase !== 'idle') {
       if (st.phase === 'products') {
         if (sup.platform === 'shopify_admin') {
-          const tok = (await D.get(`private_config?select=v&k=eq.token_${sup.id}`))[0];
-          if (!tok) throw new Error('No Admin API token saved for ' + sup.id);
+          const tok = await bridgeToken(D, sup);
           const cur = st.stats?.cursor;
-          const { json, next } = await getAdmin(`${base}/admin/api/${ADMIN_API}/products.json?limit=250${cur ? '&page_info=' + cur : ''}`, tok.v);
+          const { json, next } = await getAdmin(`${base}/admin/api/${ADMIN_API}/products.json?limit=250${cur ? '&page_info=' + cur : ''}`, tok);
           pages++;
           const list = json.products || [];
           if (list.length) {

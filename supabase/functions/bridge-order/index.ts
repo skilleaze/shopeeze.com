@@ -9,6 +9,19 @@ const get = async (p: string) => { const r = await fetch(`${URL_}/rest/v1/${p}`,
 const patch = (p: string, b: unknown) => fetch(`${URL_}/rest/v1/${p}`, { method: 'PATCH', headers: { ...H, Prefer: 'return=minimal' }, body: JSON.stringify(b) });
 const post = (p: string, b: unknown) => fetch(`${URL_}/rest/v1/${p}`, { method: 'POST', headers: { ...H, Prefer: 'return=minimal' }, body: JSON.stringify(b) });
 
+async function token(s: { id: string; base_url: string }) {
+  const rows = await get(`private_config?select=k,v&k=like.bridge_${s.id}_*`);
+  const cfg: Record<string, string> = Object.fromEntries(rows.map((r: { k: string; v: string }) => [r.k.replace(`bridge_${s.id}_`, ''), r.v]));
+  if (cfg.token && Number(cfg.exp || 0) > Date.now() + 300e3) return cfg.token;
+  if (!cfg.client_id || !cfg.client_secret) throw new Error('Bridge store keys are not saved yet');
+  const r = await fetch(`${s.base_url.replace(/\/+$/, '')}/admin/oauth/access_token`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ grant_type: 'client_credentials', client_id: cfg.client_id, client_secret: cfg.client_secret }) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || !j.access_token) throw new Error('Bridge store refused the keys: ' + r.status);
+  await fetch(`${URL_}/rest/v1/rpc/bridge_cache_token`, { method: 'POST', headers: H, body: JSON.stringify({ p_supplier: s.id, p_token: j.access_token, p_exp: Date.now() + Number(j.expires_in || 86399) * 1000 }) });
+  return j.access_token as string;
+}
+
 async function sendOrder(id: number) {
   const [o] = await get(`orders?select=*&id=eq.${id}`);
   if (!o) return { id, error: 'order not found' };
@@ -20,8 +33,8 @@ async function sendOrder(id: number) {
   for (const s of sups) {
     const mine = items.filter((i: { supplier: string }) => i.supplier === s.id);
     if (!mine.length) continue;
-    const [tok] = await get(`private_config?select=v&k=eq.token_${s.id}`);
-    if (!tok) { out.push({ supplier: s.id, error: 'no token' }); continue; }
+    let tok: string;
+    try { tok = await token(s); } catch (e) { out.push({ supplier: s.id, error: String(e) }); continue; }
     const [first, ...rest] = String(o.name || '').trim().split(/\s+/);
     const addr = { first_name: first || 'Customer', last_name: rest.join(' ') || '.', address1: o.addr, city: o.city, province: o.state || undefined, zip: o.pin, country: 'India', country_code: 'IN', phone: '+91' + o.phone };
     const cod = o.pay_method === 'cod';
@@ -37,7 +50,7 @@ async function sendOrder(id: number) {
       note: `Shopeiz order ${o.code}. ${cod ? 'Cash on delivery: collect ₹' + share.toFixed(0) : 'Prepaid by UPI: collect nothing'}.`,
       send_receipt: false, send_fulfillment_receipt: false, inventory_behaviour: 'decrement_obeying_policy',
     } };
-    const r = await fetch(`${s.base_url.replace(/\/+$/, '')}/admin/api/${API}/orders.json`, { method: 'POST', headers: { 'X-Shopify-Access-Token': tok.v, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const r = await fetch(`${s.base_url.replace(/\/+$/, '')}/admin/api/${API}/orders.json`, { method: 'POST', headers: { 'X-Shopify-Access-Token': tok, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     const j = await r.json().catch(() => ({}));
     if (!r.ok) { out.push({ supplier: s.id, error: `${r.status} ${JSON.stringify(j.errors || j).slice(0, 300)}` }); continue; }
     refs.push(`${s.id} ${j.order.name}`);
