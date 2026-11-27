@@ -4,7 +4,7 @@
 const UA = 'Mozilla/5.0 (compatible; ShopeizSync/1.0; +https://shopeiz.com)';
 export const PAGE = 250;
 // Short id prefixes so product ids don't name the supplier
-export const PREFIX = { dropplier: 'dp', baapstore: 'bs', deodap: 'dd', seasonsway: 'sw' };
+export const PREFIX = { dropplier: 'dp', baapstore: 'bs', deodap: 'dd', seasonsway: 'sw', bridge: 'br' };
 export const pid = (supplier, id) => `${PREFIX[supplier] || supplier}${id}`;
 
 /* ---------- Text clean-up ---------- */
@@ -119,6 +119,27 @@ export function mapProduct(supplier, sp, runId) {
   };
 }
 
+/* ---------- Bridge store (our own Shopify store, read through the Admin API) ----------
+   Dropdash / vFulfill push products into the bridge store. The price set there is treated as our COST
+   (set it to the supplier's sourcing price); Shopeiz then adds the usual margin. */
+export function mapAdmin(supplier, sp, runId) {
+  const vs = (sp.variants || []).map((v) => ({ ...v, available: !(v.inventory_management === 'shopify' && v.inventory_policy === 'deny' && Number(v.inventory_quantity) <= 0) }));
+  const row = mapProduct(supplier, { ...sp, variants: vs, images: (sp.images || []).map((i) => ({ src: i.src })) }, runId);
+  if (sp.status && sp.status !== 'active') { row.available = false; row.hidden_reason = row.hidden_reason || 'not active in bridge store'; }
+  return row;
+}
+export async function getAdmin(url, token) {
+  for (let i = 0; i < 4; i++) {
+    const r = await fetch(url, { headers: { 'X-Shopify-Access-Token': token, Accept: 'application/json' } });
+    if (r.status === 429 || r.status >= 500) { await sleep(1500 * (i + 1)); continue; }
+    if (!r.ok) throw new Error(`${r.status} from bridge store: ${(await r.text()).slice(0, 200)}`);
+    const next = ((r.headers.get('link') || '').match(/<[^>]*page_info=([^&>]+)[^>]*>;\s*rel="next"/) || [])[1] || null;
+    return { json: await r.json(), next };
+  }
+  throw new Error('Bridge store is busy, will retry');
+}
+export const ADMIN_API = '2025-07';
+
 /* ---------- Map one WooCommerce Store API product ---------- */
 export function mapWoo(supplier, wp, runId) {
   const pr = wp.prices || {};
@@ -208,6 +229,23 @@ export async function step(D, { force = false, pagesPerCall = 4, log = () => {} 
   try {
     while (pages < pagesPerCall && st.phase !== 'idle') {
       if (st.phase === 'products') {
+        if (sup.platform === 'shopify_admin') {
+          const tok = (await D.get(`private_config?select=v&k=eq.token_${sup.id}`))[0];
+          if (!tok) throw new Error('No Admin API token saved for ' + sup.id);
+          const cur = st.stats?.cursor;
+          const { json, next } = await getAdmin(`${base}/admin/api/${ADMIN_API}/products.json?limit=250${cur ? '&page_info=' + cur : ''}`, tok.v);
+          pages++;
+          const list = json.products || [];
+          if (list.length) {
+            const rows = list.map((p) => mapAdmin(sup.id, p, st.run_id));
+            for (let i = 0; i < rows.length; i += 125) await D.upsert('products', rows.slice(i, i + 125));
+            st.stats = { ...(st.stats || {}), seen: (st.stats?.seen || 0) + rows.length };
+            log(`${sup.id} bridge page ${st.page}: ${rows.length}`);
+          }
+          st.stats = { ...(st.stats || {}), cursor: next };
+          if (!next || !list.length) { st.phase = 'finish'; st.page = 1; } else st.page++;
+          continue;
+        }
         const woo = sup.platform === 'woo';
         const j = woo ? await getJson(`${base}/wp-json/wc/store/v1/products?per_page=100&page=${st.page}`).catch((e) => { if (/ 40\d from /.test(e.message)) return []; throw e; })
                       : await getJson(`${base}/products.json?limit=${PAGE}&page=${st.page}`);
