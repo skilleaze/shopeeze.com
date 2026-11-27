@@ -203,7 +203,7 @@
         <div class="f"><label>Extra cost (RTO, refund, re-ship)</label><input class="in" id="xc" type="number" value="${Number(o.extra_cost) || 0}"></div>
       </div>
       <div class="f" style="margin-top:12px"><label>Notes</label><textarea class="in" id="nt">${esc(o.notes || '')}</textarea></div>
-      <div class="row" style="margin-top:10px"><button class="btn dark" id="sv">Save</button>${o.tracking_no ? `<button class="btn" id="sendtr">WhatsApp tracking to customer</button>` : ''}${o.status === 'delivered' ? `<button class="btn" id="askrv">Ask for a review</button>` : ''}</div></div>
+      <div class="row" style="margin-top:10px"><button class="btn dark" id="sv">Save</button>${o.tracking_no ? `<button class="btn" id="sendtr">WhatsApp tracking to customer</button>` : ''}${o.status === 'delivered' ? `<button class="btn" id="askrv">Ask for a review</button>` : ''}${items.some((i) => i.supplier === 'bridge') && !o.supplier_order ? `<button class="btn" id="tobridge">Send to bridge store</button>` : ''}</div></div>
       <div class="sec"><h3>Delivery updates the customer sees</h3>
         <p class="muted" style="font-size:12.5px;margin:0 0 8px">These appear on the customer's tracking page. "Out for delivery" also lights up that step.</p>
         <div class="row" style="flex-wrap:wrap;gap:6px">${['Out for delivery', 'Reached the delivery hub in your city', 'In transit', 'Delivery attempted, we will try again', 'Delayed by the courier, sorry'].map((t) => `<button class="btn sm" data-up="${esc(t)}">${esc(t)}</button>`).join('')}</div>
@@ -236,6 +236,7 @@
     $$('[data-up]', d).forEach((b) => (b.onclick = () => postUp(b.dataset.up)));
     $('#upb', d).onclick = () => postUp($('#upt', d).value);
     if ($('#askrv', d)) $('#askrv', d).onclick = () => { askReview(o); };
+    if ($('#tobridge', d)) $('#tobridge', d).onclick = async () => { try { await q(sb.rpc('bridge_send_now', { p_id: o.id })); toast('Sending to the bridge store. Refresh in a few seconds.'); } catch (e) { fail(e); } };
     if ($('#sendtr', d)) $('#sendtr', d).onclick = () => window.open(`https://wa.me/91${o.phone}?text=${encodeURIComponent(`Hi ${o.name.split(' ')[0]}, your Shopeiz order ${o.code} has shipped${o.courier ? ' with ' + o.courier : ''}. Tracking number: ${o.tracking_no}${o.tracking_url ? '\nCourier tracking: ' + o.tracking_url : ''}\nTrack your order: https://shopeiz.com/track?code=${o.code}&phone=${o.phone}`)}`, '_blank');
   }
   const refresh = () => { pollNew(); if (view === 'orders') orders().catch(fail); if (view === 'delivery') delivery().catch(fail); };
